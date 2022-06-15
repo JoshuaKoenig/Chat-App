@@ -12,4 +12,5 @@
 
     <color name="primary_text">#232323</color>
     <color name="secondary_text">#353535</color>
+    <color name="green">#4CAF50</color>
 </resources>
