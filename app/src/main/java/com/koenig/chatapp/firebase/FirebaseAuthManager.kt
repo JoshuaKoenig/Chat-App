@@ -1,8 +1,12 @@
 package com.koenig.chatapp.firebase
 
 import android.app.Application
+import android.net.Uri
 import android.os.Build
+import android.util.Log
+import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
@@ -10,7 +14,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.koenig.chatapp.R
+import com.koenig.chatapp.models.UserModel
+import com.koenig.chatapp.ui.profileManager.ProfileViewModel
 
 class FirebaseAuthManager(application: Application) {
 
@@ -20,7 +27,6 @@ class FirebaseAuthManager(application: Application) {
     var loggedOut = MutableLiveData<Boolean>()
     var errorStatus = MutableLiveData<Boolean>()
     var googleSignInClient = MutableLiveData<GoogleSignInClient>()
-
 
     init
     {
@@ -32,6 +38,7 @@ class FirebaseAuthManager(application: Application) {
             liveFirebaseUser.postValue(firebaseAuth!!.currentUser)
             loggedOut.postValue(false)
             errorStatus.postValue(false)
+            FirebaseImageManager.checkStorageForExistingProfilePic(firebaseAuth!!.currentUser!!.uid)
         }
 
         configureGoogleSignIn()
@@ -59,7 +66,7 @@ class FirebaseAuthManager(application: Application) {
                 .addOnCompleteListener(application!!.mainExecutor) {task ->
                     if (task.isSuccessful)
                     {
-                        liveFirebaseUser.postValue(firebaseAuth!!.currentUser)
+                        initProfileData()
                         errorStatus.postValue(false)
                     }
                     else
@@ -68,6 +75,29 @@ class FirebaseAuthManager(application: Application) {
                     }
                 }
         }
+    }
+
+    //TODO: Change to Profile View Model
+    private fun initProfileData(){
+
+        val user = firebaseAuth!!.currentUser
+
+        val profileUpdates = userProfileChangeRequest {
+            displayName = "New User"
+            photoUri = Uri.parse("android.resource://com.koenig.chatapp/drawable/empty_profile")
+        }
+
+        Log.d("Debug", FirebaseImageManager.imageUri.value.toString())
+
+        user!!.updateProfile(profileUpdates)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful)
+                {
+                    liveFirebaseUser.postValue(user!!)
+                    FirebaseDBManager.createUser(firebaseAuth!!.currentUser!!)
+                }
+            }
+
     }
 
     private fun configureGoogleSignIn()
@@ -89,6 +119,7 @@ class FirebaseAuthManager(application: Application) {
                     if (task.isSuccessful)
                     {
                         liveFirebaseUser.postValue(firebaseAuth!!.currentUser)
+                        FirebaseDBManager.createUser(firebaseAuth!!.currentUser!!)
                     }
                     else
                     {

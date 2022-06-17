@@ -8,14 +8,19 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.databinding.ActivityLoginBinding
+import com.koenig.chatapp.models.UserModel
+import com.koenig.chatapp.ui.profileManager.ProfileViewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -25,6 +30,9 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
+
 
         loginBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginBinding.root)
@@ -52,8 +60,6 @@ class LoginActivity : AppCompatActivity() {
     public override fun onStart() {
         super.onStart()
 
-        loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
-
         loginRegisterViewModel.liveFirebaseUser.observe(this, Observer {
             firebaseUser -> if (firebaseUser != null)
                 startActivity(Intent(this, MainActivity::class.java))
@@ -70,6 +76,7 @@ class LoginActivity : AppCompatActivity() {
         if(!validateEmail() || !validatePassword()){ return }
 
         loginRegisterViewModel.register(email, password)
+
     }
 
     private  fun signIn(email: String, password: String)
@@ -122,9 +129,8 @@ class LoginActivity : AppCompatActivity() {
     private fun validateEmail(): Boolean
     {
         var valid = true
-
-        // Email validation
         val email = loginBinding.fieldEmail.text.toString()
+
         if (TextUtils.isEmpty(email))
         {
             loginBinding.fieldEmail.error = "Required."
@@ -146,7 +152,6 @@ class LoginActivity : AppCompatActivity() {
     private fun validatePassword(): Boolean
     {
         var valid = true
-
         val password = loginBinding.fieldPassword.text.toString()
 
         if (TextUtils.isEmpty(password))

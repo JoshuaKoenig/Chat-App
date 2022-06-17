@@ -1,10 +1,12 @@
 package com.koenig.chatapp.ui.auth
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.koenig.chatapp.firebase.FirebaseAuthManager
+import com.koenig.chatapp.firebase.FirebaseImageManager
 
 class LoggedInViewModel(app: Application): AndroidViewModel(app) {
 
@@ -15,5 +17,6 @@ class LoggedInViewModel(app: Application): AndroidViewModel(app) {
     fun logOut()
     {
         firebaseAuthManager.logout()
+        FirebaseImageManager.imageUri.postValue(Uri.EMPTY)
     }
 }

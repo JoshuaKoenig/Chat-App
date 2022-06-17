@@ -36,7 +36,6 @@ class ContactsFragment : Fragment() {
 
         // TODO: observableContacts
 
-
         fragBinding.buttonSearchContacts.setOnClickListener {
             val action = ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment()
             findNavController().navigate(action)
