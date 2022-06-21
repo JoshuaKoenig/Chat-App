@@ -29,7 +29,11 @@
         android:id="@+id/chatFragment"
         android:name="com.koenig.chatapp.ui.chatManager.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="userModel"
+            app:argType="com.koenig.chatapp.models.UserModel" />
+    </fragment>
     <fragment
         android:id="@+id/searchContactsFragment"
         android:name="com.koenig.chatapp.ui.searchContactManager.SearchContactsFragment"

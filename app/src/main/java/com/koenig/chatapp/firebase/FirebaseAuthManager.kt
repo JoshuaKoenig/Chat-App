@@ -87,8 +87,6 @@ class FirebaseAuthManager(application: Application) {
             photoUri = Uri.parse("android.resource://com.koenig.chatapp/drawable/empty_profile")
         }
 
-        Log.d("Debug", FirebaseImageManager.imageUri.value.toString())
-
         user!!.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful)

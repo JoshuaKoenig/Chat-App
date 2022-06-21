@@ -23,7 +23,7 @@
     <style name="Theme.ChatApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Button_Theme">
-        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorOnSecondary">@color/colorOnPrimary</item>
         <item name="colorSecondary">#FFFFFF</item>
     </style>
 

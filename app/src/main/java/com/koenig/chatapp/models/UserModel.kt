@@ -14,7 +14,7 @@ data class UserModel(
     var email: String = "",
     var photoUri: String = "",
     var status: String = "",
-    var contacts: List<UserModel> = listOf()
+    var contacts: HashMap<String, UserModel> = hashMapOf()
 
 ) : Parcelable
 {
