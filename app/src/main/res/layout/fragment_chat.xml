@@ -14,6 +14,16 @@
         android:layout_height="match_parent"
         tools:context=".ui.chatManager.ChatFragment">
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+           android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:indeterminate="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textNoChat"
             android:layout_width="wrap_content"
@@ -41,6 +51,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:visibility="invisible"
             android:id="@+id/recyclerViewChat"
             android:layout_width="0dp"
             android:layout_height="0dp"

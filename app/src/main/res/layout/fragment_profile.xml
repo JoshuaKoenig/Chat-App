@@ -13,6 +13,15 @@
         android:layout_height="match_parent"
         tools:context=".ui.profileManager.ProfileFragment">
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:indeterminate="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/textUserName"
@@ -39,7 +48,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textUserName" />
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loadImageUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="@+id/imageUser"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageUser" />
+
         <ImageView
+            android:visibility="invisible"
             android:id="@+id/imageUser"
             android:layout_width="0dp"
             android:layout_height="200dp"

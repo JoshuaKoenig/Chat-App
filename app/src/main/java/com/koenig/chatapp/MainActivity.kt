@@ -1,12 +1,9 @@
 package com.koenig.chatapp
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBar
@@ -19,16 +16,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.koenig.chatapp.databinding.ActivityMainBinding
 import com.koenig.chatapp.databinding.NavHeaderMainBinding
 import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.auth.LoginActivity
-import com.makeramen.roundedimageview.RoundedTransformationBuilder
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Transformation
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,7 +47,8 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.contactsFragment,
-                R.id.profileFragment
+                R.id.profileFragment,
+                R.id.friendRequestFragment
             ), drawerLayout
         )
 
@@ -135,13 +128,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {

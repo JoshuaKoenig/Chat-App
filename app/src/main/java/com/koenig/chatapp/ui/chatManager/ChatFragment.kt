@@ -3,16 +3,17 @@ package com.koenig.chatapp.ui.chatManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.koenig.chatapp.MainActivity
+import com.koenig.chatapp.R
 import com.koenig.chatapp.adapters.ChatAdapter
 import com.koenig.chatapp.databinding.FragmentChatBinding
 import com.koenig.chatapp.models.MessageModel
@@ -57,8 +58,6 @@ class ChatFragment : Fragment() {
             chatViewModel.sendMessage(message)
         }
 
-      //  renderChatAdapter(chatViewModel.observableMessages.value as ArrayList<MessageModel>)
-
         chatViewModel.observableMessages.observe(viewLifecycleOwner, Observer { messages ->
 
             messages?.let {
@@ -74,11 +73,15 @@ class ChatFragment : Fragment() {
     private fun render()
     {
         fragBinding.chatvm = chatViewModel
+        (requireActivity() as MainActivity).toolbar.title = chatViewModel.observableUser.value!!.userName
     }
 
     private fun renderChatAdapter(messages: ArrayList<MessageModel>)
     {
-        fragBinding.recyclerViewChat.adapter = ChatAdapter(messages)
+        fragBinding.progressBar.visibility = View.GONE
+        fragBinding.recyclerViewChat.visibility = View.VISIBLE
+        fragBinding.recyclerViewChat.adapter = ChatAdapter(messages, loggedInViewModel.liveFirebaseUser.value!!.uid, requireContext())
+
         if (messages.isEmpty())
         {
             fragBinding.recyclerViewChat.visibility = View.GONE
@@ -89,6 +92,8 @@ class ChatFragment : Fragment() {
         {
             fragBinding.recyclerViewChat.visibility = View.VISIBLE
             fragBinding.textNoChat.visibility = View.GONE
+
+            fragBinding.recyclerViewChat.smoothScrollToPosition(messages.size-1)
         }
     }
 
@@ -105,4 +110,21 @@ class ChatFragment : Fragment() {
         })
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId)
+        {
+            R.id.action_profile -> {
+                val action = ChatFragmentDirections.actionChatFragmentToContactProfileFragment(args.userModel)
+                findNavController().navigate(action)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 }

@@ -32,11 +32,28 @@
         tools:layout="@layout/fragment_chat" >
         <argument
             android:name="userModel"
-            app:argType="com.koenig.chatapp.models.UserModel" />
+            app:argType="com.koenig.chatapp.models.ContactModel" />
+        <action
+            android:id="@+id/action_chatFragment_to_contactProfileFragment"
+            app:destination="@id/contactProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchContactsFragment"
         android:name="com.koenig.chatapp.ui.searchContactManager.SearchContactsFragment"
         android:label="fragment_search_contacts"
         tools:layout="@layout/fragment_search_contacts" />
+    <fragment
+        android:id="@+id/friendRequestFragment"
+        android:name="com.koenig.chatapp.ui.friendRequestManager.FriendRequestFragment"
+        android:label="fragment_friend_request"
+        tools:layout="@layout/fragment_friend_request" />
+    <fragment
+        android:id="@+id/contactProfileFragment"
+        android:name="com.koenig.chatapp.ui.contactProfileManager.ContactProfileFragment"
+        android:label="fragment_contact_profile"
+        tools:layout="@layout/fragment_contact_profile" >
+        <argument
+            android:name="contactModel"
+            app:argType="com.koenig.chatapp.models.ContactModel" />
+    </fragment>
 </navigation>

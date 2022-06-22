@@ -2,7 +2,6 @@ package com.koenig.chatapp.ui.contactsManager
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.koenig.chatapp.adapters.ContactsAdapter
 import com.koenig.chatapp.adapters.ContactsClickListener
 import com.koenig.chatapp.databinding.FragmentContactsBinding
-import com.koenig.chatapp.models.UserModel
+import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 
 class ContactsFragment : Fragment(), ContactsClickListener {
@@ -27,7 +26,7 @@ class ContactsFragment : Fragment(), ContactsClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(false)
     }
 
     override fun onCreateView(
@@ -42,7 +41,8 @@ class ContactsFragment : Fragment(), ContactsClickListener {
 
         contactsViewModel.observableContacts.observe(viewLifecycleOwner, Observer { contacts ->
             contacts?.let {
-                render(contacts as ArrayList<UserModel>)
+                render(contacts as ArrayList<ContactModel>)
+                fragBinding.progressBar.visibility = View.GONE
             }
         })
 
@@ -60,7 +60,7 @@ class ContactsFragment : Fragment(), ContactsClickListener {
         return  root
     }
 
-    private fun render(contacts: ArrayList<UserModel>)
+    private fun render(contacts: ArrayList<ContactModel>)
     {
         fragBinding.recyclerViewMyContacts.adapter = ContactsAdapter(contacts, this)
 
@@ -76,7 +76,7 @@ class ContactsFragment : Fragment(), ContactsClickListener {
         }
     }
 
-    override fun onClickOpenChat(selectedUser: UserModel) {
+    override fun onClickOpenChat(selectedUser: ContactModel) {
         val action = ContactsFragmentDirections.actionContactsFragmentToChatFragment(selectedUser)
         findNavController().navigate(action)
     }

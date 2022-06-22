@@ -5,17 +5,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.koenig.chatapp.databinding.ListItemContactBinding
-import com.koenig.chatapp.models.UserModel
+import com.koenig.chatapp.models.ContactModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 
 interface ContactsClickListener{
-    fun onClickOpenChat(selectedUser: UserModel)
+    fun onClickOpenChat(selectedUser: ContactModel)
 }
 
-class ContactsAdapter constructor(private var contacts: ArrayList<UserModel>, private val listener: ContactsClickListener) : RecyclerView.Adapter<ContactsAdapter.MainHolder>()
+class ContactsAdapter constructor(private var contacts: ArrayList<ContactModel>, private val listener: ContactsClickListener) : RecyclerView.Adapter<ContactsAdapter.MainHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         val binding = ListItemContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -31,10 +31,10 @@ class ContactsAdapter constructor(private var contacts: ArrayList<UserModel>, pr
 
     inner class MainHolder(val binding: ListItemContactBinding): RecyclerView.ViewHolder(binding.root)
     {
-        fun bind(user: UserModel, listener: ContactsClickListener)
+        fun bind(user: ContactModel, listener: ContactsClickListener)
         {
             binding.root.tag = user
-            binding.user = user
+            binding.contact = user
 
             Picasso.get().load(user.photoUri)
                 .resize(200, 200)
@@ -44,7 +44,6 @@ class ContactsAdapter constructor(private var contacts: ArrayList<UserModel>, pr
                 .into(binding.imageUser)
 
             binding.root.setOnClickListener { listener.onClickOpenChat(user) }
-
             binding.executePendingBindings()
         }
     }

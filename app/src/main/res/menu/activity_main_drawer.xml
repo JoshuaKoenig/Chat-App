@@ -12,6 +12,11 @@
             android:id="@+id/contactsFragment"
             android:icon="@drawable/ic_contacts"
             android:title="My Contacts" />
+        <item
+            android:id="@+id/friendRequestFragment"
+            android:icon="@drawable/ic_friend_request"
+            android:title="Friend Requests"
+            />
     </group>
     <item android:title="Access Control">
         <menu>

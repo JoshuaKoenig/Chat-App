@@ -25,16 +25,4 @@ class SearchContactsViewModel : ViewModel() {
             //TODO: Catch exception
         }
     }
-
-    fun addContact(currentUserId: String, addUser: UserModel)
-    {
-        try {
-            FirebaseDBManager.addContact(currentUserId, addUser)
-        }
-        catch (e: Exception)
-        {
-            //TODO: Catch exception
-        }
-    }
-
 }

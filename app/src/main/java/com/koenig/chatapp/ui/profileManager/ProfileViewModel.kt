@@ -1,7 +1,6 @@
 package com.koenig.chatapp.ui.profileManager
 
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

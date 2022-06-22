@@ -1,10 +1,12 @@
 package com.koenig.chatapp.adapters
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.koenig.chatapp.databinding.ListItemAddUserBinding
+import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.UserModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
@@ -12,7 +14,7 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 
 interface FoundUserClickListener{
-    fun onUserAddClick(addUser: UserModel)
+    fun onUserAddClick(addUser: ContactModel)
 }
 
 class FoundUserAdapter constructor(private var users: ArrayList<UserModel>, private val listener: FoundUserClickListener) : RecyclerView.Adapter<FoundUserAdapter.MainHolder>()
@@ -36,14 +38,26 @@ class FoundUserAdapter constructor(private var users: ArrayList<UserModel>, priv
             binding.root.tag = user
             binding.user = user
 
-            Picasso.get().load(user.photoUri)
-                .resize(200, 200)
-                .transform(customTransformation())
-                .centerCrop()
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .into(binding.imageUser)
+            Log.d("Debug", user.userName)
+            if(user.photoUri.isNotEmpty())
+            {
+                Picasso.get().load(user.photoUri)
+                    .resize(200, 200)
+                    .transform(customTransformation())
+                    .centerCrop()
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(binding.imageUser)
+            }
 
-            binding.buttonAddUser.setOnClickListener { listener.onUserAddClick(user) }
+            val contactModel = ContactModel(
+                userId = user.userId,
+                userName = user.userName,
+                email = user.email,
+                photoUri = user.photoUri,
+                status = user.status
+            )
+
+            binding.buttonAddUser.setOnClickListener { listener.onUserAddClick(contactModel) }
 
             binding.executePendingBindings()
         }

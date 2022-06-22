@@ -3,35 +3,24 @@ package com.koenig.chatapp.ui.profileManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Debug
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentProfileBinding
-import com.koenig.chatapp.firebase.FirebaseDBManager
 import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
-import com.makeramen.roundedimageview.RoundedTransformationBuilder
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Transformation
 import java.io.IOException
-import kotlin.math.log
 
 
 class ProfileFragment : Fragment() {
@@ -54,7 +43,10 @@ class ProfileFragment : Fragment() {
         _fragBinding = FragmentProfileBinding.inflate(inflater, container, false)
         val root = fragBinding.root
 
-        profileViewModel.observableProfile.observe(viewLifecycleOwner, Observer { render() })
+        profileViewModel.observableProfile.observe(viewLifecycleOwner, Observer {
+            render()
+            fragBinding.progressBar.visibility = View.GONE
+        })
 
         fragBinding.textUserName.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -151,8 +143,6 @@ class ProfileFragment : Fragment() {
                 fragBinding.imageUser,
                 true
             )
-
-
         }
     }
 
@@ -188,6 +178,8 @@ class ProfileFragment : Fragment() {
                     false
                 )
             }
+          fragBinding.imageUser.visibility = View.VISIBLE
+          fragBinding.loadImageUser.visibility = View.GONE
         }
     }
 

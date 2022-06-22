@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.koenig.chatapp.firebase.FirebaseDBManager
-import com.koenig.chatapp.models.UserModel
+import com.koenig.chatapp.models.ContactModel
 
 class ContactsViewModel: ViewModel() {
 
-    private val contacts = MutableLiveData<List<UserModel>>()
+    private val contacts = MutableLiveData<List<ContactModel>>()
 
-    val observableContacts: LiveData<List<UserModel>>
+    val observableContacts: LiveData<List<ContactModel>>
         get() = contacts
 
     fun loadAllContacts(currentUserId: String)
