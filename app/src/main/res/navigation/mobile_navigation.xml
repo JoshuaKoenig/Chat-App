@@ -56,4 +56,13 @@
             android:name="contactModel"
             app:argType="com.koenig.chatapp.models.ContactModel" />
     </fragment>
+    <fragment
+        android:id="@+id/chatOverviewFragment"
+        android:name="com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewFragment"
+        android:label="fragment_chat_overview"
+        tools:layout="@layout/fragment_chat_overview" >
+        <action
+            android:id="@+id/action_chatOverviewFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
 </navigation>

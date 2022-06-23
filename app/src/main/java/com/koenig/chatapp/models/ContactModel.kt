@@ -15,6 +15,9 @@ data class ContactModel(
     var email: String = "",
     var photoUri: String = "",
     var status: String = "",
+    var hasConversation: Boolean = false,
+    var recentMessage: MessageModel = MessageModel(),
+    var hasNewMessage: Boolean = false
 
 ) : Parcelable
 {
@@ -26,6 +29,9 @@ data class ContactModel(
             "email" to email,
             "photoUri" to photoUri,
             "status" to status,
+            "hasConversation" to hasConversation,
+            "recentMessage" to recentMessage,
+            "hasNewMessage" to hasNewMessage,
         )
     }
 }

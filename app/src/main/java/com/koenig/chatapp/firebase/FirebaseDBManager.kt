@@ -1,13 +1,17 @@
 package com.koenig.chatapp.firebase
 
 import android.net.Uri
+import android.os.Build
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.koenig.chatapp.models.ContactModel
+import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.models.UserModel
 import com.koenig.chatapp.models.UserStore
+import java.time.Instant
 
 object FirebaseDBManager: UserStore {
 
@@ -96,8 +100,14 @@ object FirebaseDBManager: UserStore {
                 val contacts = snapshot.children
 
                 contacts.forEach {
-                    val contactUserModel = it.getValue(ContactModel::class.java)
-                    localContactList.add(contactUserModel!!)
+                    //val contactUserModel = it.getValue(ContactModel::class.java)
+                    val currentContact = ContactModel()
+                    currentContact.userId = it.child("userId").value.toString()
+                    currentContact.userName = it.child("userName").value.toString()
+                    currentContact.status = it.child("status").value.toString()
+                    currentContact.photoUri = it.child("photoUri").value.toString()
+                    currentContact.email = it.child("email").value.toString()
+                    localContactList.add(currentContact)
                 }
 
                 database.child("users").child(userId).child("contacts").removeEventListener(this)
@@ -228,5 +238,41 @@ object FirebaseDBManager: UserStore {
         database.updateChildren(childDelete)
     }
 
+    override fun getAllChatsForUser(currentUserId: String, chatContacts: MutableLiveData<List<ContactModel>>)
+    {
+        database.child("users").child(currentUserId).child("contacts").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
 
+                var localChatContacts = ArrayList<ContactModel>()
+                val children = snapshot.children
+
+                children.forEach{ ds ->
+                    // val currentContact = it.getValue(ContactModel::class.java)
+
+                    val currentContact = ContactModel()
+                    currentContact.userId = ds.child("userId").value.toString()
+                    currentContact.userName = ds.child("userName").value.toString()
+                    currentContact.status = ds.child("status").value.toString()
+                    currentContact.photoUri = ds.child("photoUri").value.toString()
+                    currentContact.email = ds.child("email").value.toString()
+                    currentContact.hasConversation = ds.child("hasConversation").value as Boolean
+                    currentContact.hasNewMessage = ds.child("hasNewMessage").value as Boolean
+                    currentContact.recentMessage = ds.child("recentMessage").getValue(MessageModel:: class.java)!!
+
+                    if (currentContact.hasConversation)
+                    {
+                        localChatContacts.add(currentContact)
+                    }
+
+                }
+
+                database.child("users").child(currentUserId).child("contacts").removeEventListener(this)
+                chatContacts.value = localChatContacts
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+               // TODO: Catch error
+            }
+        })
+    }
 }

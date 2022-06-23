@@ -13,6 +13,7 @@ import com.koenig.chatapp.adapters.FriendRequestAdapter
 import com.koenig.chatapp.adapters.FriendRequestClickListener
 import com.koenig.chatapp.databinding.FragmentFriendRequestBinding
 import com.koenig.chatapp.models.ContactModel
+import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
 
@@ -156,6 +157,9 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
             currentUser.status = it.status
             currentUser.email = it.email
             currentUser.photoUri = it.photoUri
+            currentUser.hasNewMessage = false
+            currentUser.hasConversation = false
+            currentUser.recentMessage = MessageModel()
 
             friendRequestViewModel.acceptFriendRequest(currentUser, addUser)
             startObservingReceivedRequests()

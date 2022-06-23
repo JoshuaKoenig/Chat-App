@@ -40,7 +40,7 @@ class ChatViewModel : ViewModel() {
     fun retrieveMessage(toUserId: String)
     {
         try {
-            FirebaseMessageManager.retrieveMessage(lifeFirebaseUser.value!!.uid, toUserId, messages)
+            FirebaseMessageManager.retrieveMessages(lifeFirebaseUser.value!!.uid, toUserId, messages)
         }
         catch (e: Exception)
         {

@@ -48,7 +48,8 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.contactsFragment,
                 R.id.profileFragment,
-                R.id.friendRequestFragment
+                R.id.friendRequestFragment,
+                R.id.chatOverviewFragment
             ), drawerLayout
         )
 

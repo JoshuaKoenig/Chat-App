@@ -19,4 +19,5 @@ interface UserStore {
     fun sendFriendRequest(contactToAdd: ContactModel, currentUser: ContactModel)
     fun receiveOpenFriendRequests(currentUserId: String, openFriendRequests: MutableLiveData<List<ContactModel>>)
     fun getReceivedFriendRequests(currentUserId: String, receivedFriendRequests: MutableLiveData<List<ContactModel>>)
+    fun getAllChatsForUser(currentUserId: String, chatContacts: MutableLiveData<List<ContactModel>>)
 }

@@ -17,6 +17,11 @@
             android:icon="@drawable/ic_friend_request"
             android:title="Friend Requests"
             />
+        <item
+            android:id="@+id/chatOverviewFragment"
+            android:icon="@drawable/ic_message"
+            android:title="My Chats"
+            />
     </group>
     <item android:title="Access Control">
         <menu>
