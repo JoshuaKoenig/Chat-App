@@ -13,7 +13,7 @@ import java.lang.Exception
 
 class ProfileViewModel : ViewModel() {
 
-    private val userModel = MutableLiveData<UserModel>()
+    val userModel = MutableLiveData<UserModel>()
 
     var observableProfile: LiveData<UserModel>
         get() = userModel

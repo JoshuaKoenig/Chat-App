@@ -20,8 +20,6 @@ class ContactProfileFragment : Fragment() {
 
     private val args by navArgs<ContactProfileFragmentArgs>()
 
-    private lateinit var viewModel: ContactProfileViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(false)
@@ -64,5 +62,4 @@ class ContactProfileFragment : Fragment() {
             .cornerRadius(35f)
             .oval(false)
             .build()
-
 }

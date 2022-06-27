@@ -1,6 +1,5 @@
 package com.koenig.chatapp.ui.contactsManager
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,12 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.koenig.chatapp.adapters.ContactsAdapter
 import com.koenig.chatapp.adapters.ContactsClickListener
 import com.koenig.chatapp.databinding.FragmentContactsBinding
+import com.koenig.chatapp.enums.ChatModes
+import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
+
 
 class ContactsFragment : Fragment(), ContactsClickListener {
 
@@ -23,6 +26,8 @@ class ContactsFragment : Fragment(), ContactsClickListener {
 
     private val contactsViewModel: ContactsViewModel by activityViewModels()
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
+
+    private val args by navArgs<ContactsFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +62,18 @@ class ContactsFragment : Fragment(), ContactsClickListener {
             }
         }
 
+        // MODES => default: false
+        if (args.contactClickModes == ContactClickModes.CREATEGROUPMODE || args.contactClickModes == ContactClickModes.ADDCONTACTMODE)
+        {
+            renderSelectMode()
+        }
+
         return  root
     }
 
     private fun render(contacts: ArrayList<ContactModel>)
     {
-        fragBinding.recyclerViewMyContacts.adapter = ContactsAdapter(contacts, this)
+        fragBinding.recyclerViewMyContacts.adapter = ContactsAdapter(contacts, this, args.contactClickModes)
 
         if(contacts.isEmpty())
         {
@@ -76,8 +87,23 @@ class ContactsFragment : Fragment(), ContactsClickListener {
         }
     }
 
+    private fun renderSelectMode()
+    {
+        fragBinding.buttonSearchContacts.visibility = View.GONE
+    }
+
     override fun onClickOpenChat(selectedUser: ContactModel) {
-        val action = ContactsFragmentDirections.actionContactsFragmentToChatFragment(selectedUser)
+        val action = ContactsFragmentDirections.actionContactsFragmentToChatFragment(ChatModes.SINGLECHATMODE, selectedUser, null)
+        findNavController().navigate(action)
+    }
+
+    override fun onClickSelectUser(selectedUser: ContactModel) {
+        val action = ContactsFragmentDirections.actionContactsFragmentToCreateGroupChatFragment(selectedUser)
+        findNavController().navigate(action)
+    }
+
+    override fun onClickAddUserToGroup(selectedUser: ContactModel) {
+        val action = ContactsFragmentDirections.actionContactsFragmentToGroupProfileFragment(args.groupModel, selectedUser)
         findNavController().navigate(action)
     }
 }

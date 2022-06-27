@@ -2,11 +2,11 @@ package com.koenig.chatapp
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -21,6 +21,7 @@ import com.koenig.chatapp.databinding.NavHeaderMainBinding
 import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.auth.LoginActivity
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -134,5 +135,9 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }

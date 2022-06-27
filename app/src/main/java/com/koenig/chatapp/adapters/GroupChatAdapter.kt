@@ -6,41 +6,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.koenig.chatapp.databinding.ListItemChatContactBinding
-import com.koenig.chatapp.models.ContactModel
+import com.koenig.chatapp.databinding.ListItemGroupChatBinding
+import com.koenig.chatapp.models.GroupModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 import java.time.Instant
 
-interface ChatOverviewClickListener{
-    fun onClickOpenChat(selectedUser: ContactModel)
+interface GroupChatListener{
+    fun onClickOpenGroupChat(selectedGroupChat: GroupModel)
 }
 
-class ChatOverviewAdapter constructor(private var contacts: ArrayList<ContactModel>, private val listener: ChatOverviewClickListener) : RecyclerView.Adapter<ChatOverviewAdapter.MainHolder>()
+class GroupChatAdapter constructor(private var groupChats: ArrayList<GroupModel>, private val listener: GroupChatListener, private val currentUserId: String) : RecyclerView.Adapter<GroupChatAdapter.MainHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
-        val binding = ListItemChatContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ListItemGroupChatBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MainHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val selectedContact = contacts[holder.adapterPosition]
+        val selectedContact = groupChats[holder.adapterPosition]
         holder.bind(selectedContact, listener)
     }
 
-    override fun getItemCount(): Int = contacts.size
+    override fun getItemCount(): Int = groupChats.size
 
-    inner class MainHolder(val binding: ListItemChatContactBinding): RecyclerView.ViewHolder(binding.root)
+    inner class MainHolder(val binding: ListItemGroupChatBinding): RecyclerView.ViewHolder(binding.root)
     {
-        fun bind(user: ContactModel, listener: ChatOverviewClickListener)
+        fun bind(groupChat: GroupModel, listener: GroupChatListener)
         {
-            binding.root.tag = user
-            binding.chatContact = user
-            binding.root.setOnClickListener { listener.onClickOpenChat(user) }
+            binding.root.tag = groupChat
+            binding.groupChat = groupChat
+            binding.root.setOnClickListener { listener.onClickOpenGroupChat(groupChat) }
 
-            if(user.hasNewMessage)
+            val currentUserHasNewMsgFlag: Boolean = groupChat.groupMembers[currentUserId]!!.hasNewMessage
+
+            if(currentUserHasNewMsgFlag)
             {
                 binding.iconNewMessage.visibility = View.VISIBLE
                 binding.recentMessage.setTextColor(Color.GREEN)
@@ -51,17 +53,17 @@ class ChatOverviewAdapter constructor(private var contacts: ArrayList<ContactMod
                 binding.recentMessage.setTextColor(Color.parseColor("#99FFFFFF"))
             }
 
-            if(user.userName == user.recentMessage.fromUserName)
-            {
-                binding.textFromUserName.text = "${user.userName}: "
-            }
-            else
+            if(currentUserId == groupChat.recentMessage.fromUserId)
             {
                 binding.textFromUserName.text = "You: "
             }
+            else
+            {
+                binding.textFromUserName.text = "${groupChat.recentMessage.fromUserName}: "
+            }
 
-            val dateString = user.recentMessage.timeStamp.substring(0, 10)
-            val timeString = user.recentMessage.timeStamp.substring(11,16)
+             val dateString = groupChat.recentMessage.timeStamp.substring(0, 10)
+             val timeString = groupChat.recentMessage.timeStamp.substring(11,16)
 
             val todayDateString =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Instant.now().toString().substring(0, 10)
@@ -76,13 +78,13 @@ class ChatOverviewAdapter constructor(private var contacts: ArrayList<ContactMod
                 binding.textMessageTime.text = dateString
             }
 
-            Picasso.get().load(user.photoUri)
+
+            Picasso.get().load(groupChat.photoUri)
                 .resize(200, 200)
                 .transform(customTransformation())
                 .centerCrop()
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(binding.imageUser)
-
 
             binding.executePendingBindings()
         }

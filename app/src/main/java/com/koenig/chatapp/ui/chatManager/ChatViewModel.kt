@@ -1,12 +1,14 @@
 package com.koenig.chatapp.ui.chatManager
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.koenig.chatapp.firebase.FirebaseDBManager
+import com.koenig.chatapp.firebase.FirebaseGroupChatManager
 import com.koenig.chatapp.firebase.FirebaseMessageManager
+import com.koenig.chatapp.models.ContactModel
+import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.models.UserModel
 import java.lang.Exception
@@ -14,6 +16,8 @@ import java.lang.Exception
 class ChatViewModel : ViewModel() {
 
     private val selectedUser = MutableLiveData<UserModel>()
+    private val selectedGroup = MutableLiveData<GroupModel>()
+
     private val messages = MutableLiveData<List<MessageModel>>()
 
     var lifeFirebaseUser = MutableLiveData<FirebaseUser>()
@@ -21,6 +25,11 @@ class ChatViewModel : ViewModel() {
     var observableUser: LiveData<UserModel>
         get() = selectedUser
         set(value) {selectedUser.value = value.value}
+
+    var observableGroup: LiveData<GroupModel>
+        get() = selectedGroup
+        set(value) {selectedGroup.value = value.value}
+
 
     var observableMessages: LiveData<List<MessageModel>>
         get() = messages
@@ -37,6 +46,11 @@ class ChatViewModel : ViewModel() {
         }
     }
 
+    fun getSelectedGroup(groupId: String)
+    {
+        FirebaseGroupChatManager.getGroupById(groupId, selectedGroup)
+    }
+
     fun retrieveMessage(toUserId: String)
     {
         try {
@@ -48,9 +62,27 @@ class ChatViewModel : ViewModel() {
         }
     }
 
+    fun retrieveGroupMessages(toGroupId: String)
+    {
+        try {
+            FirebaseMessageManager.retrieveGroupMessages(lifeFirebaseUser.value!!.uid, toGroupId, messages)
+        }
+        catch (e: Exception)
+        {
+            //TODO: Catch exception
+        }
+    }
+
     fun sendMessage(message: MessageModel)
     {
         FirebaseMessageManager.sendMessage(message)
+    }
+
+    fun sendGroupMessage(message: MessageModel, groupMembers: List<ContactModel>)
+    {
+        FirebaseMessageManager.sendGroupMessage(message, groupMembers)
+
+
     }
 
 }

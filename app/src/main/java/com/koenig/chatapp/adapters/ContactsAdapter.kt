@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.koenig.chatapp.databinding.ListItemContactBinding
+import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.models.ContactModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
@@ -13,9 +14,11 @@ import com.squareup.picasso.Transformation
 
 interface ContactsClickListener{
     fun onClickOpenChat(selectedUser: ContactModel)
+    fun onClickSelectUser(selectedUser: ContactModel)
+    fun onClickAddUserToGroup(selectedUser: ContactModel)
 }
 
-class ContactsAdapter constructor(private var contacts: ArrayList<ContactModel>, private val listener: ContactsClickListener) : RecyclerView.Adapter<ContactsAdapter.MainHolder>()
+class ContactsAdapter constructor(private var contacts: ArrayList<ContactModel>, private val listener: ContactsClickListener, private val clickMode: ContactClickModes) : RecyclerView.Adapter<ContactsAdapter.MainHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         val binding = ListItemContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -43,7 +46,13 @@ class ContactsAdapter constructor(private var contacts: ArrayList<ContactModel>,
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(binding.imageUser)
 
-            binding.root.setOnClickListener { listener.onClickOpenChat(user) }
+            when(clickMode)
+            {
+                ContactClickModes.DEFAULTMODE -> { binding.root.setOnClickListener { listener.onClickOpenChat(user) } }
+                ContactClickModes.CREATEGROUPMODE -> { binding.root.setOnClickListener { listener.onClickSelectUser(user) } }
+                ContactClickModes.ADDCONTACTMODE -> { binding.root.setOnClickListener { listener.onClickAddUserToGroup(user) } }
+            }
+
             binding.executePendingBindings()
         }
     }

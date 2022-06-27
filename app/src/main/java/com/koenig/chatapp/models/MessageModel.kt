@@ -14,8 +14,8 @@ data class MessageModel(
     var toUserId: String = "",
     var message: String = "",
     var timeStamp: String = "",
-    var fromUserName: String = ""
-
+    var fromUserName: String = "",
+    var firstMessage: Boolean = false
 
 ) : Parcelable
 {
@@ -27,7 +27,8 @@ data class MessageModel(
             "toUserId" to toUserId,
             "message" to message,
             "timeStamp" to timeStamp,
-            "fromUserName" to fromUserName
+            "fromUserName" to fromUserName,
+            "firstMessage" to firstMessage
         )
     }
 }

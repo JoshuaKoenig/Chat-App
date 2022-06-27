@@ -38,29 +38,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Start Conversation" />
 
-        <TextView
-            android:id="@+id/textUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@{chatvm.observableUser.userName}"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:visibility="invisible"
             android:id="@+id/recyclerViewChat"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/ChatLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUserName" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/ChatLayout"

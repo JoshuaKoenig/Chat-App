@@ -17,12 +17,13 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
         >
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardLayout"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:elevation="0dp"
@@ -33,7 +34,7 @@
 
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="10dp">
@@ -42,16 +43,24 @@
                     android:id="@+id/textMessage"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
+                    android:textAlignment="textStart"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="2.5"
-                    android:gravity="center_vertical|center_horizontal"
                     android:text="@{message.message}"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     tools:text="Message" />
+
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:id="@+id/textTimeStamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="12:00"
+            />
     </LinearLayout>
 </layout>

@@ -2,9 +2,7 @@ package com.koenig.chatapp.ui.chatManager
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -15,12 +13,13 @@ import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
 import com.koenig.chatapp.adapters.ChatAdapter
 import com.koenig.chatapp.databinding.FragmentChatBinding
+import com.koenig.chatapp.enums.ChatModes
+import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewViewModel
-import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.format.DateTimeFormatter
+
 
 class ChatFragment : Fragment() {
 
@@ -47,44 +46,86 @@ class ChatFragment : Fragment() {
 
         fragBinding.recyclerViewChat.layoutManager = LinearLayoutManager(activity)
 
-        chatViewModel.observableUser.observe(viewLifecycleOwner, Observer { render() })
+        when(args.chatMode)
+        {
+            ChatModes.SINGLECHATMODE -> chatViewModel.observableUser.observe(viewLifecycleOwner, Observer { renderSingleChat() })
+            ChatModes.GROUPCHATMODE -> chatViewModel.observableGroup.observe(viewLifecycleOwner, Observer { renderGroupChat() })
+        }
 
         fragBinding.buttonSendMessage.setOnClickListener {
-            val message = MessageModel()
-            message.fromUserId = loggedInViewModel.liveFirebaseUser.value!!.uid
-            message.toUserId = args.userModel.userId
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+
+            when(args.chatMode)
             {
-                message.timeStamp = Instant.now().toString()
+                ChatModes.SINGLECHATMODE -> sendSingeMessage()
+                ChatModes.GROUPCHATMODE -> sendGroupMessage()
             }
-            message.message = fragBinding.textCurrentMessage.text.toString()
-            message.fromUserName = loggedInViewModel.liveFirebaseUser.value!!.displayName.toString()
-            chatViewModel.sendMessage(message)
         }
 
         chatViewModel.observableMessages.observe(viewLifecycleOwner, Observer { messages ->
 
             messages?.let {
 
-                chatOverviewViewModel.removeHasNewMessageFlag(loggedInViewModel.liveFirebaseUser.value!!.uid, args.userModel.userId)
-                renderChatAdapter(messages as ArrayList<MessageModel>)
+                when(args.chatMode)
+                {
+                    ChatModes.SINGLECHATMODE -> {
+                        chatOverviewViewModel.removeHasNewMessageFlag(loggedInViewModel.liveFirebaseUser.value!!.uid, args.userModel!!.userId)
+                        renderChatAdapter(messages as ArrayList<MessageModel>)
+                    }
+
+                    ChatModes.GROUPCHATMODE -> {
+                        chatOverviewViewModel.removeHasNewGroupMessageFlag(args.groupModel!!.groupId, loggedInViewModel.liveFirebaseUser.value!!.uid)
+                        renderChatAdapter(messages as ArrayList<MessageModel>)
+                    }
+                }
+
             }
 
         })
 
-        //DEBUG
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-        getDate()
-        }
-
         return root
     }
 
-    private fun render()
+    private fun renderSingleChat()
     {
         fragBinding.chatvm = chatViewModel
         (requireActivity() as MainActivity).toolbar.title = chatViewModel.observableUser.value!!.userName
+    }
+
+    private fun renderGroupChat()
+    {
+        fragBinding.chatvm = chatViewModel
+        (requireActivity() as MainActivity).toolbar.title = chatViewModel.observableGroup.value!!.groupName
+    }
+
+    private fun sendSingeMessage()
+    {
+        val message = MessageModel()
+        message.fromUserId = loggedInViewModel.liveFirebaseUser.value!!.uid
+        message.toUserId = args.userModel!!.userId
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            message.timeStamp = Instant.now().toString()
+        }
+        message.message = fragBinding.textCurrentMessage.text.toString()
+        message.fromUserName = loggedInViewModel.liveFirebaseUser.value!!.displayName.toString()
+        chatViewModel.sendMessage(message)
+    }
+
+    private fun sendGroupMessage()
+    {
+        val message = MessageModel()
+        message.fromUserId = loggedInViewModel.liveFirebaseUser.value!!.uid
+        message.toUserId = args.groupModel!!.groupId
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            message.timeStamp = Instant.now().toString()
+        }
+        message.message = fragBinding.textCurrentMessage.text.toString()
+        message.fromUserName = loggedInViewModel.liveFirebaseUser.value!!.displayName.toString()
+
+        val groupMembers: ArrayList<ContactModel> = ArrayList(args.groupModel!!.groupMembers.values)
+
+        chatViewModel.sendGroupMessage(message, groupMembers)
     }
 
     private fun renderChatAdapter(messages: ArrayList<MessageModel>)
@@ -110,48 +151,76 @@ class ChatFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        chatViewModel.getSelectedProfile(args.userModel.userId)
-        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
-            if (firebaseUser != null)
+
+        when(args.chatMode)
+        {
+            ChatModes.SINGLECHATMODE ->
             {
-                chatViewModel.lifeFirebaseUser.value = firebaseUser
-
-               chatViewModel.retrieveMessage(args.userModel.userId)
+                chatViewModel.getSelectedProfile(args.userModel!!.userId)
+                loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
+                    if (firebaseUser != null)
+                    {
+                        chatViewModel.lifeFirebaseUser.value = firebaseUser
+                        chatViewModel.retrieveMessage(args.userModel!!.userId)
+                    }
+                })
             }
-        })
 
+            ChatModes.GROUPCHATMODE ->
+            {
+                chatViewModel.getSelectedGroup(args.groupModel!!.groupId)
+                loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
+                    if (firebaseUser != null)
+                    {
+                        chatViewModel.lifeFirebaseUser.value = firebaseUser
+                        chatViewModel.retrieveGroupMessages(args.groupModel!!.groupId)
+                    }
+                })
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main, menu)
+        when(args.chatMode)
+        {
+            ChatModes.SINGLECHATMODE -> menu.findItem(R.id.action_profile).title = "View Profile"
+            ChatModes.GROUPCHATMODE -> menu.findItem(R.id.action_profile).title = "View Group"
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when(item.itemId)
+        if (args.chatMode == ChatModes.SINGLECHATMODE)
         {
-            R.id.action_profile -> {
-                val action = ChatFragmentDirections.actionChatFragmentToContactProfileFragment(args.userModel)
-                findNavController().navigate(action)
+            when(item.itemId)
+            {
+                R.id.action_profile -> {
+                    item.title = "View Profile"
+                    val action = ChatFragmentDirections.actionChatFragmentToContactProfileFragment(args.userModel!!)
+                    findNavController().navigate(action)
+                }
+
+                android.R.id.home -> {
+                    chatOverviewViewModel.currentTab.postValue(0)
+                }
+            }
+        }
+        else if (args.chatMode == ChatModes.GROUPCHATMODE)
+        {
+            when(item.itemId)
+            {
+                R.id.action_profile -> {
+
+                    val action = ChatFragmentDirections.actionChatFragmentToGroupProfileFragment(args.groupModel!!)
+                    findNavController().navigate(action)
+                }
+
+                android.R.id.home -> {
+                    chatOverviewViewModel.currentTab.postValue(1)
+                }
             }
         }
         return super.onOptionsItemSelected(item)
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun getDate()
-    {
-        // Parse Date from String
-        val sampleDate = Instant.parse("2021-03-23T15:30:57.013678Z")
-        // Get Current Date as Date
-        val currentDate : Instant = Instant.now()
-
-        // -1 means first date is less
-        Log.d("DateCompare", sampleDate.compareTo(currentDate).toString())
-        // 1 means first date is greater
-        Log.d("DateCompare2", currentDate.compareTo(sampleDate).toString())
-        // Parse String from Date
-        Log.d("Date", currentDate.toString())
-    }
-
 }

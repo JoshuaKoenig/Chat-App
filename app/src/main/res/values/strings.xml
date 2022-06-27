@@ -23,4 +23,7 @@
     <string name="verify_email">Verify Email</string>
     <string name="emailpassword_title_text">Login</string>
     <string name="server_client_id">305546480769-bd0ugdv01at6gfbod03nqp4b0i8uio33.apps.googleusercontent.com</string>
+
+    <string name="preference_group_chat_key">PREF_GROUP_CHAT_KEY</string>
+    <string name="preference_group_profile_key">PREF_GROUP_PROFILE_KEY</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.koenig.chatapp.adapters
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +37,6 @@ class FoundUserAdapter constructor(private var users: ArrayList<UserModel>, priv
             binding.root.tag = user
             binding.user = user
 
-            Log.d("Debug", user.userName)
             if(user.photoUri.isNotEmpty())
             {
                 Picasso.get().load(user.photoUri)

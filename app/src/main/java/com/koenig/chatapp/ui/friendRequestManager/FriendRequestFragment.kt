@@ -44,7 +44,6 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
 
         fragBinding.tablayout.addOnTabSelectedListener(object  : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-
                 if(tab != null)
                 {
                     when(tab.contentDescription)
@@ -61,7 +60,6 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
                             startObservingReceivedRequests()
                         }
                     }
-
                 }
             }
 
@@ -121,6 +119,7 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
         // Clear the adapter and set new when tab changed
         renderFriendRequests(arrayListOf(), "")
         fragBinding.progressBar.visibility = View.VISIBLE
+
         friendRequestViewModel.observableReceivedFriendReq.observe(viewLifecycleOwner, object : Observer<List<ContactModel>> {
             override fun onChanged(t: List<ContactModel>?) {
 

@@ -19,6 +19,24 @@
         <action
             android:id="@+id/action_contactsFragment_to_searchContactsFragment"
             app:destination="@id/searchContactsFragment" />
+        <argument
+            android:name="contactClickModes"
+            app:argType="com.koenig.chatapp.enums.ContactClickModes"
+            android:defaultValue="DEFAULTMODE" />
+        <action
+            android:id="@+id/action_contactsFragment_to_createGroupChatFragment"
+            app:destination="@id/createGroupChatFragment"
+            app:popUpTo="@+id/chatOverviewFragment"
+            />
+        <action
+            android:id="@+id/action_contactsFragment_to_groupProfileFragment"
+            app:destination="@id/groupProfileFragment"
+            app:popUpTo="@+id/chatOverviewFragment"/>
+        <argument
+            android:name="groupModel"
+            app:argType="com.koenig.chatapp.models.GroupModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -32,10 +50,24 @@
         tools:layout="@layout/fragment_chat" >
         <argument
             android:name="userModel"
-            app:argType="com.koenig.chatapp.models.ContactModel" />
+            app:argType="com.koenig.chatapp.models.ContactModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_chatFragment_to_contactProfileFragment"
             app:destination="@id/contactProfileFragment" />
+        <argument
+            android:name="groupModel"
+            app:argType="com.koenig.chatapp.models.GroupModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="chatMode"
+            app:argType="com.koenig.chatapp.enums.ChatModes" />
+        <action
+            android:id="@+id/action_chatFragment_to_groupProfileFragment"
+            app:destination="@id/groupProfileFragment"
+            app:popUpTo="@+id/chatOverviewFragment"/>
     </fragment>
     <fragment
         android:id="@+id/searchContactsFragment"
@@ -64,5 +96,43 @@
         <action
             android:id="@+id/action_chatOverviewFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_chatOverviewFragment_to_createGroupChatFragment"
+            app:destination="@id/createGroupChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createGroupChatFragment"
+        android:name="com.koenig.chatapp.ui.groupChatManger.CreateGroupChatFragment"
+        android:label="fragment_create_group_chat"
+        tools:layout="@layout/fragment_create_group_chat" >
+        <action
+            android:id="@+id/action_createGroupChatFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment" />
+        <argument
+            android:name="contactToAdd"
+            app:argType="com.koenig.chatapp.models.ContactModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupProfileFragment"
+        android:name="com.koenig.chatapp.ui.groupProfileManager.GroupProfileFragment"
+        android:label="fragment_group_profile"
+        tools:layout="@layout/fragment_group_profile" >
+        <argument
+            android:name="groupModel"
+            app:argType="com.koenig.chatapp.models.GroupModel"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_groupProfileFragment_to_contactProfileFragment"
+            app:destination="@id/contactProfileFragment" />
+        <action
+            android:id="@+id/action_groupProfileFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment" />
+        <argument
+            android:name="contactToAdd"
+            app:argType="com.koenig.chatapp.models.ContactModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>
