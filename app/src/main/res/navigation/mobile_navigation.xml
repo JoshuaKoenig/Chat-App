@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/contactsFragment">
+    app:startDestination="@id/chatOverviewFragment">
 
     <fragment
         android:id="@+id/contactsFragment"
@@ -42,7 +42,11 @@
         android:id="@+id/profileFragment"
         android:name="com.koenig.chatapp.ui.profileManager.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.koenig.chatapp.ui.chatManager.ChatFragment"
@@ -87,6 +91,9 @@
         <argument
             android:name="contactModel"
             app:argType="com.koenig.chatapp.models.ContactModel" />
+        <action
+            android:id="@+id/action_contactProfileFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatOverviewFragment"
@@ -134,5 +141,24 @@
             app:argType="com.koenig.chatapp.models.ContactModel"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="isEdited"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.koenig.chatapp.ui.mapManager.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" >
+        <argument
+            android:name="contact"
+            app:argType="com.koenig.chatapp.models.ContactModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="isOwnMap"
+            app:argType="boolean"
+            android:defaultValue="true" />
     </fragment>
 </navigation>

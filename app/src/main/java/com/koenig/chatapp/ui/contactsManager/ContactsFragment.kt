@@ -1,15 +1,15 @@
 package com.koenig.chatapp.ui.contactsManager
 
 import android.os.Bundle
+import android.view.*
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.koenig.chatapp.R
 import com.koenig.chatapp.adapters.ContactsAdapter
 import com.koenig.chatapp.adapters.ContactsClickListener
 import com.koenig.chatapp.databinding.FragmentContactsBinding
@@ -31,7 +31,7 @@ class ContactsFragment : Fragment(), ContactsClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(false)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -90,6 +90,32 @@ class ContactsFragment : Fragment(), ContactsClickListener {
     private fun renderSelectMode()
     {
         fragBinding.buttonSearchContacts.visibility = View.GONE
+    }
+
+    // OVERRIDES
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId)
+        {
+            android.R.id.home -> {
+
+                if (args.contactClickModes == ContactClickModes.ADDCONTACTMODE)
+                {
+                    val action = ContactsFragmentDirections.actionContactsFragmentToGroupProfileFragment(args.groupModel, null, true)
+                    findNavController().navigate(action)
+                }
+                else if(args.contactClickModes == ContactClickModes.CREATEGROUPMODE)
+                {
+                    findNavController().navigateUp()
+                }
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onClickOpenChat(selectedUser: ContactModel) {

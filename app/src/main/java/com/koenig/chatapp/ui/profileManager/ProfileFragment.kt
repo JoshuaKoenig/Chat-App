@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +16,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseUser
 import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentProfileBinding
 import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
+import com.koenig.chatapp.ui.mapManager.MapsViewModel
 import java.io.IOException
+import kotlin.math.log
 
 
 class ProfileFragment : Fragment() {
@@ -29,6 +33,7 @@ class ProfileFragment : Fragment() {
     private val fragBinding get() = _fragBinding!!
     private  val profileViewModel: ProfileViewModel by activityViewModels()
     private  val loggedInViewModel: LoggedInViewModel by activityViewModels()
+    private val mapViewModel: MapsViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +52,10 @@ class ProfileFragment : Fragment() {
             render()
             fragBinding.progressBar.visibility = View.GONE
         })
+
+        mapViewModel.observableMap.observe(viewLifecycleOwner){
+            renderMapButton(it)
+        }
 
         fragBinding.textUserName.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -104,6 +113,11 @@ class ProfileFragment : Fragment() {
 
         fragBinding.imageUser.setOnClickListener {
             openGalleryForImage()
+        }
+
+        fragBinding.buttonMap.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment()
+            findNavController().navigate(action)
         }
 
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
@@ -183,10 +197,15 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun renderMapButton(isMapEnabled: Boolean)
+    {
+        fragBinding.buttonMap.isEnabled = isMapEnabled
+    }
+
     override fun onResume() {
         super.onResume()
         profileViewModel.getProfile(loggedInViewModel.liveFirebaseUser.value?.uid!!)
-
+        mapViewModel.getIsMapEnabled(loggedInViewModel.liveFirebaseUser.value?.uid!!)
     }
 
     // TODO: Outsource in Helpers.kt

@@ -53,7 +53,11 @@ class GroupChatAdapter constructor(private var groupChats: ArrayList<GroupModel>
                 binding.recentMessage.setTextColor(Color.parseColor("#99FFFFFF"))
             }
 
-            if(currentUserId == groupChat.recentMessage.fromUserId)
+            if(groupChat.recentMessage.firstMessage)
+            {
+                binding.textFromUserName.visibility = View.GONE
+            }
+            else if(currentUserId == groupChat.recentMessage.fromUserId)
             {
                 binding.textFromUserName.text = "You: "
             }

@@ -16,7 +16,10 @@ data class UserModel(
     var status: String = "",
     var contacts: HashMap<String, UserModel> = hashMapOf(),
     var openRequests: HashMap<String, ContactModel> = hashMapOf(),
-    var receivedRequests: HashMap<String, ContactModel> = hashMapOf()
+    var receivedRequests: HashMap<String, ContactModel> = hashMapOf(),
+    var isMapEnabled: Boolean = false,
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0
 
 ) : Parcelable
 {
@@ -30,7 +33,10 @@ data class UserModel(
             "status" to status,
             "contacts" to contacts,
             "openRequests" to openRequests,
-            "receivedRequests" to receivedRequests
+            "receivedRequests" to receivedRequests,
+            "isMapEnabled" to isMapEnabled,
+            "latitude" to latitude,
+            "longitude" to longitude
         )
     }
 }

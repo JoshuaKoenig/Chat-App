@@ -1,13 +1,17 @@
 package com.koenig.chatapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -21,6 +25,9 @@ import com.koenig.chatapp.databinding.NavHeaderMainBinding
 import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.auth.LoginActivity
+import com.koenig.chatapp.ui.mapManager.MapsViewModel
+import com.koenig.chatapp.utils.checkLocationPermissions
+import com.koenig.chatapp.utils.isPermissionGranted
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private  lateinit var loggedInViewModel: LoggedInViewModel
     private  lateinit var navHeaderBinding: NavHeaderMainBinding
     private lateinit var headerView : View
+    private val mapsViewModel: MapsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.contactsFragment,
                 R.id.profileFragment,
                 R.id.friendRequestFragment,
                 R.id.chatOverviewFragment
@@ -58,6 +65,11 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         initProfileHeader()
+
+        if(checkLocationPermissions(this))
+        {
+            mapsViewModel.updateCurrentLocation()
+        }
     }
 
     public override fun onStart() {
@@ -137,7 +149,29 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (isPermissionGranted(requestCode, grantResults))
+        {
+            // Set current location in database
+            mapsViewModel.updateCurrentLocation()
+            mapsViewModel.setMapEnabled(loggedInViewModel.liveFirebaseUser.value!!.uid, true)
+
+            mapsViewModel.currentLocation.observe(this, object: Observer<Location> {
+                override fun onChanged(t: Location?) {
+                    mapsViewModel.setUserLocation(
+                        loggedInViewModel.liveFirebaseUser.value!!.uid,
+                        t!!.latitude,
+                        t.longitude)
+
+                    mapsViewModel.currentLocation.removeObserver(this)
+                }
+            })
+        }
+        else {
+            // Disable map in database
+            mapsViewModel.setMapEnabled(loggedInViewModel.liveFirebaseUser.value!!.uid, false)
+        }
     }
 }

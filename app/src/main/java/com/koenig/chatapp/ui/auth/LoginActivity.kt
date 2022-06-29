@@ -8,19 +8,14 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.databinding.ActivityLoginBinding
-import com.koenig.chatapp.models.UserModel
-import com.koenig.chatapp.ui.profileManager.ProfileViewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -44,7 +39,8 @@ class LoginActivity : AppCompatActivity() {
 
         // Create Account
         loginBinding.emailCreateAccountButton.setOnClickListener {
-            createAccount(loginBinding.fieldEmail.text.toString(), loginBinding.fieldPassword.text.toString())
+           val intent = Intent(this, CreateAccountActivity::class.java)
+           startActivity(intent)
         }
 
         // Google Button UI
@@ -69,14 +65,6 @@ class LoginActivity : AppCompatActivity() {
             {status -> checkStatus(status)})
 
         setupGoogleSignInCallback()
-    }
-
-    private fun createAccount(email: String, password: String)
-    {
-        if(!validateEmail() || !validatePassword()){ return }
-
-        loginRegisterViewModel.register(email, password)
-
     }
 
     private  fun signIn(email: String, password: String)

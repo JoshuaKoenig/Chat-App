@@ -59,14 +59,14 @@ class FirebaseAuthManager(application: Application) {
         }
     }
 
-    fun register(email: String?, password: String?)
+    fun register(email: String?, password: String?, userName: String?)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             firebaseAuth!!.createUserWithEmailAndPassword(email!!, password!!)
                 .addOnCompleteListener(application!!.mainExecutor) {task ->
                     if (task.isSuccessful)
                     {
-                        initProfileData()
+                        initProfileData(userName)
                         errorStatus.postValue(false)
                     }
                     else
@@ -78,12 +78,14 @@ class FirebaseAuthManager(application: Application) {
     }
 
     //TODO: Change to Profile View Model
-    private fun initProfileData(){
+    private fun initProfileData(userName: String?){
 
         val user = firebaseAuth!!.currentUser
 
+        val newUserName: String = userName ?: "New User"
+
         val profileUpdates = userProfileChangeRequest {
-            displayName = "New User"
+            displayName = newUserName
             photoUri = Uri.parse("android.resource://com.koenig.chatapp/drawable/empty_profile")
         }
 

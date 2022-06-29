@@ -66,13 +66,13 @@ object FirebaseGroupChatManager: GroupStore {
             .setValue(contactToAdd)
     }
 
-    override fun removeUserFromGroupChat(groupId: String, contactToRemove: ContactModel)
+    override fun removeUserFromGroupChat(groupId: String, contactToRemoveId: String)
     {
         database
             .child("groups")
             .child(groupId)
             .child("groupMembers")
-            .child(contactToRemove.userId)
+            .child(contactToRemoveId)
             .removeValue()
     }
 
@@ -90,5 +90,36 @@ object FirebaseGroupChatManager: GroupStore {
             }
         })
 
+    }
+
+    override fun updateGroupName(groupId: String, newGroupName: String) {
+        database
+            .child("groups")
+            .child(groupId)
+            .child("groupName")
+            .setValue(newGroupName)
+    }
+
+    override fun updateGroupDescription(groupId: String, newDescription: String) {
+        database
+            .child("groups")
+            .child(groupId)
+            .child("description")
+            .setValue(newDescription)
+    }
+
+    override fun updateGroupImage(groupId: String, newImageUrl: String) {
+        database
+            .child("groups")
+            .child(groupId)
+            .child("photoUri")
+            .setValue(newImageUrl)
+    }
+
+    override fun disbandGroup(groupId: String) {
+        database
+            .child("groups")
+            .child(groupId)
+            .removeValue()
     }
 }

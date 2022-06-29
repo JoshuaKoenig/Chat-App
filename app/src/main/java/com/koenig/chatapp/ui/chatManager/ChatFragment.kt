@@ -196,7 +196,6 @@ class ChatFragment : Fragment() {
             when(item.itemId)
             {
                 R.id.action_profile -> {
-                    item.title = "View Profile"
                     val action = ChatFragmentDirections.actionChatFragmentToContactProfileFragment(args.userModel!!)
                     findNavController().navigate(action)
                 }

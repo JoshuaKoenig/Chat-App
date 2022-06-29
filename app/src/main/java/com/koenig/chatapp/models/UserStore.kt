@@ -20,4 +20,7 @@ interface UserStore {
     fun receiveOpenFriendRequests(currentUserId: String, openFriendRequests: MutableLiveData<List<ContactModel>>)
     fun getReceivedFriendRequests(currentUserId: String, receivedFriendRequests: MutableLiveData<List<ContactModel>>)
     fun getAllChatsForUser(currentUserId: String, chatContacts: MutableLiveData<List<ContactModel>>)
+
+    fun setMapEnabled(userId: String, isMapEnabled: Boolean)
+    fun isMapEnabled(userId: String, isMapEnabled: MutableLiveData<Boolean>)
 }

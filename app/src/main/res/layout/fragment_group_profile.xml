@@ -6,27 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".ui.contactProfileManager.ContactProfileFragment">
 
-    <TextView
-        android:id="@+id/textGroupName"
+    <LinearLayout
+        android:id="@+id/FrameGroupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Group Name"
-        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        >
 
-    <TextView
-        android:id="@+id/textGroupDescription"
+        <EditText
+            android:id="@+id/textGroupName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:text="Group Name"
+            android:layout_marginEnd="10dp"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/buttonSaveGroupName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            app:icon="@drawable/ic_save"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/FrameDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Group Description"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/imageGroup">
+
+        <EditText
+            android:id="@+id/textGroupDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Group Description"
+            android:textSize="20sp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageGroup" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/buttonSaveDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            app:icon="@drawable/ic_save"
+            />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageGroup"
@@ -36,7 +79,7 @@
         android:src="@drawable/empty_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textGroupName" />
+        app:layout_constraintTop_toBottomOf="@+id/FrameGroupName" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/buttonAddUser"
@@ -46,7 +89,7 @@
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textGroupDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/FrameDescription" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewGroupContacts"

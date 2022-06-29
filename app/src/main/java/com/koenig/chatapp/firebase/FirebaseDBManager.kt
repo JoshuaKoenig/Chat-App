@@ -3,6 +3,7 @@ package com.koenig.chatapp.firebase
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -22,6 +23,7 @@ object FirebaseDBManager: UserStore {
     database.child("users").child(userId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 user.value = snapshot.getValue<UserModel>()
+                Log.d("map2", user.value!!.isMapEnabled.toString())
                 database.child("users").child(userId).removeEventListener(this)
             }
 
@@ -42,6 +44,8 @@ object FirebaseDBManager: UserStore {
         user.status = "Hello i'm new here"
         user.photoUri = firebaseUser.photoUrl.toString()
         user.contacts = hashMapOf()
+        user.isMapEnabled = true
+
 
         val userValues = user.toMap()
         val childAdd = HashMap<String, Any>()
@@ -79,6 +83,8 @@ object FirebaseDBManager: UserStore {
                     currentUser.status = it.child("status").value.toString()
                     currentUser.photoUri = it.child("photoUri").value.toString()
                     currentUser.email = it.child("email").value.toString()
+                    //TODO: Not working => First when all users have isMapEnabled value
+                    if(it.child("isMapEnabled").value != null) currentUser.isMapEnabled = it.child("isMapEnabled").value as Boolean
                     //val userModel = it.getValue(UserModel::class.java)
                     localUserList.add(currentUser)
                 }
@@ -212,6 +218,16 @@ object FirebaseDBManager: UserStore {
         database.updateChildren(childAdd)
     }
 
+    fun setUsersLocation(userId: String, latitude: Double, longitude: Double)
+    {
+        val childLocation = HashMap<String, Any>()
+
+        childLocation["/users/$userId/latitude"] = latitude
+        childLocation["/users/$userId/longitude"] = longitude
+
+        database.updateChildren(childLocation)
+    }
+
     override fun rejectRequest(currentUserId: String, userAddId: String) {
 
         val childDelete : MutableMap<String, Any?> = HashMap()
@@ -275,4 +291,29 @@ object FirebaseDBManager: UserStore {
             }
         })
     }
+
+    override fun setMapEnabled(userId: String, isMapEnabled: Boolean)
+    {
+        database
+            .child("users")
+            .child(userId)
+            .child("isMapEnabled")
+            .setValue(isMapEnabled)
+    }
+
+    override fun isMapEnabled(userId: String, isMapEnabled: MutableLiveData<Boolean>) {
+
+        database.child("users").child(userId).child("isMapEnabled").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                isMapEnabled.value = snapshot.value as Boolean
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+
 }

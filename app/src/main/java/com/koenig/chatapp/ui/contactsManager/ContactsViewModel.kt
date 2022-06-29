@@ -8,7 +8,7 @@ import com.koenig.chatapp.models.ContactModel
 
 class ContactsViewModel: ViewModel() {
 
-    private val contacts = MutableLiveData<List<ContactModel>>()
+    val contacts = MutableLiveData<List<ContactModel>>()
 
     val observableContacts: LiveData<List<ContactModel>>
         get() = contacts

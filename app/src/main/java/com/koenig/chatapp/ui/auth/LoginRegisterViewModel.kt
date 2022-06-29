@@ -17,9 +17,9 @@ class LoginRegisterViewModel (app: Application): AndroidViewModel(app) {
         firebaseAuthManager.login(email, password)
     }
 
-    fun register(email: String?, password: String?)
+    fun register(email: String?, password: String?, userName: String?)
     {
-        firebaseAuthManager.register(email, password)
+        firebaseAuthManager.register(email, password, userName)
     }
 
     fun authWithGoogle(account: GoogleSignInAccount)

@@ -31,7 +31,6 @@ data class ContactModel(
             "status" to status,
             "hasConversation" to hasConversation,
             "recentMessage" to recentMessage,
-            "hasNewMessage" to hasNewMessage,
-        )
+            "hasNewMessage" to hasNewMessage)
     }
 }
