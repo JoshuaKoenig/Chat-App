@@ -2,7 +2,6 @@ package com.koenig.chatapp.ui.contactsManager
 
 import android.os.Bundle
 import android.view.*
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -17,7 +16,6 @@ import com.koenig.chatapp.enums.ChatModes
 import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
-
 
 class ContactsFragment : Fragment(), ContactsClickListener {
 
@@ -37,7 +35,7 @@ class ContactsFragment : Fragment(), ContactsClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _fragBinding = FragmentContactsBinding.inflate(inflater, container, false)
         val root = fragBinding.root
@@ -52,13 +50,33 @@ class ContactsFragment : Fragment(), ContactsClickListener {
         })
 
         fragBinding.buttonSearchContacts.setOnClickListener {
-            val action = ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment()
+            val currentContactIds = ArrayList<String>()
+
+            contactsViewModel.contacts.value!!.forEach {
+                currentContactIds.add(it.userId)
+            }
+
+            val action = ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment(currentContactIds.toTypedArray())
             findNavController().navigate(action)
         }
 
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
             if (firebaseUser != null) {
-                contactsViewModel.loadAllContacts(firebaseUser.uid)
+
+                if (args.contactClickModes == ContactClickModes.ADDCONTACTMODE || args.contactClickModes == ContactClickModes.CREATEGROUPMODE)
+                {
+                    // Users who are already in the group cannot be added again.
+                    val groupContactIds = ArrayList<String>()
+                    args.groupModel!!.groupMembers.forEach {
+                        groupContactIds.add(it.value.userId)
+                    }
+
+                    contactsViewModel.loadAllContacts(firebaseUser.uid, true, groupContactIds)
+                }
+                else
+                {
+                    contactsViewModel.loadAllContacts(firebaseUser.uid, false, null)
+                }
             }
         }
 

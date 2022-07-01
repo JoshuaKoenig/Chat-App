@@ -10,12 +10,12 @@ interface UserStore {
     fun createUser(firebaseUser: FirebaseUser)
     fun updateUser(userId: String, user: UserModel)
     fun updateUserImage(userId: String, photoUri: Uri)
-    fun getAllUsers(userList: MutableLiveData<List<UserModel>>)
+    fun getUsersByName(currentUserId: String, contactIds: ArrayList<String>, userNameFilter: String, userList: MutableLiveData<List<UserModel>>)
 
     fun addContact(currentUser: ContactModel, userAdd: ContactModel)
     fun rejectRequest(currentUserId: String, userAddId: String)
     fun withdrawRequest(currentUserId: String, userAddId: String)
-    fun getAllContactsForUser(userId: String, contactList: MutableLiveData<List<ContactModel>>)
+    fun getAllContactsForUser(userId: String, contactList: MutableLiveData<List<ContactModel>>, isSelectMode: Boolean, groupContactIds: ArrayList<String>?)
     fun sendFriendRequest(contactToAdd: ContactModel, currentUser: ContactModel)
     fun receiveOpenFriendRequests(currentUserId: String, openFriendRequests: MutableLiveData<List<ContactModel>>)
     fun getReceivedFriendRequests(currentUserId: String, receivedFriendRequests: MutableLiveData<List<ContactModel>>)
@@ -23,4 +23,8 @@ interface UserStore {
 
     fun setMapEnabled(userId: String, isMapEnabled: Boolean)
     fun isMapEnabled(userId: String, isMapEnabled: MutableLiveData<Boolean>)
+    fun setHasLocationPermission(userId: String, hasLocationPermission: Boolean)
+    fun hasLocationPermission(userId: String, hasLocationPermission: MutableLiveData<Boolean>)
+    fun setAreNotificationsEnabled(userId: String, areNotificationsEnabled: Boolean)
+    fun areNotificationsEnabled(userId: String, areNotificationsEnabled: MutableLiveData<Boolean>)
 }

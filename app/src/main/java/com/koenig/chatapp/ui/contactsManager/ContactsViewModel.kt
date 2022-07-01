@@ -13,10 +13,10 @@ class ContactsViewModel: ViewModel() {
     val observableContacts: LiveData<List<ContactModel>>
         get() = contacts
 
-    fun loadAllContacts(currentUserId: String)
+    fun loadAllContacts(currentUserId: String, isSelectMode: Boolean, groupContactIds: ArrayList<String>?)
     {
         try {
-            FirebaseDBManager.getAllContactsForUser(currentUserId, contacts)
+            FirebaseDBManager.getAllContactsForUser(currentUserId, contacts, isSelectMode, groupContactIds)
         }
         catch (e: Exception)
         {

@@ -13,12 +13,10 @@ class SearchContactsViewModel : ViewModel() {
     val observableUserList: LiveData<List<UserModel>>
         get() = userList
 
-    init { load() }
-
-    private fun load()
+    fun getFilteredUsers(currentUserId: String, contactIds: ArrayList<String>, userNameFilter: String)
     {
         try {
-            FirebaseDBManager.getAllUsers(userList)
+            FirebaseDBManager.getUsersByName(currentUserId, contactIds, userNameFilter, userList)
         }
         catch (e: Exception)
         {

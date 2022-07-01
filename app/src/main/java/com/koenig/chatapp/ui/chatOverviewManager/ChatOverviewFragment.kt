@@ -9,7 +9,9 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.koenig.chatapp.adapters.ChatOverviewAdapter
 import com.koenig.chatapp.adapters.ChatOverviewClickListener
@@ -17,10 +19,12 @@ import com.koenig.chatapp.adapters.GroupChatAdapter
 import com.koenig.chatapp.adapters.GroupChatListener
 import com.koenig.chatapp.databinding.FragmentChatOverviewBinding
 import com.koenig.chatapp.enums.ChatModes
+import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.chatManager.ChatViewModel
+import com.koenig.chatapp.utils.SwipeToViewCallback
 import java.time.Instant
 import java.util.*
 
@@ -61,11 +65,13 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
                         "chatTab" -> {
                             chatOverviewViewModel.currentTab.postValue(0)
                             fragBinding.addGroupChat.visibility = View.GONE
+                            fragBinding.buttonContacts.visibility = View.VISIBLE
 
                         }
                         "groupTab" -> {
                             chatOverviewViewModel.currentTab.postValue(1)
                             fragBinding.addGroupChat.visibility = View.VISIBLE
+                            fragBinding.buttonContacts.visibility = View.GONE
                         }
                     }
                 }
@@ -82,8 +88,14 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
             }
         })
 
+        // CLICK LISTENERS
         fragBinding.addGroupChat.setOnClickListener {
             val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToCreateGroupChatFragment()
+            findNavController().navigate(action)
+        }
+
+        fragBinding.buttonContacts.setOnClickListener {
+            val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToContactsFragment(ContactClickModes.DEFAULTMODE, null)
             findNavController().navigate(action)
         }
 
@@ -109,6 +121,24 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
                 }
             }
         }
+
+        // ITEM TOUCH HANDLER
+        val swipeViewHandler = object : SwipeToViewCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+                if(viewHolder.itemView.tag.toString().substring(0, 12) == "ContactModel")
+                {
+                    viewContactProfile(viewHolder.itemView.tag as ContactModel)
+                }
+                else if(viewHolder.itemView.tag.toString().substring(0, 10) == "GroupModel")
+                {
+                    viewGroupProfile(viewHolder.itemView.tag as GroupModel)
+                }
+            }
+
+        }
+        val itemTouchViewHelper = ItemTouchHelper(swipeViewHandler)
+            itemTouchViewHelper.attachToRecyclerView(fragBinding.recyclerViewOpenChats)
 
         return root
     }
@@ -196,6 +226,19 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
         fragBinding.tablayout.getTabAt(1)!!.select()
     }
 
+    private fun viewContactProfile(contact: ContactModel)
+    {
+        val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToContactProfileFragment(contact)
+        findNavController().navigate(action)
+    }
+
+    private fun viewGroupProfile(group: GroupModel)
+    {
+        val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToGroupProfileFragment(group)
+        findNavController().navigate(action)
+    }
+
+    // OVERRIDES
     override fun onResume() {
         super.onResume()
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner){

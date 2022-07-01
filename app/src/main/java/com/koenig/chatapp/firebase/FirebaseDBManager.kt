@@ -2,8 +2,7 @@ package com.koenig.chatapp.firebase
 
 import android.net.Uri
 import android.os.Build
-import android.util.Log
-import androidx.lifecycle.LiveData
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -12,7 +11,9 @@ import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.models.UserModel
 import com.koenig.chatapp.models.UserStore
-import java.time.Instant
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 object FirebaseDBManager: UserStore {
 
@@ -23,7 +24,6 @@ object FirebaseDBManager: UserStore {
     database.child("users").child(userId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 user.value = snapshot.getValue<UserModel>()
-                Log.d("map2", user.value!!.isMapEnabled.toString())
                 database.child("users").child(userId).removeEventListener(this)
             }
 
@@ -44,7 +44,9 @@ object FirebaseDBManager: UserStore {
         user.status = "Hello i'm new here"
         user.photoUri = firebaseUser.photoUrl.toString()
         user.contacts = hashMapOf()
-        user.isMapEnabled = true
+        user.isMapEnabled = false
+        user.hasLocationPermission = false
+        user.hasNotificationEnabled = true
 
 
         val userValues = user.toMap()
@@ -69,25 +71,38 @@ object FirebaseDBManager: UserStore {
         database.child("users").child(userId).child("photoUri").setValue(photoUri.toString())
     }
 
-    override fun getAllUsers(userList: MutableLiveData<List<UserModel>>) {
-
-        database.child("users").addValueEventListener(object : ValueEventListener {
+    override fun getUsersByName(currentUserId: String, contactIds: ArrayList<String>, userNameFilter: String, userList: MutableLiveData<List<UserModel>>)
+    {
+        database.child("users").addValueEventListener(object : ValueEventListener{
+            @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
-               val localUserList = ArrayList<UserModel>()
+                val localUserList = ArrayList<UserModel>()
                 val users = snapshot.children
 
                 users.forEach{
-                    val currentUser = UserModel()
-                    currentUser.userId = it.child("userId").value.toString()
-                    currentUser.userName = it.child("userName").value.toString()
-                    currentUser.status = it.child("status").value.toString()
-                    currentUser.photoUri = it.child("photoUri").value.toString()
-                    currentUser.email = it.child("email").value.toString()
-                    //TODO: Not working => First when all users have isMapEnabled value
-                    if(it.child("isMapEnabled").value != null) currentUser.isMapEnabled = it.child("isMapEnabled").value as Boolean
-                    //val userModel = it.getValue(UserModel::class.java)
-                    localUserList.add(currentUser)
+
+                    if(it.child("userName").value.toString().lowercase(Locale.getDefault()).contains(userNameFilter.lowercase(Locale.getDefault())))
+                    {
+                        val currentUser = UserModel()
+                        currentUser.userId = it.child("userId").value.toString()
+                        currentUser.userName = it.child("userName").value.toString()
+                        currentUser.status = it.child("status").value.toString()
+                        currentUser.photoUri = it.child("photoUri").value.toString()
+                        currentUser.email = it.child("email").value.toString()
+                        if(it.child("isMapEnabled").value != null) currentUser.isMapEnabled = it.child("isMapEnabled").value as Boolean
+                        if(it.child("hasLocationPermission").value != null) currentUser.hasLocationPermission = it.child("hasLocationPermission").value as Boolean
+                        localUserList.add(currentUser)
+                    }
                 }
+
+                // Remove all users included in the contact list
+                contactIds.forEach {
+                    localUserList.removeIf { currentUser -> currentUser.userId == it }
+                }
+
+                // Remove own user
+                localUserList.removeIf{ currentUser -> currentUser.userId == currentUserId}
+
 
                 database.child("users").removeEventListener(this)
                 userList.value = localUserList
@@ -99,8 +114,9 @@ object FirebaseDBManager: UserStore {
         })
     }
 
-    override fun getAllContactsForUser(userId: String, contactList: MutableLiveData<List<ContactModel>>) {
+    override fun getAllContactsForUser(userId: String, contactList: MutableLiveData<List<ContactModel>>, isSelectMode: Boolean, groupContactIds: ArrayList<String>?) {
         database.child("users").child(userId).child("contacts").addValueEventListener(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 val localContactList = ArrayList<ContactModel>()
                 val contacts = snapshot.children
@@ -114,6 +130,14 @@ object FirebaseDBManager: UserStore {
                     currentContact.photoUri = it.child("photoUri").value.toString()
                     currentContact.email = it.child("email").value.toString()
                     localContactList.add(currentContact)
+                }
+
+                if(isSelectMode && groupContactIds != null)
+                {
+                    // Remove all users included in the contact list
+                    groupContactIds.forEach {
+                        localContactList.removeIf { currentUser -> currentUser.userId == it }
+                    }
                 }
 
                 database.child("users").child(userId).child("contacts").removeEventListener(this)
@@ -259,7 +283,7 @@ object FirebaseDBManager: UserStore {
         database.child("users").child(currentUserId).child("contacts").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                var localChatContacts = ArrayList<ContactModel>()
+                val localChatContacts = ArrayList<ContactModel>()
                 val children = snapshot.children
 
                 children.forEach{ ds ->
@@ -315,5 +339,51 @@ object FirebaseDBManager: UserStore {
         })
     }
 
+    override fun setHasLocationPermission(userId: String, hasLocationPermission: Boolean) {
+        database
+            .child("users")
+            .child(userId)
+            .child("hasLocationPermission")
+            .setValue(hasLocationPermission)
+    }
 
+    override fun hasLocationPermission(
+        userId: String,
+        hasLocationPermission: MutableLiveData<Boolean>
+    ) {
+        database.child("users").child(userId).child("hasLocationPermission").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+               if(snapshot.value != null)  hasLocationPermission.value = snapshot.value as Boolean
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    override fun setAreNotificationsEnabled(userId: String, areNotificationsEnabled: Boolean) {
+        database
+            .child("users")
+            .child(userId)
+            .child("hasNotificationEnabled")
+            .setValue(areNotificationsEnabled)
+    }
+
+    override fun areNotificationsEnabled(
+        userId: String,
+        areNotificationsEnabled: MutableLiveData<Boolean>
+    ) {
+        database.child("users").child(userId).child("hasNotificationEnabled").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                if(snapshot.value != null) areNotificationsEnabled.value = snapshot.value as Boolean
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
 }

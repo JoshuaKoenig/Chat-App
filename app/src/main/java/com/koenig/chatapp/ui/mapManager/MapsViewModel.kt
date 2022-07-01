@@ -20,17 +20,24 @@ class MapsViewModel (application: Application) : AndroidViewModel(application) {
 
     val isMapEnabled = MutableLiveData<Boolean>()
 
+    val hasLocationPermission = MutableLiveData<Boolean>()
+
     var observableMap: LiveData<Boolean>
         get() = isMapEnabled
         set(value) {isMapEnabled.value = value.value}
 
-    val locationRequest = LocationRequest.create().apply {
+    var observableLocationPermission: LiveData<Boolean>
+        get() = hasLocationPermission
+        set(value) {hasLocationPermission.value = value.value}
+
+
+    private val locationRequest = LocationRequest.create().apply {
         interval = 10000
         fastestInterval = 5000
         priority = Priority.PRIORITY_HIGH_ACCURACY
     }
 
-    val locationCallback = object : LocationCallback() {
+    private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             currentLocation.value = locationResult.locations.last()
         }
@@ -68,5 +75,21 @@ class MapsViewModel (application: Application) : AndroidViewModel(application) {
     fun setUserLocation(userId: String, latitude: Double, longitude: Double)
     {
         FirebaseDBManager.setUsersLocation(userId, latitude, longitude)
+    }
+
+    fun getHasLocationPermission(userId: String)
+    {
+        FirebaseDBManager.hasLocationPermission(userId, hasLocationPermission)
+    }
+
+    fun setLocationPermission(userId: String, hasLocationPermission: Boolean)
+    {
+        try {
+            FirebaseDBManager.setHasLocationPermission(userId, hasLocationPermission)
+        }
+        catch (e: Exception)
+        {
+            // TODO
+        }
     }
 }

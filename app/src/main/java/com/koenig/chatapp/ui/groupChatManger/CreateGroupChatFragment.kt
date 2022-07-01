@@ -90,13 +90,13 @@ class CreateGroupChatFragment : Fragment() {
                 if (TextUtils.isEmpty(fragBinding.textGroupDescription.text)) newGroup.description = ""
                 else newGroup.description = fragBinding.textGroupDescription.text.toString()
 
-                // Group Picture -> TODO
+                // Group Picture
                 if (newGroup.photoUri == "")
                 {
                     newGroup.photoUri = "android.resource://com.koenig.chatapp/drawable/empty_profile"
                 }
 
-                // Group Members -> TODO
+                // Group Members
                 if (groupViewModel.currentGroupMembers.value != null)
                 {
                     groupViewModel.currentGroupMembers.value!!.forEach{
@@ -133,7 +133,11 @@ class CreateGroupChatFragment : Fragment() {
         // Add User to group
         fragBinding.buttonAddUserToGroup.setOnClickListener {
             saveCurrentInputFields()
-            val action = CreateGroupChatFragmentDirections.actionCreateGroupChatFragmentToContactsFragment(ContactClickModes.CREATEGROUPMODE)
+            val currentGroup = GroupModel()
+            groupViewModel.currentGroupMembers.value!!.forEach {
+                currentGroup.groupMembers[it.userId] = it
+            }
+            val action = CreateGroupChatFragmentDirections.actionCreateGroupChatFragmentToContactsFragment(ContactClickModes.CREATEGROUPMODE, currentGroup)
             findNavController().navigate(action)
         }
 

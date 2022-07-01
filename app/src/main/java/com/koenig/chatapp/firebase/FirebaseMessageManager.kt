@@ -105,7 +105,6 @@ object FirebaseMessageManager: MessageStore {
          childAdd["groups/${message.toUserId}/recentMessage"] = message
 
         groupMembers.forEach {
-            // Add has new message flag => TODO
             childAdd["groups/${message.toUserId}/groupMembers/${it.userId}/hasNewMessage"] = true
         }
 
@@ -136,5 +135,41 @@ object FirebaseMessageManager: MessageStore {
                     TODO("Not yet implemented")
                 }
             })
+    }
+
+    override fun receiveRecentMessagesForUser(currentUserId: String, message: MutableLiveData<MessageModel>)
+    {
+        database.child("messages").orderByChild("toUserId").equalTo(currentUserId)
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    val localSentMessages = ArrayList<MessageModel>()
+                    val children = snapshot.children
+
+                    children.forEach {
+                        val receivedMessage = it.getValue(MessageModel::class.java)
+                        localSentMessages.add(receivedMessage!!)
+                    }
+
+                    // Get the most recent message
+                    val recentMessage = localSentMessages.maxByOrNull { it.timeStamp }
+
+                    if(recentMessage != null)
+                    {
+                        message.value = recentMessage
+                        // Show Notification only once
+                        database.child("messages").child(recentMessage.uid).child("wasRead").setValue(true)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+    }
+
+    override fun receiveRecentMessagesForGroup(currentGroupId: String, message: MutableLiveData<MessageModel>)
+    {
+        // TODO
     }
 }

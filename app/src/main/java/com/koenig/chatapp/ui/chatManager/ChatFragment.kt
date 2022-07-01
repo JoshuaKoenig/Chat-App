@@ -77,9 +77,7 @@ class ChatFragment : Fragment() {
                         renderChatAdapter(messages as ArrayList<MessageModel>)
                     }
                 }
-
             }
-
         })
 
         return root
@@ -100,6 +98,7 @@ class ChatFragment : Fragment() {
     private fun sendSingeMessage()
     {
         val message = MessageModel()
+        message.wasRead = false
         message.fromUserId = loggedInViewModel.liveFirebaseUser.value!!.uid
         message.toUserId = args.userModel!!.userId
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)

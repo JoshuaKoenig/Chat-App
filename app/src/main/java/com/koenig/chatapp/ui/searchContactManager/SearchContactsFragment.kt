@@ -1,12 +1,15 @@
 package com.koenig.chatapp.ui.searchContactManager
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.koenig.chatapp.adapters.FoundUserAdapter
 import com.koenig.chatapp.adapters.FoundUserClickListener
@@ -28,6 +31,8 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
     private val profileViewModel: ProfileViewModel by activityViewModels()
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
 
+    private val args by navArgs<SearchContactsFragmentArgs>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -36,7 +41,7 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _fragBinding = FragmentSearchContactsBinding.inflate(inflater, container, false)
         val root = fragBinding.root
@@ -47,6 +52,19 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
                 render(users as ArrayList<UserModel>)
                 fragBinding.progressBar.visibility = View.GONE
             }
+        })
+
+        fragBinding.editSearchContact.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                searchContactsViewModel.getFilteredUsers(
+                    loggedInViewModel.liveFirebaseUser.value!!.uid,
+                    args.contactIds.toList() as ArrayList<String>,
+                    p0.toString())
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
         })
 
 
@@ -73,11 +91,11 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
         super.onResume()
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) {
             profileViewModel.getProfile(it.uid)
+            searchContactsViewModel.getFilteredUsers(it.uid, args.contactIds.toList() as ArrayList<String>, "")
         }
     }
 
     override fun onUserAddClick(addUser: ContactModel) {
-       // searchContactsViewModel.addContact(loggedInViewModel.liveFirebaseUser.value!!.uid, addUser)
 
         profileViewModel.observableProfile.observe(viewLifecycleOwner) {
 
@@ -89,7 +107,5 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
 
            friendRequestViewModel.sendFriendRequest(addUser,currentUser)
         }
-
     }
-
 }

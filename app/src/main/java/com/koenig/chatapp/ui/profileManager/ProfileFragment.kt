@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,14 +16,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.google.firebase.auth.FirebaseUser
 import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentProfileBinding
+import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.mapManager.MapsViewModel
 import java.io.IOException
-import kotlin.math.log
 
 
 class ProfileFragment : Fragment() {
@@ -43,20 +43,29 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _fragBinding = FragmentProfileBinding.inflate(inflater, container, false)
         val root = fragBinding.root
 
+        // OBSERVERS
         profileViewModel.observableProfile.observe(viewLifecycleOwner, Observer {
             render()
             fragBinding.progressBar.visibility = View.GONE
         })
 
-        mapViewModel.observableMap.observe(viewLifecycleOwner){
+        // Enable own Map when location permission was given
+        mapViewModel.observableLocationPermission.observe(viewLifecycleOwner){
             renderMapButton(it)
         }
 
+        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
+            if (firebaseUser != null) {
+                updateProfile(firebaseUser)
+            }
+        }
+
+        // TEXT CHANGE LISTENER
         fragBinding.textUserName.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -101,6 +110,7 @@ class ProfileFragment : Fragment() {
 
         })
 
+        // CLICK LISTENERS
         fragBinding.buttonSave.setOnClickListener {
 
             profileViewModel.updateProfile(loggedInViewModel.liveFirebaseUser.value?.uid!!,
@@ -120,10 +130,16 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
-            if (firebaseUser != null) {
-                updateProfile(firebaseUser)
-            }
+        fragBinding.buttonContacts.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToContactsFragment(
+                ContactClickModes.DEFAULTMODE, null)
+
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            })
         }
         return  root
     }
@@ -205,7 +221,7 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         profileViewModel.getProfile(loggedInViewModel.liveFirebaseUser.value?.uid!!)
-        mapViewModel.getIsMapEnabled(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+        mapViewModel.getHasLocationPermission(loggedInViewModel.liveFirebaseUser.value?.uid!!)
     }
 
     // TODO: Outsource in Helpers.kt

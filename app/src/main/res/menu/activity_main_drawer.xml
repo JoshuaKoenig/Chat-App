@@ -3,33 +3,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/profileFragment"
-            android:icon="@drawable/ic_profile"
-            android:title="My Profile" />
-        <item
-            android:id="@+id/contactsFragment"
-            android:icon="@drawable/ic_contacts"
-            android:title="My Contacts" />
-        <item
-            android:id="@+id/friendRequestFragment"
-            android:icon="@drawable/ic_friend_request"
-            android:title="Friend Requests"
-            />
+    <group android:id="@+id/menuTop" android:checkableBehavior="single">
         <item
             android:id="@+id/chatOverviewFragment"
             android:icon="@drawable/ic_message"
             android:title="My Chats"
             />
     </group>
-    <item android:title="Access Control">
+    <item android:title="Account">
         <menu>
-            <item
-                android:id="@+id/nav_sign_out"
-                android:icon="@android:drawable/ic_menu_revert"
-                android:title="@string/sign_out"
-                android:onClick="signOut"/>
+            <group android:id="@+id/menuMiddle" android:checkableBehavior="single">
+                <item
+                    android:id="@+id/profileFragment"
+                    android:icon="@drawable/ic_profile"
+                    android:title="My Profile" />
+                <item
+                    android:id="@+id/friendRequestFragment"
+                    android:icon="@drawable/ic_friend_request"
+                    android:title="Friend Requests"
+                    />
+            </group>
         </menu>
     </item>
+    <item android:title="Settings"  android:checkableBehavior="single">
+        <menu>
+            <group android:id="@+id/menuBottom" android:checkableBehavior="single">
+                <item
+                    android:id="@+id/settingsFragment"
+                    android:icon="@drawable/ic_settings"
+                    android:title="App Settings"
+                    />
+
+                <item
+                    android:id="@+id/aboutFragment"
+                    android:title="About"
+                    android:icon="@drawable/ic_about_us"
+                    >
+                </item>
+            </group>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/nav_sign_out"
+        android:icon="@drawable/ic_logout"
+        android:title="@string/sign_out"
+        android:onClick="signOut"
+        />
 </menu>

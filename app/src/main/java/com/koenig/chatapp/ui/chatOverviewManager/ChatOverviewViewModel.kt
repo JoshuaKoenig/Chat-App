@@ -26,7 +26,6 @@ class ChatOverviewViewModel : ViewModel() {
     val observableGroupChats: LiveData<List<GroupModel>>
         get() = groupChats
 
-
     fun getAllChatContacts(currentUserId: String)
     {
         try {

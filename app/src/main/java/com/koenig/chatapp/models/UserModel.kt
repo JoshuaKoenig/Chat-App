@@ -19,7 +19,9 @@ data class UserModel(
     var receivedRequests: HashMap<String, ContactModel> = hashMapOf(),
     var isMapEnabled: Boolean = false,
     var latitude: Double = 0.0,
-    var longitude: Double = 0.0
+    var longitude: Double = 0.0,
+    var hasLocationPermission: Boolean = false,
+    var hasNotificationEnabled: Boolean = true
 
 ) : Parcelable
 {
@@ -36,7 +38,12 @@ data class UserModel(
             "receivedRequests" to receivedRequests,
             "isMapEnabled" to isMapEnabled,
             "latitude" to latitude,
-            "longitude" to longitude
+            "longitude" to longitude,
+            "hasLocationPermission" to hasLocationPermission,
+            "hasNotificationEnabled" to hasNotificationEnabled
         )
     }
 }
+
+// IsMapEnabled => Can other users see the map
+// HasLocationPermission => Whether location was granted or not

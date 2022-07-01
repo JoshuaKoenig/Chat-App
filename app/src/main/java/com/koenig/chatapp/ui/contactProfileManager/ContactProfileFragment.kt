@@ -2,23 +2,18 @@ package com.koenig.chatapp.ui.contactProfileManager
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentContactProfileBinding
-import com.koenig.chatapp.enums.ChatModes
 import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
-import com.koenig.chatapp.ui.chatManager.ChatFragmentDirections
 import com.koenig.chatapp.ui.contactsManager.ContactsViewModel
 import com.koenig.chatapp.ui.friendRequestManager.FriendRequestViewModel
 import com.koenig.chatapp.ui.mapManager.MapsViewModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
-import com.koenig.chatapp.ui.searchContactManager.SearchContactsViewModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
@@ -45,7 +40,7 @@ class ContactProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _fragBinding = FragmentContactProfileBinding.inflate(inflater, container, false)
         val root = fragBinding.root
@@ -102,7 +97,7 @@ class ContactProfileFragment : Fragment() {
         super.onResume()
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) {
             profileViewModel.getProfile(it.uid)
-            contactsViewModel.loadAllContacts(it.uid)
+            contactsViewModel.loadAllContacts(it.uid, false, null)
         }
         mapViewModel.getIsMapEnabled(args.contactModel.userId)
     }

@@ -20,6 +20,10 @@ class ChatViewModel : ViewModel() {
 
     private val messages = MutableLiveData<List<MessageModel>>()
 
+    private val messageForUser = MutableLiveData<MessageModel>()
+    val observableMessageForUser: LiveData<MessageModel>
+            get() = messageForUser
+
     var lifeFirebaseUser = MutableLiveData<FirebaseUser>()
 
     var observableUser: LiveData<UserModel>
@@ -81,8 +85,10 @@ class ChatViewModel : ViewModel() {
     fun sendGroupMessage(message: MessageModel, groupMembers: List<ContactModel>)
     {
         FirebaseMessageManager.sendGroupMessage(message, groupMembers)
-
-
     }
 
+    fun receiveMessageForUser(currentUserId: String)
+    {
+        FirebaseMessageManager.receiveRecentMessagesForUser(currentUserId, messageForUser)
+    }
 }
