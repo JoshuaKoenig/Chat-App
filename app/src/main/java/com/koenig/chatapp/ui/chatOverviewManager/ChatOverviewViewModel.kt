@@ -26,10 +26,10 @@ class ChatOverviewViewModel : ViewModel() {
     val observableGroupChats: LiveData<List<GroupModel>>
         get() = groupChats
 
-    fun getAllChatContacts(currentUserId: String)
+    fun getAllChatContacts(currentUserId: String, contactNameFilter: String)
     {
         try {
-            FirebaseDBManager.getAllChatsForUser(currentUserId, chatContacts)
+            FirebaseDBManager.getAllChatsForUser(currentUserId, chatContacts, contactNameFilter)
         }
         catch (e: Exception)
         {
@@ -37,10 +37,10 @@ class ChatOverviewViewModel : ViewModel() {
         }
     }
 
-    fun getAllGroupChats(currentUserId: String)
+    fun getAllGroupChats(currentUserId: String, contactNameFilter: String)
     {
         try {
-            FirebaseGroupChatManager.getGroupChatsForUser(currentUserId, groupChats)
+            FirebaseGroupChatManager.getGroupChatsForUser(currentUserId, groupChats, contactNameFilter)
         }
         catch (e: Exception)
         {

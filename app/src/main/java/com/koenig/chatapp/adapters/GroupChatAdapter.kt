@@ -1,6 +1,7 @@
 package com.koenig.chatapp.adapters
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -45,12 +46,11 @@ class GroupChatAdapter constructor(private var groupChats: ArrayList<GroupModel>
             if(currentUserHasNewMsgFlag)
             {
                 binding.iconNewMessage.visibility = View.VISIBLE
-                binding.recentMessage.setTextColor(Color.GREEN)
+                binding.recentMessage.setTypeface(binding.recentMessage.typeface, Typeface.BOLD)
             }
             else
             {
                 binding.iconNewMessage.visibility = View.GONE
-                binding.recentMessage.setTextColor(Color.parseColor("#99FFFFFF"))
             }
 
             if(groupChat.recentMessage.firstMessage)

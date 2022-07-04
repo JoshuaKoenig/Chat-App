@@ -53,7 +53,7 @@ class ChatAdapter constructor(private var messages: ArrayList<MessageModel>, pri
             {
                 binding.parentLayout.gravity = Gravity.END
                 val drawable = ContextCompat.getDrawable(context, R.drawable.message_shape_sent)
-                drawable!!.setTint(Color.parseColor("#4CAF50"))
+                drawable!!.setTint(Color.parseColor("#6C63FF"))
                 binding.cardLayout.background = drawable
                 params.setMargins(1, -1, 0, 0)
 
@@ -64,7 +64,7 @@ class ChatAdapter constructor(private var messages: ArrayList<MessageModel>, pri
             {
                 binding.parentLayout.gravity = Gravity.START
                 val drawable = ContextCompat.getDrawable(context, R.drawable.message_shape_received)
-                drawable!!.setTint(Color.parseColor("#333742"))
+                drawable!!.setTint(Color.parseColor("#cdc9ff"))
                 binding.cardLayout.background = drawable
                 params.setMargins(0, -1, 1, 0)
 

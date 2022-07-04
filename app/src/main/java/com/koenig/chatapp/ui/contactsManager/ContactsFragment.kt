@@ -7,7 +7,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
 import com.koenig.chatapp.adapters.ContactsAdapter
 import com.koenig.chatapp.adapters.ContactsClickListener
@@ -57,7 +59,12 @@ class ContactsFragment : Fragment(), ContactsClickListener {
             }
 
             val action = ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment(currentContactIds.toTypedArray())
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            })
         }
 
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
@@ -97,16 +104,19 @@ class ContactsFragment : Fragment(), ContactsClickListener {
         {
             fragBinding.recyclerViewMyContacts.visibility = View.GONE
             fragBinding.textNoContacts.visibility = View.VISIBLE
+            fragBinding.noContactsImage.visibility = View.VISIBLE
         }
         else
         {
             fragBinding.recyclerViewMyContacts.visibility = View.VISIBLE
             fragBinding.textNoContacts.visibility = View.GONE
+            fragBinding.noContactsImage.visibility = View.GONE
         }
     }
 
     private fun renderSelectMode()
     {
+        (requireActivity() as MainActivity).toolbar.title = "Select Contact"
         fragBinding.buttonSearchContacts.visibility = View.GONE
     }
 
@@ -124,7 +134,12 @@ class ContactsFragment : Fragment(), ContactsClickListener {
                 if (args.contactClickModes == ContactClickModes.ADDCONTACTMODE)
                 {
                     val action = ContactsFragmentDirections.actionContactsFragmentToGroupProfileFragment(args.groupModel, null, true)
-                    findNavController().navigate(action)
+                    findNavController().navigate(action, navOptions {
+                        anim {
+                            enter = android.R.animator.fade_in
+                            exit = android.R.animator.fade_out
+                        }
+                    })
                 }
                 else if(args.contactClickModes == ContactClickModes.CREATEGROUPMODE)
                 {
@@ -138,16 +153,31 @@ class ContactsFragment : Fragment(), ContactsClickListener {
 
     override fun onClickOpenChat(selectedUser: ContactModel) {
         val action = ContactsFragmentDirections.actionContactsFragmentToChatFragment(ChatModes.SINGLECHATMODE, selectedUser, null)
-        findNavController().navigate(action)
+        findNavController().navigate(action, navOptions {
+            anim {
+                enter = android.R.animator.fade_in
+                exit = android.R.animator.fade_out
+            }
+        })
     }
 
     override fun onClickSelectUser(selectedUser: ContactModel) {
         val action = ContactsFragmentDirections.actionContactsFragmentToCreateGroupChatFragment(selectedUser)
-        findNavController().navigate(action)
+        findNavController().navigate(action, navOptions {
+            anim {
+                enter = android.R.animator.fade_in
+                exit = android.R.animator.fade_out
+            }
+        })
     }
 
     override fun onClickAddUserToGroup(selectedUser: ContactModel) {
         val action = ContactsFragmentDirections.actionContactsFragmentToGroupProfileFragment(args.groupModel, selectedUser)
-        findNavController().navigate(action)
+        findNavController().navigate(action, navOptions {
+            anim {
+                enter = android.R.animator.fade_in
+                exit = android.R.animator.fade_out
+            }
+        })
     }
 }

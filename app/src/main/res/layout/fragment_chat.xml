@@ -28,15 +28,26 @@
             android:id="@+id/textNoChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Conversation"
+            android:layout_marginTop="8dp"
+            android:text="Start a Conversation"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noMessagesImage"
+           />
+
+        <ImageView
+            android:id="@+id/noMessagesImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_begin_chat"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Start Conversation" />
+            app:layout_constraintVertical_bias="0.36" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -68,13 +79,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:hint="Message"
-
                 android:layout_weight="4"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                app:startIconDrawable="@drawable/ic_message"
-
-                >
+                app:startIconDrawable="@drawable/ic_message">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textCurrentMessage"
@@ -89,7 +97,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 app:icon="@drawable/ic_send"
-                android:text="Send"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
                 android:layout_weight="1"

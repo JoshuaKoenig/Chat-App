@@ -18,7 +18,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
 import com.koenig.chatapp.adapters.GroupContactsAdapter
 import com.koenig.chatapp.adapters.GroupContactsClickListener
@@ -75,6 +77,8 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
         fragBinding.recyclerViewGroupContacts.layoutManager = LinearLayoutManager(activity)
 
+        (requireActivity() as MainActivity).toolbar.title = args.groupModel!!.groupName
+
         // Executed when come back from contacts fragment
         if (args.contactToAdd != null)
         {
@@ -112,7 +116,12 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
         // CLICK LISTENERS
         fragBinding.buttonAddUser.setOnClickListener {
             val action = GroupProfileFragmentDirections.actionGroupProfileFragmentToContactsFragment(ContactClickModes.ADDCONTACTMODE, args.groupModel)
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            })
         }
 
         fragBinding.buttonSaveGroupName.setOnClickListener {
@@ -379,7 +388,12 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
     override fun onClickShowUserProfile(user: ContactModel) {
         val action = GroupProfileFragmentDirections.actionGroupProfileFragmentToContactProfileFragment(user)
-        findNavController().navigate(action)
+        findNavController().navigate(action, navOptions {
+            anim {
+                enter = android.R.animator.fade_in
+                exit = android.R.animator.fade_out
+            }
+        })
     }
 
     override fun onClickRemoveUser(user: ContactModel) {

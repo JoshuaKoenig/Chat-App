@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
         <variable
@@ -9,44 +11,78 @@
             type="com.koenig.chatapp.models.ContactModel" />
     </data>
 
-    <androidx.cardview.widget.CardView
-        xmlns:tools="http://schemas.android.com/tools"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:elevation="24dp">
+        android:elevation="24dp"
+        app:shapeAppearance="@style/ShapeAppearanceOverlay.App.Card.Media"
+        app:strokeColor="#4D6C63FF"
+        app:cardElevation="2dp"
+        android:shadowColor="@color/colorPrimary"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="@color/colorPrimary"
+            android:layout_height="75dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="10dp"
+            android:background="#F8F8F8"
+            android:paddingStart="10dp">
 
             <ImageView
                 android:id="@+id/imageUser"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="10dp"
                 android:src="@drawable/ic_profile"/>
 
-            <TextView
-                android:id="@+id/textUserName"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
+                android:layout_weight="2.5"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="2.5"
-                android:text="@{contact.userName}"
-                android:textColor="@color/white"
-                android:gravity="center_vertical|center_horizontal"
-                android:textSize="20sp"
-                tools:text="User Name"
-                />
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/textUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@{contact.userName}"
+                    android:textColor="#990E0E0E"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="20sp"
+                    tools:text="User Name"
+                    android:layout_marginBottom="2dp"
+                    />
+
+                <TextView
+                    android:id="@+id/textUserMail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@{contact.email}"
+                    android:textColor="@color/colorSecondary"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="16sp"
+                    tools:text="newuser@mail.com"
+                    android:textStyle="italic"
+                    />
+
+            </LinearLayout>
+
 
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

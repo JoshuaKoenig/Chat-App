@@ -127,7 +127,12 @@ class ProfileFragment : Fragment() {
 
         fragBinding.buttonMap.setOnClickListener {
             val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment()
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            })
         }
 
         fragBinding.buttonContacts.setOnClickListener {

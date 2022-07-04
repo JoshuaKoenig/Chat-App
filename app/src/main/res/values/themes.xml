@@ -3,12 +3,12 @@
     <style name="Theme.ChatApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimary</item>
+        <item name="colorOnPrimary">#4e37ee</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
-        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorSecondary">#8682ff</item>
+        <item name="colorSecondaryVariant">#FFFFFFFF</item>
+        <item name="colorOnSecondary">#FFFFFFFF</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
@@ -23,8 +23,22 @@
     <style name="Theme.ChatApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Button_Theme">
-        <item name="colorOnSecondary">@color/colorOnPrimary</item>
+        <item name="colorOnSecondary">@color/colorSecondary</item>
         <item name="colorSecondary">#FFFFFF</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.Card.Media" parent="">
+        <item name="android:shadowColor">#8682ff</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+
+    <style name="MaterialButton" parent="">
+        <item name="android:colorButtonNormal">@color/white</item>
+    </style>
+
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">#FFFFFF</item>
+        <item name="boxStrokeWidth">2dp</item>
     </style>
 
 </resources>

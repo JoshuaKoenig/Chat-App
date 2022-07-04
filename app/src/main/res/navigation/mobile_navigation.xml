@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/contactsFragment"
         android:name="com.koenig.chatapp.ui.contactsManager.ContactsFragment"
-        android:label="fragment_contacts"
+        android:label="My Contacts"
         tools:layout="@layout/fragment_contacts" >
         <action
             android:id="@+id/action_contactsFragment_to_chatFragment"
@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.koenig.chatapp.ui.profileManager.ProfileFragment"
-        android:label="fragment_profile"
+        android:label="My Profile"
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_mapsFragment"
@@ -76,7 +76,7 @@
     <fragment
         android:id="@+id/searchContactsFragment"
         android:name="com.koenig.chatapp.ui.searchContactManager.SearchContactsFragment"
-        android:label="fragment_search_contacts"
+        android:label="Add Contacts"
         tools:layout="@layout/fragment_search_contacts" >
         <argument
             android:name="contactIds"
@@ -85,7 +85,7 @@
     <fragment
         android:id="@+id/friendRequestFragment"
         android:name="com.koenig.chatapp.ui.friendRequestManager.FriendRequestFragment"
-        android:label="fragment_friend_request"
+        android:label="Friend Requests"
         tools:layout="@layout/fragment_friend_request" />
     <fragment
         android:id="@+id/contactProfileFragment"
@@ -102,7 +102,7 @@
     <fragment
         android:id="@+id/chatOverviewFragment"
         android:name="com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewFragment"
-        android:label="fragment_chat_overview"
+        android:label="My Chats"
         tools:layout="@layout/fragment_chat_overview" >
         <action
             android:id="@+id/action_chatOverviewFragment_to_chatFragment"
@@ -123,7 +123,7 @@
     <fragment
         android:id="@+id/createGroupChatFragment"
         android:name="com.koenig.chatapp.ui.groupChatManger.CreateGroupChatFragment"
-        android:label="fragment_create_group_chat"
+        android:label="Add Group Chat"
         tools:layout="@layout/fragment_create_group_chat" >
         <action
             android:id="@+id/action_createGroupChatFragment_to_contactsFragment"
@@ -162,7 +162,7 @@
     <fragment
         android:id="@+id/mapsFragment"
         android:name="com.koenig.chatapp.ui.mapManager.MapsFragment"
-        android:label="fragment_maps"
+        android:label="My Location"
         tools:layout="@layout/fragment_maps" >
         <argument
             android:name="contact"
@@ -177,11 +177,11 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.koenig.chatapp.ui.settingsManager.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="App Settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.koenig.chatapp.ui.aboutManager.AboutFragment"
-        android:label="fragment_about"
+        android:label="About Us"
         tools:layout="@layout/fragment_about" />
 </navigation>

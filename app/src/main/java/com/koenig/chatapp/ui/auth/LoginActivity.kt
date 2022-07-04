@@ -44,8 +44,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Google Button UI
-        loginBinding.googleSignInButton.setSize(SignInButton.SIZE_WIDE)
-        loginBinding.googleSignInButton.setColorScheme(0)
+        loginBinding.googleSignInButton.setSize(SignInButton.SIZE_ICON_ONLY)
+        loginBinding.googleSignInButton.setColorScheme(1)
 
         // Google login
         loginBinding.googleSignInButton.setOnClickListener {

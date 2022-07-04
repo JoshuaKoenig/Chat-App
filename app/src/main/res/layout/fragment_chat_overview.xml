@@ -37,6 +37,35 @@
 
     </com.google.android.material.tabs.TabLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchContactLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:hint="User Name"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tablayout"
+        app:startIconDrawable="@drawable/ic_search"
+        android:backgroundTint="@color/white"
+        android:background="@drawable/round_corners_compl"
+        app:startIconTint="@color/colorSecondary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editSearchContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:ems="10"
+            android:backgroundTint="@color/white"
+            android:inputType="textPersonName" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOpenChats"
         android:layout_width="match_parent"
@@ -48,18 +77,18 @@
         app:layout_constraintBottom_toTopOf="@+id/addGroupChat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tablayout" />
+        app:layout_constraintTop_toBottomOf="@+id/searchContactLayout" />
 
     <TextView
         android:id="@+id/textNoConversations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Conversations yet."
+        android:layout_marginTop="8dp"
+        android:text="Start a conversation ..."
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/noConversationImage" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/addGroupChat"
@@ -82,5 +111,16 @@
         app:icon="@drawable/ic_contacts"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/noConversationImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_begin_chat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tablayout"
+        app:layout_constraintVertical_bias="0.36" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

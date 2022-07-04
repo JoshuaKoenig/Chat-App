@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
@@ -137,13 +138,14 @@ class ChatFragment : Fragment() {
         {
             fragBinding.recyclerViewChat.visibility = View.GONE
             fragBinding.textNoChat.visibility = View.VISIBLE
+            fragBinding.noMessagesImage.visibility = View.VISIBLE
 
         }
         else
         {
             fragBinding.recyclerViewChat.visibility = View.VISIBLE
             fragBinding.textNoChat.visibility = View.GONE
-
+            fragBinding.noMessagesImage.visibility = View.GONE
             fragBinding.recyclerViewChat.smoothScrollToPosition(messages.size-1)
         }
     }
@@ -196,7 +198,12 @@ class ChatFragment : Fragment() {
             {
                 R.id.action_profile -> {
                     val action = ChatFragmentDirections.actionChatFragmentToContactProfileFragment(args.userModel!!)
-                    findNavController().navigate(action)
+                    findNavController().navigate(action, navOptions {
+                        anim {
+                            enter = android.R.animator.fade_in
+                            exit = android.R.animator.fade_out
+                        }
+                    })
                 }
 
                 android.R.id.home -> {
@@ -211,7 +218,12 @@ class ChatFragment : Fragment() {
                 R.id.action_profile -> {
 
                     val action = ChatFragmentDirections.actionChatFragmentToGroupProfileFragment(args.groupModel!!)
-                    findNavController().navigate(action)
+                    findNavController().navigate(action, navOptions {
+                        anim {
+                            enter = android.R.animator.fade_in
+                            exit = android.R.animator.fade_out
+                        }
+                    })
                 }
 
                 android.R.id.home -> {

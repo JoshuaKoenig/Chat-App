@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimary">#333742</color>
     <color name="colorPrimaryLight">#3C414C</color>
     <color name="colorPrimaryVariant">#2C2F3A</color>
     <color name="colorOnPrimary">#2F333F</color>
-    <color name="colorSecondary">#2F333F</color>
+    <color name="colorSecondary">#8682ff</color>
     <color name="colorSecondaryVariant">#FFFFFF</color>
     <color name="colorOnSecondary">#FFFFFF</color>
 
@@ -15,6 +15,10 @@
     <color name="green">#4CAF50</color>
     <color name="red">#F44336</color>
 
-    <color name="sentMessage">#4CAF50</color>
-    <color name="receivedMessage">#333742</color>
+    <color name="sentMessage">#6C63FF</color>
+    <color name="receivedMessage">#ebeaff</color>
+
+    <color name="colorApp">#6C63FF</color>
+
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#333742</color>
 </resources>

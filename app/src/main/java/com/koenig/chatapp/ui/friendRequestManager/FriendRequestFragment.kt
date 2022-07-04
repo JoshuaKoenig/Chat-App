@@ -87,11 +87,13 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
         {
             fragBinding.recyclerViewRequests.visibility = View.GONE
             fragBinding.noContent.visibility = View.VISIBLE
+            fragBinding.noRequestImage.visibility = View.VISIBLE
         }
         else
         {
             fragBinding.recyclerViewRequests.visibility = View.VISIBLE
             fragBinding.noContent.visibility = View.GONE
+            fragBinding.noRequestImage.visibility = View.GONE
         }
     }
 

@@ -4,6 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.koenig.chatapp.models.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 object FirebaseGroupChatManager: GroupStore {
 
@@ -25,7 +28,7 @@ object FirebaseGroupChatManager: GroupStore {
         database.updateChildren(childAdd)
     }
 
-    override fun getGroupChatsForUser(userId: String, groups: MutableLiveData<List<GroupModel>>)
+    override fun getGroupChatsForUser(userId: String, groups: MutableLiveData<List<GroupModel>>, groupFilter: String)
     {
         database.child("groups").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -41,7 +44,10 @@ object FirebaseGroupChatManager: GroupStore {
                         // All members get the group
                         if(it.value.userId == userId)
                         {
-                            localGroupList.add(currentGroup)
+                            if(ds.child("groupName").value.toString().lowercase(Locale.getDefault()).contains(groupFilter.lowercase(Locale.getDefault())))
+                            {
+                                localGroupList.add(currentGroup)
+                            }
                         }
                     }
                 }

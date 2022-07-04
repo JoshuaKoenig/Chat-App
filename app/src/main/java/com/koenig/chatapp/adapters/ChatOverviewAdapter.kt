@@ -1,6 +1,7 @@
 package com.koenig.chatapp.adapters
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -43,12 +44,11 @@ class ChatOverviewAdapter constructor(private var contacts: ArrayList<ContactMod
             if(user.hasNewMessage)
             {
                 binding.iconNewMessage.visibility = View.VISIBLE
-                binding.recentMessage.setTextColor(Color.GREEN)
+                binding.recentMessage.setTypeface(binding.recentMessage.typeface, Typeface.BOLD)
             }
             else
             {
                 binding.iconNewMessage.visibility = View.GONE
-                binding.recentMessage.setTextColor(Color.parseColor("#99FFFFFF"))
             }
 
             if(user.userName == user.recentMessage.fromUserName)

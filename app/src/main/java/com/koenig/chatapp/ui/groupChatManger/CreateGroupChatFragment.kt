@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentCreateGroupChatBinding
 import com.koenig.chatapp.enums.ContactClickModes
@@ -138,7 +139,12 @@ class CreateGroupChatFragment : Fragment() {
                 currentGroup.groupMembers[it.userId] = it
             }
             val action = CreateGroupChatFragmentDirections.actionCreateGroupChatFragmentToContactsFragment(ContactClickModes.CREATEGROUPMODE, currentGroup)
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            })
         }
 
         // OBSERVE

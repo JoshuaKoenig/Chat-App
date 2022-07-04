@@ -19,7 +19,7 @@ interface UserStore {
     fun sendFriendRequest(contactToAdd: ContactModel, currentUser: ContactModel)
     fun receiveOpenFriendRequests(currentUserId: String, openFriendRequests: MutableLiveData<List<ContactModel>>)
     fun getReceivedFriendRequests(currentUserId: String, receivedFriendRequests: MutableLiveData<List<ContactModel>>)
-    fun getAllChatsForUser(currentUserId: String, chatContacts: MutableLiveData<List<ContactModel>>)
+    fun getAllChatsForUser(currentUserId: String, chatContacts: MutableLiveData<List<ContactModel>>, contactNameFilter: String)
 
     fun setMapEnabled(userId: String, isMapEnabled: Boolean)
     fun isMapEnabled(userId: String, isMapEnabled: MutableLiveData<Boolean>)
@@ -27,4 +27,6 @@ interface UserStore {
     fun hasLocationPermission(userId: String, hasLocationPermission: MutableLiveData<Boolean>)
     fun setAreNotificationsEnabled(userId: String, areNotificationsEnabled: Boolean)
     fun areNotificationsEnabled(userId: String, areNotificationsEnabled: MutableLiveData<Boolean>)
+
+    fun getRecommendedContacts( currentUserId: String, contactIdsForCurrentUser: ArrayList<String>, recContacts: MutableLiveData<List<UserModel>>)
 }

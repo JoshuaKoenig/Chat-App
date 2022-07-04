@@ -4,104 +4,194 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
     tools:context=".ui.contactProfileManager.ContactProfileFragment">
 
-    <LinearLayout
-        android:id="@+id/FrameGroupName"
+
+    <ImageView
+        android:id="@+id/imageGroup"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/empty_profile"
+        app:layout_constraintBottom_toTopOf="@+id/FrameGroupName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/buttonAddUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:theme="@style/Button_Theme"
+        app:icon="@drawable/ic_add_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/round_corners"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center"
-        >
+        app:layout_constraintTop_toTopOf="@+id/guideline2">
 
-        <EditText
-            android:id="@+id/textGroupName"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center|center_horizontal|center_vertical"
-            android:text="Group Name"
-            android:layout_marginEnd="10dp"
-            android:textSize="24sp"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewGroupContacts"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/FrameGroupName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/FrameDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_weight="4"
+            android:hint="Group Name"
+            android:textColorHint="@color/white"
+            android:theme="@style/TextInputLayoutStyle"
+            app:boxStrokeColor="@color/white"
+            app:boxStrokeWidth=".5dp"
+            app:boxStrokeWidthFocused=".5dp"
+            app:endIconDrawable="@drawable/ic_edit"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/white"
+            app:hintTextColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textContactMail"
+            app:startIconDrawable="@drawable/ic_groups"
+            app:startIconTint="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textGroupName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Group Name"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageGroup" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/buttonSaveGroupName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
             android:layout_gravity="center|center_horizontal|center_vertical"
-            app:icon="@drawable/ic_save"
-            />
+            android:layout_marginEnd="16dp"
+            app:icon="@drawable/ic_save" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/FrameDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageGroup">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/textGroupDescription"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Group Description"
-            android:textSize="20sp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_weight="4"
+            android:hint="Description"
+            android:textColorHint="@color/white"
+            app:boxStrokeColor="@color/white"
+            app:boxStrokeWidth=".5dp"
+            app:boxStrokeWidthFocused=".5dp"
+            app:endIconDrawable="@drawable/ic_edit"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/white"
+            app:hintTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageGroup" />
+            app:layout_constraintTop_toBottomOf="@+id/textContactMail"
+            app:startIconDrawable="@drawable/ic_info_outline"
+            app:startIconTint="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textGroupDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageGroup" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/buttonSaveDescription"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
             android:layout_gravity="center|center_horizontal|center_vertical"
-            app:icon="@drawable/ic_save"
-            />
+            android:layout_marginEnd="16dp"
+            app:icon="@drawable/ic_save" />
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageGroup"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/empty_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FrameGroupName" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/buttonAddUser"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
         android:layout_width="wrap_content"
-        app:icon="@drawable/ic_add_user"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FrameDescription" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewGroupContacts"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonAddUser" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.45" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

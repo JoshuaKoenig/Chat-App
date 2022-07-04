@@ -1,7 +1,11 @@
 package com.koenig.chatapp.ui.chatOverviewManager
 
+import android.R
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +31,7 @@ import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.chatManager.ChatViewModel
 import com.koenig.chatapp.utils.SwipeToViewCallback
 import java.time.Instant
-import java.util.*
+import kotlin.collections.ArrayList
 
 class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatListener {
 
@@ -55,6 +60,7 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
         fragBinding.addGroupChat.visibility = View.GONE
 
         // TABS
+        chatOverviewViewModel.currentTab.postValue(0)
         fragBinding.tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?)
             {
@@ -63,15 +69,21 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
                     when(tab.contentDescription)
                     {
                         "chatTab" -> {
+
+                            renderChatContacts(ArrayList(emptyList<ContactModel>()))
                             chatOverviewViewModel.currentTab.postValue(0)
                             fragBinding.addGroupChat.visibility = View.GONE
                             fragBinding.buttonContacts.visibility = View.VISIBLE
+                            fragBinding.searchContactLayout.hint = "User Name"
 
                         }
                         "groupTab" -> {
+
+                            renderGroupChats(ArrayList(emptyList<GroupModel>()))
                             chatOverviewViewModel.currentTab.postValue(1)
                             fragBinding.addGroupChat.visibility = View.VISIBLE
                             fragBinding.buttonContacts.visibility = View.GONE
+                            fragBinding.searchContactLayout.hint = "Group Name"
                         }
                     }
                 }
@@ -88,15 +100,49 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
             }
         })
 
+        // TEXT CHANGE LISTENER
+        fragBinding.editSearchContact.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+               if(chatOverviewViewModel.currentTab.value == 0)
+               {
+                   chatOverviewViewModel.getAllChatContacts(
+                       loggedInViewModel.liveFirebaseUser.value!!.uid,
+                       p0.toString())
+               }
+                else if(chatOverviewViewModel.currentTab.value == 1)
+               {
+                    chatOverviewViewModel.getAllGroupChats(
+                        loggedInViewModel.liveFirebaseUser.value!!.uid,
+                        p0.toString()
+                    )
+               }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+
         // CLICK LISTENERS
         fragBinding.addGroupChat.setOnClickListener {
             val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToCreateGroupChatFragment()
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = R.animator.fade_in
+                    exit = R.animator.fade_out
+                }
+            })
         }
 
         fragBinding.buttonContacts.setOnClickListener {
             val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToContactsFragment(ContactClickModes.DEFAULTMODE, null)
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            })
         }
 
         // OBSERVE
@@ -108,6 +154,7 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
         chatOverviewViewModel.currentTabObserver.observe(viewLifecycleOwner){
             if (it != null)
             {
+                Log.d("DEBUG", it.toString())
                 if(it == 0)
                 {
                     startObservingChats()
@@ -135,7 +182,6 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
                     viewGroupProfile(viewHolder.itemView.tag as GroupModel)
                 }
             }
-
         }
         val itemTouchViewHelper = ItemTouchHelper(swipeViewHandler)
             itemTouchViewHelper.attachToRecyclerView(fragBinding.recyclerViewOpenChats)
@@ -152,11 +198,13 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
             fragBinding.recyclerViewOpenChats.visibility = View.GONE
             fragBinding.textNoConversations.text = "No Chats yet."
             fragBinding.textNoConversations.visibility = View.VISIBLE
+            fragBinding.noConversationImage.visibility = View.VISIBLE
         }
         else
         {
             fragBinding.recyclerViewOpenChats.visibility = View.VISIBLE
             fragBinding.textNoConversations.visibility = View.GONE
+            fragBinding.noConversationImage.visibility = View.GONE
         }
     }
 
@@ -169,11 +217,13 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
             fragBinding.recyclerViewOpenChats.visibility = View.GONE
             fragBinding.textNoConversations.text = "No Groups yet."
             fragBinding.textNoConversations.visibility = View.VISIBLE
+            fragBinding.noConversationImage.visibility = View.VISIBLE
         }
         else
         {
             fragBinding.recyclerViewOpenChats.visibility = View.VISIBLE
             fragBinding.textNoConversations.visibility = View.GONE
+            fragBinding.noConversationImage.visibility = View.GONE
         }
     }
 
@@ -211,11 +261,6 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
             renderGroupChats(sortedGroups as ArrayList<GroupModel>)
             fragBinding.progressBar.visibility = View.GONE
         }
-
-        // To update chats instantly => Not working perfect yet
-        chatViewModel.observableMessages.observe(viewLifecycleOwner){
-            chatOverviewViewModel.getAllGroupChats(loggedInViewModel.liveFirebaseUser.value!!.uid)
-        }
     }
 
     private fun selectSingleChatTab(){
@@ -229,33 +274,53 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
     private fun viewContactProfile(contact: ContactModel)
     {
         val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToContactProfileFragment(contact)
-        findNavController().navigate(action)
+        findNavController().navigate(action, navOptions {
+            anim {
+                enter = android.R.animator.fade_in
+                exit = android.R.animator.fade_out
+            }
+        })
     }
 
     private fun viewGroupProfile(group: GroupModel)
     {
         val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToGroupProfileFragment(group)
-        findNavController().navigate(action)
+        findNavController().navigate(action, navOptions {
+            anim {
+                enter = android.R.animator.fade_in
+                exit = android.R.animator.fade_out
+            }
+        })
     }
 
     // OVERRIDES
     override fun onResume() {
         super.onResume()
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner){
-            chatOverviewViewModel.getAllChatContacts(it.uid)
-            chatOverviewViewModel.getAllGroupChats(it.uid)
+            chatOverviewViewModel.getAllChatContacts(it.uid, "")
+            chatOverviewViewModel.getAllGroupChats(it.uid, "")
         }
     }
 
     override fun onClickOpenChat(selectedUser: ContactModel) {
         chatOverviewViewModel.removeHasNewMessageFlag(loggedInViewModel.liveFirebaseUser.value!!.uid, selectedUser.userId)
         val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToChatFragment(ChatModes.SINGLECHATMODE, selectedUser, null)
-        findNavController().navigate(action)
+        findNavController().navigate(action, navOptions {
+            anim {
+                enter = android.R.animator.fade_in
+                exit = android.R.animator.fade_out
+            }
+        })
     }
 
     override fun onClickOpenGroupChat(selectedGroupChat: GroupModel) {
         chatOverviewViewModel.removeHasNewGroupMessageFlag(selectedGroupChat.groupId, loggedInViewModel.liveFirebaseUser.value!!.uid)
         val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToChatFragment(ChatModes.GROUPCHATMODE, null, selectedGroupChat)
-        findNavController().navigate(action)
+        findNavController().navigate(action, navOptions {
+            anim {
+                enter = android.R.animator.fade_in
+                exit = android.R.animator.fade_out
+            }
+        })
     }
 }

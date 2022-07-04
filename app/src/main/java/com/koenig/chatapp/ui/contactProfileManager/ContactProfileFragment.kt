@@ -1,5 +1,6 @@
 package com.koenig.chatapp.ui.contactProfileManager
 
+import android.R
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -7,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
+import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.databinding.FragmentContactProfileBinding
 import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
@@ -45,6 +48,7 @@ class ContactProfileFragment : Fragment() {
         _fragBinding = FragmentContactProfileBinding.inflate(inflater, container, false)
         val root = fragBinding.root
 
+        (requireActivity() as MainActivity).toolbar.title = args.contactModel.userName
         renderContactProfile()
 
         // CLICK LISTENERS
@@ -65,9 +69,13 @@ class ContactProfileFragment : Fragment() {
         fragBinding.buttonMap.setOnClickListener {
 
             val action = ContactProfileFragmentDirections.actionContactProfileFragmentToMapsFragment(args.contactModel, false)
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = R.animator.fade_in
+                    exit = R.animator.fade_out
+                }
+            })
         }
-
 
         // OBSERVE
         mapViewModel.observableMap.observe(viewLifecycleOwner){
@@ -104,8 +112,8 @@ class ContactProfileFragment : Fragment() {
 
     private fun renderContactProfile()
     {
-        fragBinding.textContactName.text = args.contactModel.userName
-        fragBinding.textContactStatus.text = args.contactModel.status
+        fragBinding.textContactName.setText(args.contactModel.userName)
+        fragBinding.textContactStatus.setText(args.contactModel.status)
         fragBinding.textContactMail.text = args.contactModel.email
 
         if (args.contactModel.photoUri.isNotEmpty())

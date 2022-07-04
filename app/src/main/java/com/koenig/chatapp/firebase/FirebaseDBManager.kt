@@ -2,6 +2,7 @@ package com.koenig.chatapp.firebase
 
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
@@ -278,7 +279,7 @@ object FirebaseDBManager: UserStore {
         database.updateChildren(childDelete)
     }
 
-    override fun getAllChatsForUser(currentUserId: String, chatContacts: MutableLiveData<List<ContactModel>>)
+    override fun getAllChatsForUser(currentUserId: String, chatContacts: MutableLiveData<List<ContactModel>>, contactNameFilter: String)
     {
         database.child("users").child(currentUserId).child("contacts").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -288,22 +289,23 @@ object FirebaseDBManager: UserStore {
 
                 children.forEach{ ds ->
                     // val currentContact = it.getValue(ContactModel::class.java)
-
-                    val currentContact = ContactModel()
-                    currentContact.userId = ds.child("userId").value.toString()
-                    currentContact.userName = ds.child("userName").value.toString()
-                    currentContact.status = ds.child("status").value.toString()
-                    currentContact.photoUri = ds.child("photoUri").value.toString()
-                    currentContact.email = ds.child("email").value.toString()
-                    currentContact.hasConversation = ds.child("hasConversation").value as Boolean
-                    currentContact.hasNewMessage = ds.child("hasNewMessage").value as Boolean
-                    currentContact.recentMessage = ds.child("recentMessage").getValue(MessageModel:: class.java)!!
-
-                    if (currentContact.hasConversation)
+                    if(ds.child("userName").value.toString().lowercase(Locale.getDefault()).contains(contactNameFilter.lowercase(Locale.getDefault())))
                     {
-                        localChatContacts.add(currentContact)
-                    }
+                        val currentContact = ContactModel()
+                        currentContact.userId = ds.child("userId").value.toString()
+                        currentContact.userName = ds.child("userName").value.toString()
+                        currentContact.status = ds.child("status").value.toString()
+                        currentContact.photoUri = ds.child("photoUri").value.toString()
+                        currentContact.email = ds.child("email").value.toString()
+                        currentContact.hasConversation = ds.child("hasConversation").value as Boolean
+                        currentContact.hasNewMessage = ds.child("hasNewMessage").value as Boolean
+                        currentContact.recentMessage = ds.child("recentMessage").getValue(MessageModel:: class.java)!!
 
+                        if (currentContact.hasConversation)
+                        {
+                            localChatContacts.add(currentContact)
+                        }
+                    }
                 }
 
                 database.child("users").child(currentUserId).child("contacts").removeEventListener(this)
@@ -386,4 +388,60 @@ object FirebaseDBManager: UserStore {
             }
         })
     }
+
+    override fun getRecommendedContacts(
+        currentUserId: String,
+        contactIdsForCurrentUser: ArrayList<String>,
+        recContacts: MutableLiveData<List<UserModel>>
+    ) {
+
+        database.child("users").addValueEventListener(object : ValueEventListener{
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                // Holds all users
+                val allUsers = ArrayList<UserModel>()
+
+                // The return list
+                val allContactsFromContacts = ArrayList<UserModel>()
+
+                val children = snapshot.children
+
+                // All users = all users in database
+                children.forEach {
+                    val currentUser = it.getValue(UserModel::class.java)
+                    allUsers.add(currentUser!!)
+                }
+
+                // All users = my contacts as users
+                allUsers.removeAll{user -> user.userId !in contactIdsForCurrentUser}
+
+
+                // All contacts from contacts = All existing contacts from current users contacts
+                allUsers.forEach {
+                    it.contacts.values.forEach { currentContact ->
+                        if(!allContactsFromContacts.contains(currentContact))
+                        {
+                            allContactsFromContacts.add(currentContact)
+                        }
+                    }
+                }
+
+                // Remove all contacts already existing in current users contacts
+                allContactsFromContacts.removeAll{user -> user.userId in contactIdsForCurrentUser}
+                // Remove user himself/herself
+                allContactsFromContacts.removeIf{user -> user.userId == currentUserId }
+
+
+                database.child("users").removeEventListener(this)
+                recContacts.value = allContactsFromContacts
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+
 }

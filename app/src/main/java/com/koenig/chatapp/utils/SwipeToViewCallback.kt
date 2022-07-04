@@ -14,7 +14,7 @@ abstract class SwipeToViewCallback(context: Context) : ItemTouchHelper.SimpleCal
     private val intrinsicWidth = viewIcon?.intrinsicWidth
     private val intrinsicHeight = viewIcon?.intrinsicHeight
     private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#2196F3")
+    private val backgroundColor = Color.parseColor("#8682ff")
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)}
 
     override fun onMove(

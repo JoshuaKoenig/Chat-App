@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
         <variable
@@ -9,26 +11,37 @@
             type="com.koenig.chatapp.models.ContactModel" />
     </data>
 
-    <androidx.cardview.widget.CardView
-        xmlns:tools="http://schemas.android.com/tools"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:elevation="24dp">
+        android:elevation="24dp"
+        app:shapeAppearance="@style/ShapeAppearanceOverlay.App.Card.Media"
+        app:strokeColor="#4D6C63FF"
+        app:cardElevation="2dp"
+        android:shadowColor="@color/colorPrimary"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@color/colorPrimary"
+            android:layout_height="75dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="10dp"
+            android:background="#F8F8F8"
+            android:paddingStart="10dp">
 
             <ImageView
                 android:id="@+id/imageUser"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="10dp"
                 android:src="@drawable/ic_profile"/>
 
             <TextView
@@ -40,7 +53,7 @@
                 android:text="@{currentContact.userName}"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="2.5"
-                android:textColor="@color/white"
+                android:textColor="#990E0E0E"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="20sp"
                 tools:text="User Name"
@@ -48,9 +61,8 @@
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/buttonAcceptUser"
-                android:theme="@style/Button_Theme"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:icon="@drawable/ic_add_user"
                 android:layout_marginEnd="10dp"
                 android:backgroundTint="@color/green"
@@ -58,7 +70,6 @@
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/buttonRejectUser"
-                android:theme="@style/Button_Theme"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:icon="@drawable/ic_reject_request"
@@ -69,7 +80,6 @@
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/buttonRemoveOpenRequest"
-                android:theme="@style/Button_Theme"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:icon="@drawable/ic_delete"
@@ -79,5 +89,5 @@
                 />
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>
