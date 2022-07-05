@@ -1,6 +1,5 @@
 package com.koenig.chatapp.ui.contactProfileManager
 
-import android.R
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -8,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navOptions
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.databinding.FragmentContactProfileBinding
 import com.koenig.chatapp.models.ContactModel
@@ -69,12 +67,7 @@ class ContactProfileFragment : Fragment() {
         fragBinding.buttonMap.setOnClickListener {
 
             val action = ContactProfileFragmentDirections.actionContactProfileFragmentToMapsFragment(args.contactModel, false)
-            findNavController().navigate(action, navOptions {
-                anim {
-                    enter = R.animator.fade_in
-                    exit = R.animator.fade_out
-                }
-            })
+            findNavController().navigate(action)
         }
 
         // OBSERVE
@@ -116,15 +109,12 @@ class ContactProfileFragment : Fragment() {
         fragBinding.textContactStatus.setText(args.contactModel.status)
         fragBinding.textContactMail.text = args.contactModel.email
 
-        if (args.contactModel.photoUri.isNotEmpty())
-        {
-            Picasso.get().load(args.contactModel.photoUri)
-                .resize(300, 300)
-                .transform(customTransformation())
-                .centerCrop()
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .into(fragBinding.imageContactUser)
-        }
+        Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/chatapp-4dffc.appspot.com/o/photos%2F${args.contactModel.userId}.jpg?alt=media&token=3a3b9aeb-8193-44bd-b1d3-54b96a8de90f")
+            .resize(200, 200)
+            .transform(customTransformation())
+            .centerCrop()
+            .memoryPolicy(MemoryPolicy.NO_CACHE)
+            .into(fragBinding.imageContactUser)
     }
 
     private fun renderMapButton(isMapEnabled: Boolean)

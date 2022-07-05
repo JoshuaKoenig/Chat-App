@@ -3,6 +3,7 @@ package com.koenig.chatapp.adapters
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,7 +82,6 @@ class GroupChatAdapter constructor(private var groupChats: ArrayList<GroupModel>
             {
                 binding.textMessageTime.text = dateString
             }
-
 
             Picasso.get().load(groupChat.photoUri)
                 .resize(200, 200)

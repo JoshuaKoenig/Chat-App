@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import com.google.firebase.auth.FirebaseUser
 import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentProfileBinding
@@ -127,24 +126,14 @@ class ProfileFragment : Fragment() {
 
         fragBinding.buttonMap.setOnClickListener {
             val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment()
-            findNavController().navigate(action, navOptions {
-                anim {
-                    enter = android.R.animator.fade_in
-                    exit = android.R.animator.fade_out
-                }
-            })
+            findNavController().navigate(action)
         }
 
         fragBinding.buttonContacts.setOnClickListener {
             val action = ProfileFragmentDirections.actionProfileFragmentToContactsFragment(
                 ContactClickModes.DEFAULTMODE, null)
 
-            findNavController().navigate(action, navOptions {
-                anim {
-                    enter = android.R.animator.fade_in
-                    exit = android.R.animator.fade_out
-                }
-            })
+            findNavController().navigate(action)
         }
         return  root
     }
@@ -168,9 +157,6 @@ class ProfileFragment : Fragment() {
         if (result.resultCode == Activity.RESULT_OK) {
             val intent = result.data
 
-            // Update User
-            profileViewModel.updateProfileImage(loggedInViewModel.liveFirebaseUser.value!!.uid, intent!!.data!!)
-
             // Update Image DB
             FirebaseImageManager.updateUserImage(
                 loggedInViewModel.liveFirebaseUser.value!!.uid,
@@ -178,6 +164,12 @@ class ProfileFragment : Fragment() {
                 fragBinding.imageUser,
                 true
             )
+
+            FirebaseImageManager.imageUri.observe(viewLifecycleOwner)
+            {
+                // Update User
+                profileViewModel.updateProfileImage(loggedInViewModel.liveFirebaseUser.value!!.uid, it)
+            }
         }
     }
 
@@ -206,6 +198,7 @@ class ProfileFragment : Fragment() {
             }
             else
             {
+                // Sets the Picture for current user
                 FirebaseImageManager.updateUserImage(
                     currentUser.uid,
                     FirebaseImageManager.imageUri.value,

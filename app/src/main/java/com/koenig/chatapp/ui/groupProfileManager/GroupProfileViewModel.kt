@@ -1,7 +1,10 @@
 package com.koenig.chatapp.ui.groupProfileManager
 
+import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import com.koenig.chatapp.firebase.FirebaseGroupChatManager
+import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.models.ContactModel
 import java.lang.Exception
 
@@ -53,10 +56,12 @@ class GroupProfileViewModel : ViewModel() {
         }
     }
 
-    fun updateGroupImage(groupId: String, newImageUri: String)
+    fun updateGroupImage(groupId: String, newImageUri: String, imageView: ImageView)
     {
         try {
-            FirebaseGroupChatManager.updateGroupImage(groupId, newImageUri)
+            // TODO: BITMAP
+             FirebaseImageManager.updateGroupImage(groupId, newImageUri.toUri(), imageView, true)
+          //  FirebaseGroupChatManager.updateGroupImage(groupId, newImageUri)
         }
         catch (e: Exception)
         {

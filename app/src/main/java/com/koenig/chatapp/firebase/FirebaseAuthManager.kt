@@ -97,7 +97,6 @@ class FirebaseAuthManager(application: Application) {
                     FirebaseDBManager.createUser(firebaseAuth!!.currentUser!!)
                 }
             }
-
     }
 
     private fun configureGoogleSignIn()
@@ -113,13 +112,19 @@ class FirebaseAuthManager(application: Application) {
     fun firebaseAuthWithGoogle(account: GoogleSignInAccount)
     {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             firebaseAuth!!.signInWithCredential(credential)
                 .addOnCompleteListener(application!!.mainExecutor){ task ->
+
                     if (task.isSuccessful)
                     {
                         liveFirebaseUser.postValue(firebaseAuth!!.currentUser)
-                        FirebaseDBManager.createUser(firebaseAuth!!.currentUser!!)
+
+                        if(task.result.additionalUserInfo!!.isNewUser)
+                        {
+                            FirebaseDBManager.createUser(firebaseAuth!!.currentUser!!)
+                        }
                     }
                     else
                     {

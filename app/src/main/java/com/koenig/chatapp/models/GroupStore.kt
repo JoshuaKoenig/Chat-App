@@ -1,9 +1,10 @@
 package com.koenig.chatapp.models
 
+import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 
 interface GroupStore {
-    fun createGroupChat(group: GroupModel, firstMessage: MessageModel)
+    fun createGroupChat(group: GroupModel, firstMessage: MessageModel, imageView: ImageView)
     fun getGroupChatsForUser(userId: String, groups: MutableLiveData<List<GroupModel>>, groupFilter: String)
     fun addUserToGroupChat(groupId: String, contactToAdd: ContactModel)
     fun removeUserFromGroupChat(groupId: String, contactToRemoveId: String)

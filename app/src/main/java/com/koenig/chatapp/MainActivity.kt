@@ -173,7 +173,6 @@ class MainActivity : AppCompatActivity() {
                     false
                 )
             }
-
         }
     }
 

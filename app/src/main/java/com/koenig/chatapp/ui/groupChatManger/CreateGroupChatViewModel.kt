@@ -1,5 +1,6 @@
 package com.koenig.chatapp.ui.groupChatManger
 
+import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,8 +17,8 @@ class CreateGroupChatViewModel : ViewModel() {
         get() = currentGroupMembers
         set(value) { currentGroupMembers.value = value.value }
 
-    fun createGroupChat(newGroup: GroupModel, firstMessage: MessageModel)
+    fun createGroupChat(newGroup: GroupModel, firstMessage: MessageModel, imageView: ImageView)
     {
-        FirebaseGroupChatManager.createGroupChat(newGroup, firstMessage)
+        FirebaseGroupChatManager.createGroupChat(newGroup, firstMessage, imageView)
     }
 }

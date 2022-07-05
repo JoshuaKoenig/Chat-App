@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
@@ -79,6 +78,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
         (requireActivity() as MainActivity).toolbar.title = args.groupModel!!.groupName
 
+
         // Executed when come back from contacts fragment
         if (args.contactToAdd != null)
         {
@@ -116,12 +116,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
         // CLICK LISTENERS
         fragBinding.buttonAddUser.setOnClickListener {
             val action = GroupProfileFragmentDirections.actionGroupProfileFragmentToContactsFragment(ContactClickModes.ADDCONTACTMODE, args.groupModel)
-            findNavController().navigate(action, navOptions {
-                anim {
-                    enter = android.R.animator.fade_in
-                    exit = android.R.animator.fade_out
-                }
-            })
+            findNavController().navigate(action)
         }
 
         fragBinding.buttonSaveGroupName.setOnClickListener {
@@ -311,7 +306,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
             {
                 hasNewGroupImage = true
 
-                groupProfileViewModel.updateGroupImage(args.groupModel!!.groupId, intent.data.toString() )
+                groupProfileViewModel.updateGroupImage(args.groupModel!!.groupId, intent.data.toString(), fragBinding.imageGroup )
 
                 Picasso.get().load(intent.data)
                     .resize(200, 200)
@@ -388,12 +383,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
     override fun onClickShowUserProfile(user: ContactModel) {
         val action = GroupProfileFragmentDirections.actionGroupProfileFragmentToContactProfileFragment(user)
-        findNavController().navigate(action, navOptions {
-            anim {
-                enter = android.R.animator.fade_in
-                exit = android.R.animator.fade_out
-            }
-        })
+        findNavController().navigate(action)
     }
 
     override fun onClickRemoveUser(user: ContactModel) {

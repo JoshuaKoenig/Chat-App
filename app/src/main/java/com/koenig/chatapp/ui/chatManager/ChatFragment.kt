@@ -1,14 +1,18 @@
 package com.koenig.chatapp.ui.chatManager
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
@@ -46,6 +50,7 @@ class ChatFragment : Fragment() {
         val root = fragBinding.root
 
         fragBinding.recyclerViewChat.layoutManager = LinearLayoutManager(activity)
+        fragBinding.recyclerViewChat.visibility = View.GONE
 
         when(args.chatMode)
         {
@@ -109,6 +114,14 @@ class ChatFragment : Fragment() {
         message.message = fragBinding.textCurrentMessage.text.toString()
         message.fromUserName = loggedInViewModel.liveFirebaseUser.value!!.displayName.toString()
         chatViewModel.sendMessage(message)
+        fragBinding.textCurrentMessage.setText("")
+
+        requireActivity().currentFocus?.let {
+            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
+
+
     }
 
     private fun sendGroupMessage()
@@ -126,12 +139,13 @@ class ChatFragment : Fragment() {
         val groupMembers: ArrayList<ContactModel> = ArrayList(args.groupModel!!.groupMembers.values)
 
         chatViewModel.sendGroupMessage(message, groupMembers)
+        fragBinding.textCurrentMessage.setText("")
     }
 
     private fun renderChatAdapter(messages: ArrayList<MessageModel>)
     {
+        Log.d("Debug_Messages", messages.size.toString())
         fragBinding.progressBar.visibility = View.GONE
-        fragBinding.recyclerViewChat.visibility = View.VISIBLE
         fragBinding.recyclerViewChat.adapter = ChatAdapter(messages, loggedInViewModel.liveFirebaseUser.value!!.uid, requireContext())
 
         if (messages.isEmpty())
@@ -139,7 +153,6 @@ class ChatFragment : Fragment() {
             fragBinding.recyclerViewChat.visibility = View.GONE
             fragBinding.textNoChat.visibility = View.VISIBLE
             fragBinding.noMessagesImage.visibility = View.VISIBLE
-
         }
         else
         {
@@ -198,12 +211,7 @@ class ChatFragment : Fragment() {
             {
                 R.id.action_profile -> {
                     val action = ChatFragmentDirections.actionChatFragmentToContactProfileFragment(args.userModel!!)
-                    findNavController().navigate(action, navOptions {
-                        anim {
-                            enter = android.R.animator.fade_in
-                            exit = android.R.animator.fade_out
-                        }
-                    })
+                    findNavController().navigate(action)
                 }
 
                 android.R.id.home -> {
@@ -216,14 +224,8 @@ class ChatFragment : Fragment() {
             when(item.itemId)
             {
                 R.id.action_profile -> {
-
                     val action = ChatFragmentDirections.actionChatFragmentToGroupProfileFragment(args.groupModel!!)
-                    findNavController().navigate(action, navOptions {
-                        anim {
-                            enter = android.R.animator.fade_in
-                            exit = android.R.animator.fade_out
-                        }
-                    })
+                    findNavController().navigate(action)
                 }
 
                 android.R.id.home -> {

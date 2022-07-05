@@ -4,6 +4,7 @@ package com.koenig.chatapp.ui.mapManager
 import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,10 +46,10 @@ class MapsFragment : Fragment() {
             profileViewModel.observableProfile.observe(viewLifecycleOwner){
                 it?.let {
                    render(it)
+                   Log.d("Map", it.userName)
                 }
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -39,7 +39,7 @@ class FriendRequestAdapter constructor(private var requests: ArrayList<ContactMo
             binding.root.tag = user
             binding.currentContact = user
 
-            Picasso.get().load(user.photoUri)
+            Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/chatapp-4dffc.appspot.com/o/photos%2F${user.userId}.jpg?alt=media&token=3a3b9aeb-8193-44bd-b1d3-54b96a8de90f")
                 .resize(200, 200)
                 .transform(customTransformation())
                 .centerCrop()
@@ -48,18 +48,13 @@ class FriendRequestAdapter constructor(private var requests: ArrayList<ContactMo
 
             if (mode == "sentTab")
             {
-                binding.buttonRejectUser.visibility = View.GONE
-                binding.buttonAcceptUser.visibility = View.GONE
-                binding.buttonRemoveOpenRequest.visibility = View.VISIBLE
-                binding.buttonRemoveOpenRequest.setOnClickListener { listener.withdrawRequest(user) }
+                binding.imageAccept.visibility = View.GONE
+                binding.imageReject.visibility = View.VISIBLE
             }
             else if(mode == "receiveTab")
             {
-                binding.buttonRejectUser.visibility = View.VISIBLE
-                binding.buttonAcceptUser.visibility = View.VISIBLE
-                binding.buttonRemoveOpenRequest.visibility = View.GONE
-                binding.buttonAcceptUser.setOnClickListener { listener.onAcceptRequest(user) }
-                binding.buttonRejectUser.setOnClickListener { listener.onRejectRequest(user) }
+                binding.imageAccept.visibility = View.VISIBLE
+                binding.imageReject.visibility = View.VISIBLE
             }
 
             binding.executePendingBindings()

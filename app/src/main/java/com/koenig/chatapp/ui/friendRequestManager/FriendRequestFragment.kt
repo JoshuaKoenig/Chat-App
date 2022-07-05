@@ -1,6 +1,8 @@
 package com.koenig.chatapp.ui.friendRequestManager
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,15 +10,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.koenig.chatapp.adapters.FriendRequestAdapter
 import com.koenig.chatapp.adapters.FriendRequestClickListener
 import com.koenig.chatapp.databinding.FragmentFriendRequestBinding
+import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
+import com.koenig.chatapp.utils.SwipeToAcceptCallback
+import com.koenig.chatapp.utils.SwipeToRemoveCallback
+import com.koenig.chatapp.utils.SwipeToViewCallback
 
 class FriendRequestFragment : Fragment(), FriendRequestClickListener {
 
@@ -27,6 +35,8 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
     private val friendRequestViewModel: FriendRequestViewModel by activityViewModels()
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by activityViewModels()
+
+    val mainHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +53,35 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
         fragBinding.recyclerViewRequests.layoutManager = LinearLayoutManager(activity)
         fragBinding.noContent.text = "No open Requests"
 
+        // ITEM TOUCH HANDLER
+        // Swipe to accept friend requests
+        val swipeAcceptHandler = object : SwipeToAcceptCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+                onAcceptRequest(viewHolder.itemView.tag as ContactModel)
+            }
+        }
+        val itemTouchAcceptHelper = ItemTouchHelper(swipeAcceptHandler)
+
+        // Swipe to reject friend request
+        val swipeToReject = object : SwipeToRemoveCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                onRejectRequest(viewHolder.itemView.tag as ContactModel)
+            }
+        }
+        val itemTouchRejectHelper = ItemTouchHelper(swipeToReject)
+
+        // Swipe to withdraw sent request
+        val swipeToWithdraw = object : SwipeToRemoveCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                withdrawRequest(viewHolder.itemView.tag as ContactModel)
+            }
+        }
+        val itemTouchWithdrawHelper = ItemTouchHelper(swipeToWithdraw)
+
+
+        itemTouchWithdrawHelper.attachToRecyclerView(fragBinding.recyclerViewRequests)
+
         fragBinding.tablayout.addOnTabSelectedListener(object  : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if(tab != null)
@@ -54,11 +93,18 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
                             fragBinding.noContent.text = "No open Requests"
                             currentTab = tab.contentDescription.toString()
                             startObservingOpenRequests()
+                            itemTouchAcceptHelper.attachToRecyclerView(null)
+                            itemTouchRejectHelper.attachToRecyclerView(null)
+                            itemTouchWithdrawHelper.attachToRecyclerView(fragBinding.recyclerViewRequests)
+
                         }
                         "receiveTab" -> {
                             fragBinding.noContent.text = "No received Requests"
                             currentTab = tab.contentDescription.toString()
                             startObservingReceivedRequests()
+                            itemTouchAcceptHelper.attachToRecyclerView(fragBinding.recyclerViewRequests)
+                            itemTouchRejectHelper.attachToRecyclerView(fragBinding.recyclerViewRequests)
+                            itemTouchWithdrawHelper.attachToRecyclerView(null)
                         }
                     }
                 }
@@ -75,6 +121,7 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
 
         // OBSERVING
         startObservingOpenRequests()
+
 
         return root
     }
@@ -112,7 +159,6 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
                     fragBinding.progressBar.visibility = View.GONE
                 }
 
-                friendRequestViewModel.observableOpenFriendReq.removeObserver(this)
             }
         })
     }
@@ -125,14 +171,13 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
 
         friendRequestViewModel.observableReceivedFriendReq.observe(viewLifecycleOwner, object : Observer<List<ContactModel>> {
             override fun onChanged(t: List<ContactModel>?) {
-
+                Log.d("Debug_Re", "Received")
                 if (currentTab == "receiveTab")
                 {
                     renderFriendRequests(t as ArrayList, "receiveTab")
                     fragBinding.progressBar.visibility = View.GONE
                 }
 
-                friendRequestViewModel.observableReceivedFriendReq.removeObserver(this)
             }
         })
     }
@@ -145,6 +190,13 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
                 friendRequestViewModel.getOpenFriendRequests(firebaseUser.uid)
                 friendRequestViewModel.getReceivedFriendRequests(firebaseUser.uid)
                 profileViewModel.getProfile(firebaseUser.uid)
+
+                mainHandler.post(object : Runnable {
+                    override fun run() {
+                        friendRequestViewModel.getReceivedFriendRequests(firebaseUser.uid)
+                        mainHandler.postDelayed(this, 7000)
+                    }
+                })
             }
         })
     }
@@ -164,15 +216,17 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
             currentUser.recentMessage = MessageModel()
 
             friendRequestViewModel.acceptFriendRequest(currentUser, addUser)
-            startObservingReceivedRequests()
+            friendRequestViewModel.getReceivedFriendRequests(loggedInViewModel.liveFirebaseUser.value!!.uid)
         }
     }
 
     override fun onRejectRequest(rejectUser: ContactModel) {
         friendRequestViewModel.rejectFriendRequest(loggedInViewModel.liveFirebaseUser.value!!.uid, rejectUser.userId)
+        friendRequestViewModel.getReceivedFriendRequests(loggedInViewModel.liveFirebaseUser.value!!.uid)
     }
 
     override fun withdrawRequest(withdrawUser: ContactModel) {
         friendRequestViewModel.withdrawRequest(loggedInViewModel.liveFirebaseUser.value!!.uid, withdrawUser.userId)
+        friendRequestViewModel.getOpenFriendRequests(loggedInViewModel.liveFirebaseUser.value!!.uid)
     }
 }

@@ -1,9 +1,17 @@
 package com.koenig.chatapp.firebase
 
+import android.app.Activity
+import android.content.Intent
+import android.media.Image
+import android.net.Uri
+import android.util.Log
+import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.koenig.chatapp.models.*
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -12,7 +20,7 @@ object FirebaseGroupChatManager: GroupStore {
 
     private var database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
-    override fun createGroupChat(group: GroupModel, firstMessage: MessageModel)
+    override fun createGroupChat(group: GroupModel, firstMessage: MessageModel, imageView: ImageView)
     {
         val key = database.child("groups").push().key ?: return
         group.groupId = key
@@ -22,10 +30,19 @@ object FirebaseGroupChatManager: GroupStore {
         firstMessage.toUserId = key
         FirebaseMessageManager.sendGroupMessage(firstMessage, ArrayList(group.groupMembers.values))
 
+        Log.d("PhotoUriCreate", group.groupId)
+
         val groupValues = group.toMap()
         val childAdd = HashMap<String, Any>()
         childAdd["/groups/$key"] = groupValues
         database.updateChildren(childAdd)
+
+        FirebaseImageManager.updateGroupImage(
+            group.groupId,
+            group.photoUri.toUri(),
+            imageView,
+            false
+        )
     }
 
     override fun getGroupChatsForUser(userId: String, groups: MutableLiveData<List<GroupModel>>, groupFilter: String)
@@ -115,6 +132,7 @@ object FirebaseGroupChatManager: GroupStore {
     }
 
     override fun updateGroupImage(groupId: String, newImageUrl: String) {
+       Log.d("Debug_UpdateImage", newImageUrl)
         database
             .child("groups")
             .child(groupId)

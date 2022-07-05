@@ -7,9 +7,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.ImageView
@@ -20,7 +22,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navOptions
 import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentCreateGroupChatBinding
 import com.koenig.chatapp.enums.ContactClickModes
@@ -28,11 +29,13 @@ import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
+import com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewViewModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
+import java.io.IOException
 import java.time.Instant
 
 class CreateGroupChatFragment : Fragment() {
@@ -119,15 +122,18 @@ class CreateGroupChatFragment : Fragment() {
                     firstMessage.timeStamp = Instant.now().toString()
                 }
 
-                groupViewModel.createGroupChat(newGroup, firstMessage)
+                groupViewModel.createGroupChat(newGroup, firstMessage, fragBinding.imageGroupChat)
                 findNavController().navigateUp()
-
                 // CLEAR
                 groupViewModel.currentGroupMembers.postValue(emptyList())
                 requireArguments().clear()
                 hasGroupName = false
                 hasGroupDescription = false
                 clearPreferences()
+            }
+            else
+            {
+                fragBinding.textGroupName.error = "Required"
             }
         }
 
@@ -139,12 +145,7 @@ class CreateGroupChatFragment : Fragment() {
                 currentGroup.groupMembers[it.userId] = it
             }
             val action = CreateGroupChatFragmentDirections.actionCreateGroupChatFragmentToContactsFragment(ContactClickModes.CREATEGROUPMODE, currentGroup)
-            findNavController().navigate(action, navOptions {
-                anim {
-                    enter = android.R.animator.fade_in
-                    exit = android.R.animator.fade_out
-                }
-            })
+            findNavController().navigate(action)
         }
 
         // OBSERVE
@@ -223,7 +224,7 @@ class CreateGroupChatFragment : Fragment() {
             lp.setMargins(0, 0, pxFromDp5.toInt(), 0)
             imageView.layoutParams = lp
 
-            Picasso.get().load(it.photoUri)
+            Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/chatapp-4dffc.appspot.com/o/photos%2F${it.userId}.jpg?alt=media&token=3a3b9aeb-8193-44bd-b1d3-54b96a8de90f")
                 .resize(200, 200)
                 .transform(customTransformation())
                 .centerCrop()
@@ -310,7 +311,8 @@ class CreateGroupChatFragment : Fragment() {
 
             if (intent!!.data != null)
             {
-                newGroup.photoUri = intent.data.toString()
+               // newGroup.photoUri = intent.data.toString()
+                newGroup.photoUri = readImageUri(result.resultCode, intent).toString()
 
                 Picasso.get().load(intent.data)
                     .resize(200, 200)
@@ -357,4 +359,15 @@ class CreateGroupChatFragment : Fragment() {
             .cornerRadius(35f)
             .oval(false)
             .build()
+
+    private fun readImageUri(resultCode: Int, data: Intent?): Uri? {
+        var uri: Uri? = null
+        if (resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            try { uri = data.data }
+            catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return uri
+    }
 }

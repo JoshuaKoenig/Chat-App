@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.storage.FirebaseStorage
@@ -19,6 +20,7 @@ object FirebaseImageManager {
 
     var storage = FirebaseStorage.getInstance().reference
     var imageUri = MutableLiveData<Uri>()
+    var groupImageUri = MutableLiveData<Uri>()
 
     fun checkStorageForExistingProfilePic(userid: String) {
         val imageRef = storage.child("photos").child("${userid}.jpg")
@@ -33,10 +35,10 @@ object FirebaseImageManager {
         }
     }
 
+
     fun uploadImageToFirebase(userid: String, bitmap: Bitmap, updating : Boolean) {
-        // Get the data from an ImageView as bytes
+
         val imageRef = storage.child("photos").child("${userid}.jpg")
-        //val bitmap = (imageView as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
         lateinit var uploadTask: UploadTask
 
@@ -44,12 +46,14 @@ object FirebaseImageManager {
         val data = baos.toByteArray()
 
         imageRef.metadata.addOnSuccessListener { //File Exists
-            if(updating) // Update existing Image
+            if(updating)
             {
                 uploadTask = imageRef.putBytes(data)
                 uploadTask.addOnSuccessListener { ut ->
                     ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
                         imageUri.value = task.result!!
+                        Log.d("Task", task.result.toString())
+                        // Can update the userImageUri => task.result
                     }
                 }
             }
@@ -58,12 +62,70 @@ object FirebaseImageManager {
             uploadTask.addOnSuccessListener { ut ->
                 ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
                     imageUri.value = task.result!!
+                    FirebaseDBManager.updateUserImage(userid, task.result)
                 }
             }
         }
     }
 
+    fun uploadGroupImage(groupId: String, bitmap: Bitmap, updating : Boolean)
+    {
+        Log.d("Debug_Upload_Id", groupId)
+        val imageRef = storage.child("photos").child("${groupId}.jpg")
+        val baos = ByteArrayOutputStream()
+        lateinit var uploadTask: UploadTask
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        imageRef.metadata.addOnSuccessListener { //File Exists
+
+        uploadTask = imageRef.putBytes(data)
+        uploadTask.addOnSuccessListener { ut ->
+            ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
+                groupImageUri.value = task.result!!
+                Log.d("Debug_Task", task.result.toString())
+                FirebaseGroupChatManager.updateGroupImage(groupId, task.result.toString())
+                }
+            }
+        }.addOnFailureListener{
+            uploadTask = imageRef.putBytes(data)
+            uploadTask.addOnSuccessListener { ut ->
+                ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
+                    groupImageUri.value = task.result!!
+                    Log.d("Debug_Task_F", task.result.toString())
+                    FirebaseGroupChatManager.updateGroupImage(groupId, task.result.toString())
+                }
+            }
+        }
+    }
+
+    fun updateGroupImage(groupId: String, imageUri: Uri?, imageView: ImageView, updating: Boolean)
+    {
+        Picasso.get().load(imageUri)
+            .resize(200, 200)
+            .transform(customTransformation())
+            .memoryPolicy(MemoryPolicy.NO_CACHE)
+            .centerCrop()
+            .into(object : Target {
+                override fun onBitmapLoaded(bitmap: Bitmap?,
+                                            from: Picasso.LoadedFrom?
+                ) {
+
+                    uploadGroupImage(groupId, bitmap!!,updating)
+                    imageView.setImageBitmap(bitmap)
+                }
+
+                override fun onBitmapFailed(e: java.lang.Exception?,
+                                            errorDrawable: Drawable?) {
+                }
+
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+            })
+    }
+
     fun updateUserImage(userid: String, imageUri : Uri?, imageView: ImageView, updating : Boolean) {
+        Log.d("Image", imageUri.toString())
         Picasso.get().load(imageUri)
             .resize(200, 200)
             .transform(customTransformation())

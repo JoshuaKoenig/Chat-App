@@ -39,7 +39,7 @@ class ContactsAdapter constructor(private var contacts: ArrayList<ContactModel>,
             binding.root.tag = user
             binding.contact = user
 
-            Picasso.get().load(user.photoUri)
+            Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/chatapp-4dffc.appspot.com/o/photos%2F${user.userId}.jpg?alt=media&token=3a3b9aeb-8193-44bd-b1d3-54b96a8de90f")
                 .resize(200, 200)
                 .transform(customTransformation())
                 .centerCrop()

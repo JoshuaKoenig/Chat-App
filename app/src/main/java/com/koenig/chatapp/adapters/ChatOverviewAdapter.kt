@@ -3,11 +3,14 @@ package com.koenig.chatapp.adapters
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.koenig.chatapp.databinding.ListItemChatContactBinding
+import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.models.ContactModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
@@ -19,7 +22,7 @@ interface ChatOverviewClickListener{
     fun onClickOpenChat(selectedUser: ContactModel)
 }
 
-class ChatOverviewAdapter constructor(private var contacts: ArrayList<ContactModel>, private val listener: ChatOverviewClickListener) : RecyclerView.Adapter<ChatOverviewAdapter.MainHolder>()
+class ChatOverviewAdapter constructor(private var contacts: ArrayList<ContactModel>, private val listener: ChatOverviewClickListener, private val owner: androidx.lifecycle.LifecycleOwner) : RecyclerView.Adapter<ChatOverviewAdapter.MainHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         val binding = ListItemChatContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -76,7 +79,7 @@ class ChatOverviewAdapter constructor(private var contacts: ArrayList<ContactMod
                 binding.textMessageTime.text = dateString
             }
 
-            Picasso.get().load(user.photoUri)
+            Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/chatapp-4dffc.appspot.com/o/photos%2F${user.userId}.jpg?alt=media&token=3a3b9aeb-8193-44bd-b1d3-54b96a8de90f")
                 .resize(200, 200)
                 .transform(customTransformation())
                 .centerCrop()

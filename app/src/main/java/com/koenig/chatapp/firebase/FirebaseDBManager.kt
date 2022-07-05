@@ -197,17 +197,17 @@ object FirebaseDBManager: UserStore {
     {
         database.child("users").child(currentUserId).child("receivedRequests").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val openRequests = ArrayList<ContactModel>()
+                val receivedRequests = ArrayList<ContactModel>()
                 val children = snapshot.children
 
                 children.forEach{
                     val contactUserModel = it.getValue(ContactModel::class.java)
-                    openRequests.add(contactUserModel!!)
+                    receivedRequests.add(contactUserModel!!)
                 }
 
                 database.child("users").child(currentUserId).child("receivedRequests").removeEventListener(this)
 
-                receivedFriendRequests.value = openRequests
+                receivedFriendRequests.value = receivedRequests
 
             }
 

@@ -1,6 +1,5 @@
 package com.koenig.chatapp.ui.chatOverviewManager
 
-import android.R
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -13,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -127,22 +125,12 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
         // CLICK LISTENERS
         fragBinding.addGroupChat.setOnClickListener {
             val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToCreateGroupChatFragment()
-            findNavController().navigate(action, navOptions {
-                anim {
-                    enter = R.animator.fade_in
-                    exit = R.animator.fade_out
-                }
-            })
+            findNavController().navigate(action)
         }
 
         fragBinding.buttonContacts.setOnClickListener {
             val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToContactsFragment(ContactClickModes.DEFAULTMODE, null)
-            findNavController().navigate(action, navOptions {
-                anim {
-                    enter = android.R.animator.fade_in
-                    exit = android.R.animator.fade_out
-                }
-            })
+            findNavController().navigate(action)
         }
 
         // OBSERVE
@@ -169,6 +157,14 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
             }
         }
 
+        // Get messages immediately
+        chatViewModel.observableMessageForUser.observe(viewLifecycleOwner)
+        {
+            chatOverviewViewModel.getAllChatContacts(loggedInViewModel.liveFirebaseUser.value!!.uid, "")
+            selectSingleChatTab()
+        }
+
+
         // ITEM TOUCH HANDLER
         val swipeViewHandler = object : SwipeToViewCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -191,7 +187,7 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
 
     private fun renderChatContacts(contacts: ArrayList<ContactModel>)
     {
-        fragBinding.recyclerViewOpenChats.adapter = ChatOverviewAdapter(contacts, this)
+        fragBinding.recyclerViewOpenChats.adapter = ChatOverviewAdapter(contacts, this, viewLifecycleOwner)
 
         if(contacts.isEmpty())
         {
@@ -274,23 +270,13 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
     private fun viewContactProfile(contact: ContactModel)
     {
         val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToContactProfileFragment(contact)
-        findNavController().navigate(action, navOptions {
-            anim {
-                enter = android.R.animator.fade_in
-                exit = android.R.animator.fade_out
-            }
-        })
+        findNavController().navigate(action)
     }
 
     private fun viewGroupProfile(group: GroupModel)
     {
         val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToGroupProfileFragment(group)
-        findNavController().navigate(action, navOptions {
-            anim {
-                enter = android.R.animator.fade_in
-                exit = android.R.animator.fade_out
-            }
-        })
+        findNavController().navigate(action)
     }
 
     // OVERRIDES
@@ -299,28 +285,19 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner){
             chatOverviewViewModel.getAllChatContacts(it.uid, "")
             chatOverviewViewModel.getAllGroupChats(it.uid, "")
+            chatViewModel.receiveMessageForUser(it.uid)
         }
     }
 
     override fun onClickOpenChat(selectedUser: ContactModel) {
         chatOverviewViewModel.removeHasNewMessageFlag(loggedInViewModel.liveFirebaseUser.value!!.uid, selectedUser.userId)
         val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToChatFragment(ChatModes.SINGLECHATMODE, selectedUser, null)
-        findNavController().navigate(action, navOptions {
-            anim {
-                enter = android.R.animator.fade_in
-                exit = android.R.animator.fade_out
-            }
-        })
+        findNavController().navigate(action)
     }
 
     override fun onClickOpenGroupChat(selectedGroupChat: GroupModel) {
         chatOverviewViewModel.removeHasNewGroupMessageFlag(selectedGroupChat.groupId, loggedInViewModel.liveFirebaseUser.value!!.uid)
         val action = ChatOverviewFragmentDirections.actionChatOverviewFragmentToChatFragment(ChatModes.GROUPCHATMODE, null, selectedGroupChat)
-        findNavController().navigate(action, navOptions {
-            anim {
-                enter = android.R.animator.fade_in
-                exit = android.R.animator.fade_out
-            }
-        })
+        findNavController().navigate(action)
     }
 }

@@ -39,6 +39,17 @@
             android:paddingStart="10dp">
 
             <ImageView
+                android:id="@+id/imageAccept"
+                android:layout_gravity="center"
+                android:layout_width="15dp"
+                android:layout_height="40dp"
+                android:background="@drawable/round_corners_compl"
+                android:src="@drawable/ic_arrow_right"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/green"
+                />
+
+            <ImageView
                 android:id="@+id/imageUser"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -59,33 +70,15 @@
                 tools:text="User Name"
                 />
 
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/buttonAcceptUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_add_user"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/green"
-                />
-
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/buttonRejectUser"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:icon="@drawable/ic_reject_request"
-                android:layout_marginEnd="10dp"
+            <ImageView
+                android:id="@+id/imageReject"
+                android:layout_gravity="center"
+                android:layout_width="15dp"
+                android:layout_height="40dp"
+                android:background="@drawable/round_corners_compl"
+                android:src="@drawable/ic_arrow_left"
+                android:layout_marginStart="10dp"
                 android:backgroundTint="@color/red"
-
-                />
-
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/buttonRemoveOpenRequest"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:icon="@drawable/ic_delete"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/red"
-
                 />
 
         </LinearLayout>
