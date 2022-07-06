@@ -214,6 +214,7 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
             currentUser.hasNewMessage = false
             currentUser.hasConversation = false
             currentUser.recentMessage = MessageModel()
+            currentUser.hasAlreadyLiked = false
 
             friendRequestViewModel.acceptFriendRequest(currentUser, addUser)
             friendRequestViewModel.getReceivedFriendRequests(loggedInViewModel.liveFirebaseUser.value!!.uid)

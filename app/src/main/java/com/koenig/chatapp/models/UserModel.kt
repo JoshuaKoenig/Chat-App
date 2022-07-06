@@ -21,7 +21,8 @@ data class UserModel(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
     var hasLocationPermission: Boolean = false,
-    var hasNotificationEnabled: Boolean = true
+    var hasNotificationEnabled: Boolean = true,
+    var amountLikes: Int = 0
 
 ) : Parcelable
 {
@@ -40,10 +41,9 @@ data class UserModel(
             "latitude" to latitude,
             "longitude" to longitude,
             "hasLocationPermission" to hasLocationPermission,
-            "hasNotificationEnabled" to hasNotificationEnabled
+            "hasNotificationEnabled" to hasNotificationEnabled,
+            "amountLikes" to amountLikes
         )
     }
 }
 
-// IsMapEnabled => Can other users see the map
-// HasLocationPermission => Whether location was granted or not

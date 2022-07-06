@@ -29,4 +29,9 @@ interface UserStore {
     fun areNotificationsEnabled(userId: String, areNotificationsEnabled: MutableLiveData<Boolean>)
 
     fun getRecommendedContacts( currentUserId: String, contactIdsForCurrentUser: ArrayList<String>, recContacts: MutableLiveData<List<UserModel>>)
+
+    fun getLikesForUser(currentUserId: String, amountLikes: MutableLiveData<Int>)
+    fun increaseLikeForUser(userId: String, currentLikeAmount: Int)
+    fun setHasLiked(currentUserId: String, contactId: String, hasLiked: Boolean)
+    fun hasAlreadyLiked(currentUserId: String, contactId: String, hasAlreadyLiked: MutableLiveData<Boolean>)
 }

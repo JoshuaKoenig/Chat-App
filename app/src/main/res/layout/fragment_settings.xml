@@ -6,12 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".ui.settingsManager.SettingsFragment">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:indicatorColor="@color/colorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/UserContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:checkable="true"
         android:clickable="true"
@@ -62,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:checkable="true"
         android:clickable="true"
@@ -99,49 +109,47 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
+
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Internet"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:text="Internet"
                     android:textColor="?android:attr/textColorSecondary" />
 
                 <Button
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+
                     android:text="REQUIRED"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:textColor="@color/red"
-                    android:textStyle="italic"
-                    />
+                    android:textStyle="italic" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
+
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_height="wrap_content"
-                    android:text="Location"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:text="Location"
                     android:textColor="?android:attr/textColorSecondary" />
 
                 <Button
                     android:id="@+id/buttonLocationPermission"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+
                     android:text="ALLOWED"
-                    android:textColor="?android:attr/textColorSecondary"
-                    style="?attr/materialButtonOutlinedStyle"
-                    />
+                    android:textColor="?android:attr/textColorSecondary" />
             </LinearLayout>
 
         </LinearLayout>
@@ -150,32 +158,18 @@
 
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/DarkLightModeContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:checkable="true"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PersmissionContainer"/>
-
-    <com.google.android.material.card.MaterialCardView
         android:id="@+id/MapContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:checkable="true"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DarkLightModeContainer">
+        app:layout_constraintTop_toBottomOf="@+id/PersmissionContainer">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -216,7 +210,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:checkable="true"
         android:clickable="true"

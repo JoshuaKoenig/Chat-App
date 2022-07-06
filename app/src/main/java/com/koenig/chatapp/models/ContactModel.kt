@@ -9,7 +9,6 @@ import kotlinx.parcelize.Parcelize
 @IgnoreExtraProperties
 @Parcelize
 data class ContactModel(
-
     var userId: String = "",
     var userName: String = "",
     var email: String = "",
@@ -17,7 +16,8 @@ data class ContactModel(
     var status: String = "",
     var hasConversation: Boolean = false,
     var recentMessage: MessageModel = MessageModel(),
-    var hasNewMessage: Boolean = false
+    var hasNewMessage: Boolean = false,
+    var hasAlreadyLiked: Boolean = false
 
 ) : Parcelable
 {
@@ -31,6 +31,8 @@ data class ContactModel(
             "status" to status,
             "hasConversation" to hasConversation,
             "recentMessage" to recentMessage,
-            "hasNewMessage" to hasNewMessage)
+            "hasNewMessage" to hasNewMessage,
+            "hasAlreadyLiked" to hasAlreadyLiked
+        )
     }
 }

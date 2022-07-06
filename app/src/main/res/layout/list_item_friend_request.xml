@@ -39,14 +39,14 @@
             android:paddingStart="10dp">
 
             <ImageView
-                android:id="@+id/imageAccept"
+                android:id="@+id/imageReject"
                 android:layout_gravity="center"
                 android:layout_width="15dp"
                 android:layout_height="40dp"
                 android:background="@drawable/round_corners_compl"
-                android:src="@drawable/ic_arrow_right"
+                android:src="@drawable/ic_arrow_left"
                 android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/green"
+                android:backgroundTint="@color/red"
                 />
 
             <ImageView
@@ -71,14 +71,14 @@
                 />
 
             <ImageView
-                android:id="@+id/imageReject"
+                android:id="@+id/imageAccept"
                 android:layout_gravity="center"
                 android:layout_width="15dp"
                 android:layout_height="40dp"
                 android:background="@drawable/round_corners_compl"
-                android:src="@drawable/ic_arrow_left"
+                android:src="@drawable/ic_arrow_right"
                 android:layout_marginStart="10dp"
-                android:backgroundTint="@color/red"
+                android:backgroundTint="@color/green"
                 />
 
         </LinearLayout>

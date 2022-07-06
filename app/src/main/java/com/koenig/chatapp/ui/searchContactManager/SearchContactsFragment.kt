@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.koenig.chatapp.adapters.FoundUserAdapter
 import com.koenig.chatapp.adapters.FoundUserClickListener
@@ -189,6 +191,9 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
             currentUser.photoUri = it.photoUri
             currentUser.status = it.status
             friendRequestViewModel.sendFriendRequest(addUser,currentUser)
+
+            findNavController().navigateUp()
+            Snackbar.make(fragBinding.root, "Friend request sent to ${addUser.userName}", Snackbar.LENGTH_SHORT).show()
         }
     }
 }

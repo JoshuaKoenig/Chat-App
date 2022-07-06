@@ -7,6 +7,7 @@
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/ic_friend_request.xml" value="0.1235" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/ic_info.xml" value="0.1535" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/ic_info_outline.xml" value="0.1535" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/ic_like.xml" value="0.244" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/ic_message.xml" value="0.2555" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/ic_new_message.xml" value="0.2555" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/ic_profile.xml" value="0.1535" />
@@ -19,24 +20,25 @@
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/round_corners_compl.xml" value="0.239" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/side_nav_bar.xml" value="0.2035" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/drawable/stroke_white.xml" value="0.1535" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout-v23/fragment_contact_profile.xml" value="0.24954710144927536" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/activity_create_account.xml" value="0.20521590423257802" />
-        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/activity_login.xml" value="0.2" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/activity_login.xml" value="0.20521590423257802" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/activity_main.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/activity_notification_view.xml" value="0.20521590423257802" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/app_bar_main.xml" value="0.21014492753623187" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/content_main.xml" value="0.20512820512820512" />
-        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_about.xml" value="0.20521590423257802" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_about.xml" value="0.6271676300578035" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_chat.xml" value="0.25" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_chat_overview.xml" value="0.2418478260869565" />
-        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_contact_profile.xml" value="0.2" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_contact_profile.xml" value="0.6" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_contacts.xml" value="0.21014492753623187" />
-        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_create_group_chat.xml" value="0.2" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_create_group_chat.xml" value="0.536" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_friend_request.xml" value="0.2418478260869565" />
-        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_group_profile.xml" value="0.2" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_group_profile.xml" value="0.264" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_maps.xml" value="0.20521590423257802" />
-        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_profile.xml" value="0.2" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_profile.xml" value="0.4" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_search_contacts.xml" value="0.23505434782608695" />
-        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_settings.xml" value="0.2" />
+        <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/fragment_settings.xml" value="0.6" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/list_item_add_user.xml" value="0.25" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/list_item_chat_contact.xml" value="0.2418478260869565" />
         <entry key="..\:/Users/Joshua/Projektmappe/AndroidStudio/ChatApp/app/src/main/res/layout/list_item_contact.xml" value="0.264" />

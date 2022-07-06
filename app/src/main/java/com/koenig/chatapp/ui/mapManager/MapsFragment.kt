@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
 import com.koenig.chatapp.models.UserModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
@@ -43,10 +44,13 @@ class MapsFragment : Fragment() {
         }
         else
         {
+            (requireActivity() as MainActivity).toolbar.title = "${args.contact!!.userName}'s Location"
             profileViewModel.observableProfile.observe(viewLifecycleOwner){
                 it?.let {
-                   render(it)
-                   Log.d("Map", it.userName)
+                    if(it.userId == args.contact!!.userId)
+                    {
+                        render(it)
+                    }
                 }
             }
         }
@@ -73,12 +77,15 @@ class MapsFragment : Fragment() {
 
     private fun render(user: UserModel)
     {
+        val loc = LatLng(user.latitude, user.longitude)
+        val markerColor = BitmapDescriptorFactory.HUE_BLUE
         mapsViewModel.map.addMarker(
-            MarkerOptions().position(LatLng(user.latitude, user.longitude))
+            MarkerOptions().position(loc)
                 .title(user.userName)
                 .snippet(user.status)
-                .icon(BitmapDescriptorFactory.defaultMarker())
+                .icon(BitmapDescriptorFactory.defaultMarker(markerColor))
         )
+        mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 5f))
     }
 
     override fun onResume() {

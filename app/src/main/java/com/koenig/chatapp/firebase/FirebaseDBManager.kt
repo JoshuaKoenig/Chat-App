@@ -48,6 +48,7 @@ object FirebaseDBManager: UserStore {
         user.isMapEnabled = false
         user.hasLocationPermission = false
         user.hasNotificationEnabled = true
+        user.amountLikes = 0
 
 
         val userValues = user.toMap()
@@ -332,7 +333,14 @@ object FirebaseDBManager: UserStore {
         database.child("users").child(userId).child("isMapEnabled").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                isMapEnabled.value = snapshot.value as Boolean
+                if(snapshot.value != null)
+                {
+                    isMapEnabled.value = snapshot.value as Boolean
+                }
+                else{
+                    isMapEnabled.value = false
+                }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -443,5 +451,72 @@ object FirebaseDBManager: UserStore {
         })
     }
 
+    override fun getLikesForUser(currentUserId: String, amountLikes: MutableLiveData<Int>) {
 
+        database.child("users").child(currentUserId).child("amountLikes").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                if (snapshot.value != null)
+                {
+                    val likeValue: Long = snapshot.value as Long
+                    amountLikes.value = likeValue.toInt()
+                }
+                else
+                {
+                    amountLikes.value = 0
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
+    }
+
+    override fun increaseLikeForUser(userId: String, currentLikeAmount: Int) {
+
+        val newLikeAmount = currentLikeAmount + 1
+        Log.d("New Like Amount", newLikeAmount.toString())
+        database
+            .child("users")
+            .child(userId)
+            .child("amountLikes")
+            .setValue(newLikeAmount)
+    }
+
+    override fun hasAlreadyLiked(currentUserId: String, contactId: String, hasAlreadyLiked: MutableLiveData<Boolean>)
+    {
+        database.child("users").child(currentUserId).child("contacts").child(contactId).child("hasAlreadyLiked")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    if(snapshot.value != null)
+                    {
+                        hasAlreadyLiked.value = snapshot.value as Boolean
+                    }
+                    else
+                    {
+                        hasAlreadyLiked.value = false
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+    }
+
+  override fun setHasLiked(currentUserId: String, contactId: String, hasLiked: Boolean)
+  {
+      database
+          .child("users")
+          .child(currentUserId)
+          .child("contacts")
+          .child(contactId)
+          .child("hasAlreadyLiked")
+          .setValue(hasLiked)
+
+  }
 }

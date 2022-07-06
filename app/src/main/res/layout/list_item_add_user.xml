@@ -29,7 +29,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal"
             android:background="#F8F8F8"
@@ -41,28 +41,48 @@
                 android:layout_height="50dp"
                 android:src="@drawable/ic_profile"/>
 
-            <TextView
-                android:id="@+id/textUserName"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="2.5"
-                android:text="@{user.userName}"
-                android:textColor="#990E0E0E"
-                android:gravity="center_vertical|center_horizontal"
-                android:textSize="20sp"
-                tools:text="User Name"
-                />
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                >
+
+                <TextView
+                    android:id="@+id/textUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|start"
+                    android:text="@{user.userName}"
+                    android:textColor="#990E0E0E"
+                    android:textSize="18sp"
+                    tools:text="User Name"
+                    android:layout_marginBottom="2dp"
+                    />
+
+                <TextView
+                    android:id="@+id/textUserMail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{user.email}"
+                    android:textColor="@color/colorSecondary"
+                    android:gravity="center_vertical|start"
+                    android:textSize="14sp"
+                    tools:text="newuser@mail.com"
+                    android:textStyle="italic"
+                    />
+
+            </LinearLayout>
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/buttonAddUser"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:icon="@drawable/ic_add_user"
                 android:layout_marginEnd="10dp"
-                android:text="Add"
+
                 />
 
         </LinearLayout>

@@ -7,11 +7,19 @@
     android:background="@color/colorSecondary"
     tools:context=".ui.contactProfileManager.ContactProfileFragment">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageGroup"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -27,12 +35,12 @@
         android:id="@+id/buttonAddUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:theme="@style/Button_Theme"
         app:icon="@drawable/ic_add_user"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/FrameGroupName"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/FrameDescription"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,10 +88,10 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
             android:layout_weight="4"
             android:hint="Group Name"
             android:textColorHint="@color/white"
@@ -107,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:text="Group Name"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageGroup" />
@@ -117,9 +125,10 @@
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/buttonSaveGroupName"
             android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_height="match_parent"
             android:layout_gravity="center|center_horizontal|center_vertical"
-            android:layout_marginEnd="16dp"
+            android:theme="@style/Button_Theme"
             app:icon="@drawable/ic_save" />
 
     </LinearLayout>
@@ -142,10 +151,10 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
             android:layout_weight="4"
             android:hint="Description"
             android:textColorHint="@color/white"
@@ -168,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:text="Description"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageGroup" />
@@ -178,10 +187,11 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/buttonSaveDescription"
+            android:theme="@style/Button_Theme"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center|center_horizontal|center_vertical"
-            android:layout_marginEnd="16dp"
+
             app:icon="@drawable/ic_save" />
 
     </LinearLayout>
@@ -192,6 +202,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.45" />
+        app:layout_constraintGuide_percent="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

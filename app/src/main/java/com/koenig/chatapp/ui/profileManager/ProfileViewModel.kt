@@ -14,10 +14,14 @@ import java.lang.Exception
 class ProfileViewModel : ViewModel() {
 
     val userModel = MutableLiveData<UserModel>()
+    val amountLikes = MutableLiveData<Int>()
 
     var observableProfile: LiveData<UserModel>
         get() = userModel
         set(value) {userModel.value = value.value}
+
+    val observableLikes: LiveData<Int>
+        get() = amountLikes
 
     fun getProfile(userId: String)
     {
@@ -60,6 +64,17 @@ class ProfileViewModel : ViewModel() {
     {
         try {
             FirebaseDBManager.updateUserImage(userId, photoUri)
+        }
+        catch (e: Exception)
+        {
+            //TODO: Catch exception
+        }
+    }
+
+    fun getLikeAmount(currentUserId: String )
+    {
+        try {
+            FirebaseDBManager.getLikesForUser(currentUserId, amountLikes)
         }
         catch (e: Exception)
         {

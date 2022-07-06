@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +51,6 @@ class ProfileFragment : Fragment() {
         // OBSERVERS
         profileViewModel.observableProfile.observe(viewLifecycleOwner, Observer {
             render()
-            fragBinding.progressBar.visibility = View.GONE
         })
 
         // Enable own Map when location permission was given
@@ -61,7 +61,12 @@ class ProfileFragment : Fragment() {
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
             if (firebaseUser != null) {
                 updateProfile(firebaseUser)
+                fragBinding.progressBar.visibility = View.GONE
             }
+        }
+
+        profileViewModel.observableLikes.observe(viewLifecycleOwner){
+            renderCurrentLikes(it)
         }
 
         // TEXT CHANGE LISTENER
@@ -175,6 +180,7 @@ class ProfileFragment : Fragment() {
 
     private fun updateProfile(currentUser: FirebaseUser)
     {
+        // TODO: CHANGE
       FirebaseImageManager.imageUri.observe(viewLifecycleOwner) { result ->
             if (result == Uri.EMPTY)
             {
@@ -207,7 +213,6 @@ class ProfileFragment : Fragment() {
                 )
             }
           fragBinding.imageUser.visibility = View.VISIBLE
-          fragBinding.loadImageUser.visibility = View.GONE
         }
     }
 
@@ -216,10 +221,16 @@ class ProfileFragment : Fragment() {
         fragBinding.buttonMap.isEnabled = isMapEnabled
     }
 
+    private fun renderCurrentLikes(amountLikes: Int)
+    {
+        fragBinding.amountLikes.text = amountLikes.toString()
+    }
+
     override fun onResume() {
         super.onResume()
         profileViewModel.getProfile(loggedInViewModel.liveFirebaseUser.value?.uid!!)
         mapViewModel.getHasLocationPermission(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+        profileViewModel.getLikeAmount(loggedInViewModel.liveFirebaseUser.value?.uid!!)
     }
 
     // TODO: Outsource in Helpers.kt

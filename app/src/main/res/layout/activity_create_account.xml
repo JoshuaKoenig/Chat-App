@@ -22,21 +22,19 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="120dp"
+            android:layout_height="110dp"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_create_account"
-            />
+            android:src="@drawable/ic_create_account" />
 
         <TextView
-            android:layout_margin="0dp"
-            android:padding="0dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="0dp"
             android:text="Sign Up"
             android:textColor="@color/primary_text"
-            android:textSize="36sp"
-            android:textStyle="bold"
-            />
+            android:textSize="24sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

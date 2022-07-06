@@ -16,29 +16,49 @@
 
         <ImageView
             android:id="@+id/imageUser"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="40dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
             android:src="@drawable/ic_profile"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/loadImageUser"
+        <LinearLayout
             android:layout_width="wrap_content"
+            android:background="@drawable/round_corners_compl"
+            android:backgroundTint="@color/red"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="20dp"
+            android:gravity="center"
+            android:paddingEnd="20dp"
             android:layout_height="wrap_content"
-            android:indeterminate="true"
-            app:layout_constraintBottom_toBottomOf="@+id/imageUser"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageUser" />
+            app:layout_constraintTop_toBottomOf="@+id/imageUser">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_like"
+                app:tint="@color/white"
+                android:layout_marginEnd="3dp"
+                />
+
+            <TextView
+                android:id="@+id/amountLikes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:layout_marginStart="3dp"
+                />
+
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -55,7 +75,7 @@
                 android:id="@+id/textEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@={profilevm.observableProfile.email}"
                 android:textAlignment="center"
                 android:textColor="#990E0E0E"
@@ -72,14 +92,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
                 android:hint="User Name"
                 android:textColorHint="@color/colorPrimary"
                 app:boxStrokeColor="@color/colorPrimary"
+                app:boxStrokeWidth=".5dp"
                 app:boxStrokeWidthFocused="1dp"
                 app:endIconDrawable="@drawable/ic_edit"
-                app:boxStrokeWidth=".5dp"
                 app:endIconMode="clear_text"
                 app:endIconTint="@color/colorPrimary"
                 app:hintTextColor="@color/colorPrimary"
@@ -96,7 +116,7 @@
                     android:text="@={profilevm.observableProfile.userName}"
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorPrimary"
-                    android:textSize="24sp"
+                    android:textSize="18sp"
                     tools:text="User Name" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -106,16 +126,16 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Status"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
+                android:hint="Status"
                 android:textColorHint="@color/colorPrimary"
                 app:boxStrokeColor="@color/colorPrimary"
-                app:boxStrokeWidthFocused="1dp"
-                app:endIconMode="clear_text"
                 app:boxStrokeWidth=".5dp"
+                app:boxStrokeWidthFocused="1dp"
                 app:endIconDrawable="@drawable/ic_edit"
+                app:endIconMode="clear_text"
                 app:endIconTint="@color/colorPrimary"
                 app:hintTextColor="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -130,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:text="@={profilevm.observableProfile.status}"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textEmail"
@@ -143,7 +163,7 @@
                 android:id="@+id/buttonSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="16dp"
                 android:enabled="false"
                 android:text="Save Profile"
                 android:visibility="invisible"
@@ -156,18 +176,18 @@
                 android:id="@+id/buttonMap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 app:icon="@drawable/ic_map"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/statusLayout" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/buttonContacts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="16dp"
                 app:icon="@drawable/ic_contacts"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -192,7 +212,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.35" />
+            app:layout_constraintGuide_percent="0.40" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

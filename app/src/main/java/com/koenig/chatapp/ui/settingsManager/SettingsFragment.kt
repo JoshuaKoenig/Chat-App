@@ -64,6 +64,7 @@ class SettingsFragment : Fragment() {
         settingsViewModel.observableNotifications.observe(viewLifecycleOwner)
         {
             setPushUpNotification(it)
+            fragBinding.progressBar.visibility = View.GONE
         }
 
         // LISTENERS

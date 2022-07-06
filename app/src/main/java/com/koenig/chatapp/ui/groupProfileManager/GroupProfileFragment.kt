@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +28,7 @@ import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.chatManager.ChatViewModel
+import com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewViewModel
 import com.koenig.chatapp.ui.contactsManager.ContactsViewModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
@@ -78,7 +78,6 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
         (requireActivity() as MainActivity).toolbar.title = args.groupModel!!.groupName
 
-
         // Executed when come back from contacts fragment
         if (args.contactToAdd != null)
         {
@@ -107,6 +106,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
             // OBSERVERS
             loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner){
                 renderGroupProfile(ArrayList(args.groupModel!!.groupMembers.values), it.uid)
+                fragBinding.progressBar.visibility = View.GONE
             }
 
             currentGroupName = args.groupModel!!.groupName
@@ -149,8 +149,6 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
                     fragBinding.buttonSaveGroupName.visibility = View.GONE
                     fragBinding.buttonSaveGroupName.isEnabled = false
                 }
-                Log.d("Debug", p0.toString())
-                Log.d("Debug 2", fragBinding.textGroupName.text.toString())
             }
             override fun afterTextChanged(p0: Editable?) {}
         })
@@ -182,13 +180,10 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
     private fun loadNewGroupName()
     {
-        Log.d("Debug", "loadNewGroupName()")
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(getString(R.string.preference_group_profile_key), Context.MODE_PRIVATE)
 
         if(sharedPreferences.getBoolean(keyHasNewGroupName, hasNewGroupName))
         {
-            Log.d("Debug", "HasNewGroupName: $hasNewGroupName")
-            Log.d("Debug", "CurrentGroupName: ${fragBinding.textGroupName.text.toString()}")
             fragBinding.textGroupName.setText(sharedPreferences.getString(keyNewGroupName, null))
             currentGroupName = sharedPreferences.getString(keyNewGroupName, null).toString()
         }
@@ -251,7 +246,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
         if (args.groupModel!!.photoUri.isNotEmpty())
         {
             Picasso.get().load(args.groupModel!!.photoUri)
-                .resize(300, 300)
+                .resize(200, 200)
                 .transform(customTransformation())
                 .centerCrop()
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -324,7 +319,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
         }
     }
 
-    // TODO: Move to Helpers.kt
+
     private fun customTransformation() : Transformation =
         RoundedTransformationBuilder()
             .borderColor(Color.WHITE)
@@ -353,9 +348,6 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        // TODO: If contact to leave is admin, write "Disband group"
-        // TODO: PopUp
-
         when(item.itemId)
         {
             R.id.action_profile -> {
@@ -376,9 +368,25 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
                 findNavController().navigateUp()
             }
+            android.R.id.home -> {
+                clearPreferences()
+            }
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun clearPreferences()
+    {
+        val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences(getString(R.string.preference_group_profile_key), Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove(keyHasNewGroupName)
+        editor.remove(keyNewGroupName)
+        editor.remove(keyHasNewDescription)
+        editor.remove(keyNewDescription)
+        editor.remove(keyHasNewImage)
+        editor.remove(keyNewImage)
+        editor.apply()
     }
 
     override fun onClickShowUserProfile(user: ContactModel) {
