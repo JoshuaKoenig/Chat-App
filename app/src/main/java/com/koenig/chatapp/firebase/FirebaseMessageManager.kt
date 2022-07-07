@@ -54,7 +54,7 @@ object FirebaseMessageManager: MessageStore {
                         || ((sentMessage.fromUserId == toUserId) && (sentMessage.toUserId == fromUserId))
                     )
                     {
-                        localSentMessages.add(sentMessage!!)
+                        localSentMessages.add(sentMessage)
                     }
 
                 }

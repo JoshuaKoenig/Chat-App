@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.koenig.chatapp.firebase.FirebaseDBManager
-import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.UserModel
 
 class SearchContactsViewModel : ViewModel() {

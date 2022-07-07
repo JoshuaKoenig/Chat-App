@@ -7,9 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentAboutBinding
-import com.koenig.chatapp.databinding.FragmentChatBinding
 import hotchemi.android.rate.AppRate
 
 class AboutFragment : Fragment() {
@@ -25,7 +23,7 @@ class AboutFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _fragBinding = FragmentAboutBinding.inflate(inflater, container, false)
         val root = fragBinding.root

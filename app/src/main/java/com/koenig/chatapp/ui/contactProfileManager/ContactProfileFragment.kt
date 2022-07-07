@@ -1,11 +1,8 @@
 package com.koenig.chatapp.ui.contactProfileManager
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -13,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
 import com.koenig.chatapp.MainActivity
-import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentContactProfileBinding
 import com.koenig.chatapp.enums.MapModes
 import com.koenig.chatapp.models.ContactModel
@@ -87,7 +83,6 @@ class ContactProfileFragment : Fragment() {
                 override fun onChanged(t: Int?) {
 
                     it.let {
-                        Log.d("LikeAmount", it.toString())
                         contactProfileViewModel.increaseLike(args.contactModel.userId, t!!)
                         fragBinding.buttonLike.visibility = View.GONE
                         fragBinding.buttonAlreadyLiked.visibility = View.VISIBLE

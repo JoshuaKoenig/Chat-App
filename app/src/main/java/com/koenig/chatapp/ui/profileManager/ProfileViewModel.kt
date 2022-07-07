@@ -14,7 +14,7 @@ import java.lang.Exception
 class ProfileViewModel : ViewModel() {
 
     val userModel = MutableLiveData<UserModel>()
-    val amountLikes = MutableLiveData<Int>()
+    private val amountLikes = MutableLiveData<Int>()
 
     var observableProfile: LiveData<UserModel>
         get() = userModel

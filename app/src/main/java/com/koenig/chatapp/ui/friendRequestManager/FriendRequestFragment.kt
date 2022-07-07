@@ -1,9 +1,9 @@
 package com.koenig.chatapp.ui.friendRequestManager
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,14 +17,12 @@ import com.google.android.material.tabs.TabLayout
 import com.koenig.chatapp.adapters.FriendRequestAdapter
 import com.koenig.chatapp.adapters.FriendRequestClickListener
 import com.koenig.chatapp.databinding.FragmentFriendRequestBinding
-import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
 import com.koenig.chatapp.utils.SwipeToAcceptCallback
 import com.koenig.chatapp.utils.SwipeToRemoveCallback
-import com.koenig.chatapp.utils.SwipeToViewCallback
 
 class FriendRequestFragment : Fragment(), FriendRequestClickListener {
 
@@ -43,10 +41,11 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
         setHasOptionsMenu(true)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _fragBinding = FragmentFriendRequestBinding.inflate(inflater, container, false)
         val root = fragBinding.root
 
@@ -83,6 +82,7 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
         itemTouchWithdrawHelper.attachToRecyclerView(fragBinding.recyclerViewRequests)
 
         fragBinding.tablayout.addOnTabSelectedListener(object  : TabLayout.OnTabSelectedListener {
+            @SuppressLint("SetTextI18n")
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if(tab != null)
                 {
@@ -122,7 +122,6 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
         // OBSERVING
         startObservingOpenRequests()
 
-
         return root
     }
 
@@ -150,17 +149,13 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
         renderFriendRequests(arrayListOf(), "")
 
         fragBinding.progressBar.visibility = View.VISIBLE
-        friendRequestViewModel.observableOpenFriendReq.observe(viewLifecycleOwner, object : Observer<List<ContactModel>> {
-            override fun onChanged(t: List<ContactModel>?) {
-
-                if (currentTab == "sentTab")
-                {
-                    renderFriendRequests(t as ArrayList, "sentTab")
-                    fragBinding.progressBar.visibility = View.GONE
-                }
-
+        friendRequestViewModel.observableOpenFriendReq.observe(viewLifecycleOwner
+        ) { t ->
+            if (currentTab == "sentTab") {
+                renderFriendRequests(t as ArrayList, "sentTab")
+                fragBinding.progressBar.visibility = View.GONE
             }
-        })
+        }
     }
 
     private fun startObservingReceivedRequests()
@@ -169,24 +164,19 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
         renderFriendRequests(arrayListOf(), "")
         fragBinding.progressBar.visibility = View.VISIBLE
 
-        friendRequestViewModel.observableReceivedFriendReq.observe(viewLifecycleOwner, object : Observer<List<ContactModel>> {
-            override fun onChanged(t: List<ContactModel>?) {
-                Log.d("Debug_Re", "Received")
-                if (currentTab == "receiveTab")
-                {
-                    renderFriendRequests(t as ArrayList, "receiveTab")
-                    fragBinding.progressBar.visibility = View.GONE
-                }
-
+        friendRequestViewModel.observableReceivedFriendReq.observe(viewLifecycleOwner
+        ) { t ->
+            if (currentTab == "receiveTab") {
+                renderFriendRequests(t as ArrayList, "receiveTab")
+                fragBinding.progressBar.visibility = View.GONE
             }
-        })
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
-            if (firebaseUser != null)
-            {
+        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
+            if (firebaseUser != null) {
                 friendRequestViewModel.getOpenFriendRequests(firebaseUser.uid)
                 friendRequestViewModel.getReceivedFriendRequests(firebaseUser.uid)
                 profileViewModel.getProfile(firebaseUser.uid)
@@ -198,7 +188,7 @@ class FriendRequestFragment : Fragment(), FriendRequestClickListener {
                     }
                 })
             }
-        })
+        }
     }
 
     override fun onAcceptRequest(addUser: ContactModel) {

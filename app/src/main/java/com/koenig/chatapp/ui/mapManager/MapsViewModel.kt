@@ -12,7 +12,6 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
 import com.koenig.chatapp.firebase.FirebaseDBManager
 import com.koenig.chatapp.firebase.FirebaseImageManager
-import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.UserModel
 
 @SuppressLint("MissingPermission")
@@ -20,7 +19,7 @@ class MapsViewModel (application: Application) : AndroidViewModel(application) {
 
     lateinit var map: GoogleMap
     var currentLocation = MutableLiveData<Location>()
-    var locationClient: FusedLocationProviderClient
+    private var locationClient: FusedLocationProviderClient
 
     private val userImageUri = MutableLiveData<Uri>()
     val observableUserImage: LiveData<Uri>

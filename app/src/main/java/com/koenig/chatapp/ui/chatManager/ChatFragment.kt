@@ -6,11 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +21,6 @@ import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewViewModel
 import java.time.Instant
-
 
 class ChatFragment : Fragment() {
 
@@ -44,7 +40,7 @@ class ChatFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _fragBinding = FragmentChatBinding.inflate(inflater, container, false)
         val root = fragBinding.root
@@ -54,8 +50,8 @@ class ChatFragment : Fragment() {
 
         when(args.chatMode)
         {
-            ChatModes.SINGLECHATMODE -> chatViewModel.observableUser.observe(viewLifecycleOwner, Observer { renderSingleChat() })
-            ChatModes.GROUPCHATMODE -> chatViewModel.observableGroup.observe(viewLifecycleOwner, Observer { renderGroupChat() })
+            ChatModes.SINGLECHATMODE -> chatViewModel.observableUser.observe(viewLifecycleOwner) { renderSingleChat() }
+            ChatModes.GROUPCHATMODE -> chatViewModel.observableGroup.observe(viewLifecycleOwner) { renderGroupChat() }
         }
 
         fragBinding.buttonSendMessage.setOnClickListener {
@@ -67,24 +63,28 @@ class ChatFragment : Fragment() {
             }
         }
 
-        chatViewModel.observableMessages.observe(viewLifecycleOwner, Observer { messages ->
+        chatViewModel.observableMessages.observe(viewLifecycleOwner) { messages ->
 
             messages?.let {
-
-                when(args.chatMode)
-                {
+                when (args.chatMode) {
                     ChatModes.SINGLECHATMODE -> {
-                        chatOverviewViewModel.removeHasNewMessageFlag(loggedInViewModel.liveFirebaseUser.value!!.uid, args.userModel!!.userId)
+                        chatOverviewViewModel.removeHasNewMessageFlag(
+                            loggedInViewModel.liveFirebaseUser.value!!.uid,
+                            args.userModel!!.userId
+                        )
                         renderChatAdapter(messages as ArrayList<MessageModel>)
                     }
 
                     ChatModes.GROUPCHATMODE -> {
-                        chatOverviewViewModel.removeHasNewGroupMessageFlag(args.groupModel!!.groupId, loggedInViewModel.liveFirebaseUser.value!!.uid)
+                        chatOverviewViewModel.removeHasNewGroupMessageFlag(
+                            args.groupModel!!.groupId,
+                            loggedInViewModel.liveFirebaseUser.value!!.uid
+                        )
                         renderChatAdapter(messages as ArrayList<MessageModel>)
                     }
                 }
             }
-        })
+        }
 
         return root
     }
@@ -171,25 +171,23 @@ class ChatFragment : Fragment() {
             ChatModes.SINGLECHATMODE ->
             {
                 chatViewModel.getSelectedProfile(args.userModel!!.userId)
-                loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
-                    if (firebaseUser != null)
-                    {
+                loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
+                    if (firebaseUser != null) {
                         chatViewModel.lifeFirebaseUser.value = firebaseUser
                         chatViewModel.retrieveMessage(args.userModel!!.userId)
                     }
-                })
+                }
             }
 
             ChatModes.GROUPCHATMODE ->
             {
                 chatViewModel.getSelectedGroup(args.groupModel!!.groupId)
-                loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
-                    if (firebaseUser != null)
-                    {
+                loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
+                    if (firebaseUser != null) {
                         chatViewModel.lifeFirebaseUser.value = firebaseUser
                         chatViewModel.retrieveGroupMessages(args.groupModel!!.groupId)
                     }
-                })
+                }
             }
         }
     }

@@ -14,7 +14,6 @@ import com.koenig.chatapp.databinding.ListItemMessageBinding
 import com.koenig.chatapp.models.MessageModel
 import java.time.Instant
 
-
 class ChatAdapter constructor(private var messages: ArrayList<MessageModel>, private var currentUserId: String, private var context: Context) : RecyclerView.Adapter<ChatAdapter.MainHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {

@@ -1,9 +1,5 @@
 package com.koenig.chatapp.firebase
 
-import android.app.Activity
-import android.content.Intent
-import android.media.Image
-import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
 import androidx.core.net.toUri
@@ -11,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.koenig.chatapp.models.*
-import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap

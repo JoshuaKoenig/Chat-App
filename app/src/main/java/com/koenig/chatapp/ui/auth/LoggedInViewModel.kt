@@ -10,7 +10,7 @@ import com.koenig.chatapp.firebase.FirebaseImageManager
 
 class LoggedInViewModel(app: Application): AndroidViewModel(app) {
 
-    var firebaseAuthManager: FirebaseAuthManager = FirebaseAuthManager(app)
+    private var firebaseAuthManager: FirebaseAuthManager = FirebaseAuthManager(app)
     var liveFirebaseUser: MutableLiveData<FirebaseUser> = firebaseAuthManager.liveFirebaseUser
     var loggedOut: MutableLiveData<Boolean> = firebaseAuthManager.loggedOut
 

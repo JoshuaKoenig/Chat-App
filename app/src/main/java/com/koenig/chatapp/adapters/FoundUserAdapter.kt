@@ -1,7 +1,7 @@
 package com.koenig.chatapp.adapters
 
+import android.annotation.SuppressLint
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +34,7 @@ class FoundUserAdapter constructor(private var users: ArrayList<UserModel>, priv
 
     inner class MainHolder(val binding: ListItemAddUserBinding): RecyclerView.ViewHolder(binding.root)
     {
+        @SuppressLint("SetTextI18n")
         fun bind(user: UserModel, listener: FoundUserClickListener)
         {
             binding.root.tag = user
@@ -83,7 +84,6 @@ class FoundUserAdapter constructor(private var users: ArrayList<UserModel>, priv
             )
 
             binding.buttonAddUser.setOnClickListener { listener.onUserAddClick(contactModel) }
-
             binding.executePendingBindings()
         }
     }

@@ -1,9 +1,9 @@
 package com.koenig.chatapp.adapters
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +36,7 @@ class GroupChatAdapter constructor(private var groupChats: ArrayList<GroupModel>
 
     inner class MainHolder(val binding: ListItemGroupChatBinding): RecyclerView.ViewHolder(binding.root)
     {
+        @SuppressLint("SetTextI18n")
         fun bind(groupChat: GroupModel, listener: GroupChatListener)
         {
             binding.root.tag = groupChat

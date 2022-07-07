@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.koenig.chatapp.firebase.FirebaseDBManager
-import com.koenig.chatapp.models.ContactModel
 
 class ContactProfileViewModel : ViewModel() {
 
-    val hasAlreadyLiked = MutableLiveData<Boolean>()
+    private val hasAlreadyLiked = MutableLiveData<Boolean>()
 
     var hasAlreadyLikedObserver: LiveData<Boolean>
         get() = hasAlreadyLiked

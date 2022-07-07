@@ -18,7 +18,7 @@ class ChatViewModel : ViewModel() {
     private val selectedUser = MutableLiveData<UserModel>()
     private val selectedGroup = MutableLiveData<GroupModel>()
 
-    val messages = MutableLiveData<List<MessageModel>>()
+    private val messages = MutableLiveData<List<MessageModel>>()
 
     private val messageForUser = MutableLiveData<MessageModel>()
     val observableMessageForUser: LiveData<MessageModel>

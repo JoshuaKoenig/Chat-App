@@ -2,26 +2,20 @@ package com.koenig.chatapp.ui.mapManager
 
 
 import android.annotation.SuppressLint
-import android.content.ContentResolver
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.ImageDecoder
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations.map
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -33,10 +27,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.SphericalUtil
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
-import com.koenig.chatapp.databinding.FragmentChatBinding
 import com.koenig.chatapp.databinding.FragmentMapsBinding
 import com.koenig.chatapp.enums.MapModes
-import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.models.UserModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
@@ -44,10 +36,6 @@ import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.squareup.picasso.Transformation
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.io.File
-import kotlin.concurrent.thread
 import kotlin.math.roundToLong
 
 
@@ -112,10 +100,9 @@ class MapsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _fragBinding = FragmentMapsBinding.inflate(inflater, container, false)
-        val root = fragBinding.root
-        return root
+        return fragBinding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -144,6 +131,7 @@ class MapsFragment : Fragment() {
         mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14f))
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.P)
     private fun renderContactMap(user: UserModel)
     {

@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
@@ -58,13 +57,13 @@ class LoginActivity : AppCompatActivity() {
     public override fun onStart() {
         super.onStart()
 
-        loginRegisterViewModel.liveFirebaseUser.observe(this, Observer {
-            firebaseUser -> if (firebaseUser != null)
+        loginRegisterViewModel.liveFirebaseUser.observe(this) { firebaseUser ->
+            if (firebaseUser != null)
                 startActivity(Intent(this, MainActivity::class.java))
-        })
+        }
 
-        loginRegisterViewModel.firebaseAuthManager.errorStatus.observe(this, Observer
-            {status -> checkStatus(status)})
+        loginRegisterViewModel.firebaseAuthManager.errorStatus.observe(this
+        ) { status -> checkStatus(status) }
 
         setupGoogleSignInCallback()
     }
@@ -101,7 +100,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     catch (e: ApiException)
                     {
-                        Snackbar.make(loginBinding.loginLayout, "Authentification Failed.", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(loginBinding.loginLayout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
                     }
                 }
 

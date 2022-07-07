@@ -3,10 +3,8 @@ package com.koenig.chatapp.utils
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 
 const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 const val REQUEST_PERMISSIONS_REQUEST_CODE_AGAIN = 35

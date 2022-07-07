@@ -1,6 +1,5 @@
 package com.koenig.chatapp
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     // NOTIFICATION
-    lateinit var notificationManager: NotificationManager
+    private lateinit var notificationManager: NotificationManager
     private val channelId = "com.koenig.chatapp.notifications"
     private val description = "NotificationMessage"
 

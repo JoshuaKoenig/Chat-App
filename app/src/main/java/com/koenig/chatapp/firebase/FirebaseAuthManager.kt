@@ -141,5 +141,4 @@ class FirebaseAuthManager(application: Application) {
         loggedOut.postValue(true)
         errorStatus.postValue(false)
     }
-
 }

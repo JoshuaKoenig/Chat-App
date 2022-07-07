@@ -15,7 +15,6 @@ import com.koenig.chatapp.models.UserStore
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlin.collections.HashSet
 
 object FirebaseDBManager: UserStore {
 

@@ -15,14 +15,12 @@ import com.squareup.picasso.Target
 import java.io.ByteArrayOutputStream
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Transformation
-import com.google.firebase.storage.ktx.component1
-import com.google.firebase.storage.ktx.component2
 
 object FirebaseImageManager {
 
-    var storage = FirebaseStorage.getInstance().reference
+    private var storage = FirebaseStorage.getInstance().reference
     var imageUri = MutableLiveData<Uri>()
-    var groupImageUri = MutableLiveData<Uri>()
+    private var groupImageUri = MutableLiveData<Uri>()
 
     fun checkStorageForExistingProfilePic(userid: String) {
         val imageRef = storage.child("photos").child("${userid}.jpg")

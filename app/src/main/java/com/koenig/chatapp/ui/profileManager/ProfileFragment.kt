@@ -3,27 +3,20 @@ package com.koenig.chatapp.ui.profileManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
-import com.google.firebase.auth.FirebaseUser
-import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentProfileBinding
 import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.enums.MapModes
@@ -34,7 +27,6 @@ import com.koenig.chatapp.ui.mapManager.MapsViewModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import com.squareup.picasso.Transformation
 import java.io.IOException
 
@@ -61,9 +53,9 @@ class ProfileFragment : Fragment() {
         val root = fragBinding.root
 
         // OBSERVERS
-        profileViewModel.observableProfile.observe(viewLifecycleOwner, Observer {
+        profileViewModel.observableProfile.observe(viewLifecycleOwner) {
             render(it)
-        })
+        }
 
         // Enable own Map when location permission was given
         mapViewModel.observableLocationPermission.observe(viewLifecycleOwner){

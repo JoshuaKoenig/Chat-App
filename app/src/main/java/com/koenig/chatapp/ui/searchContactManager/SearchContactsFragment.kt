@@ -3,7 +3,6 @@ package com.koenig.chatapp.ui.searchContactManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +20,6 @@ import com.koenig.chatapp.adapters.FoundUserAdapter
 import com.koenig.chatapp.adapters.FoundUserClickListener
 import com.koenig.chatapp.databinding.FragmentSearchContactsBinding
 import com.koenig.chatapp.models.ContactModel
-import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.models.UserModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.friendRequestManager.FriendRequestViewModel
@@ -162,12 +160,12 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
         render(arrayListOf(), arrayListOf(), currentTab)
         fragBinding.progressBar.visibility = View.VISIBLE
 
-        searchContactsViewModel.observableUserList.observe(viewLifecycleOwner, Observer { users ->
+        searchContactsViewModel.observableUserList.observe(viewLifecycleOwner) { users ->
             users?.let {
                 render(users as ArrayList<UserModel>, currentUsersContactIds, currentTab)
                 fragBinding.progressBar.visibility = View.GONE
             }
-        })
+        }
     }
 
     private fun startObservingRecommendations(currentTab: Int)

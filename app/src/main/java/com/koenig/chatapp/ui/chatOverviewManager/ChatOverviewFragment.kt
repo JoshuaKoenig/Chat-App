@@ -1,10 +1,10 @@
 package com.koenig.chatapp.ui.chatOverviewManager
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
-import com.koenig.chatapp.R
 import com.koenig.chatapp.adapters.ChatOverviewAdapter
 import com.koenig.chatapp.adapters.ChatOverviewClickListener
 import com.koenig.chatapp.adapters.GroupChatAdapter
@@ -51,7 +50,7 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _fragBinding = FragmentChatOverviewBinding.inflate(inflater, container, false)
         val root = fragBinding.root
@@ -152,7 +151,6 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
         chatOverviewViewModel.currentTabObserver.observe(viewLifecycleOwner){
             if (it != null)
             {
-                Log.d("DEBUG", it.toString())
                 if(it == 0)
                 {
                     startObservingChats()
@@ -195,6 +193,7 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
         return root
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderChatContacts(contacts: ArrayList<ContactModel>)
     {
         fragBinding.recyclerViewOpenChats.adapter = ChatOverviewAdapter(contacts, this, viewLifecycleOwner)
@@ -214,6 +213,7 @@ class ChatOverviewFragment : Fragment(), ChatOverviewClickListener, GroupChatLis
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderGroupChats(groupChats: ArrayList<GroupModel>)
     {
         fragBinding.recyclerViewOpenChats.adapter = GroupChatAdapter(groupChats, this, loggedInViewModel.liveFirebaseUser.value!!.uid)

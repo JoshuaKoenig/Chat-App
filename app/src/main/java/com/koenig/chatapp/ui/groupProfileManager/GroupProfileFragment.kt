@@ -28,14 +28,10 @@ import com.koenig.chatapp.databinding.FragmentGroupProfileBinding
 import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.enums.MapModes
 import com.koenig.chatapp.models.ContactModel
-import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.chatManager.ChatViewModel
-import com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewViewModel
-import com.koenig.chatapp.ui.contactsManager.ContactsViewModel
 import com.koenig.chatapp.utils.SwipeToRemoveCallback
-import com.koenig.chatapp.utils.SwipeToViewCallback
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
@@ -76,7 +72,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _fragBinding = FragmentGroupProfileBinding.inflate(inflater, container, false)
         val root = fragBinding.root
 

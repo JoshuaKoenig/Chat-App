@@ -1,16 +1,14 @@
 package com.koenig.chatapp.adapters
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.koenig.chatapp.databinding.ListItemChatContactBinding
-import com.koenig.chatapp.firebase.FirebaseImageManager
 import com.koenig.chatapp.models.ContactModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
@@ -38,6 +36,7 @@ class ChatOverviewAdapter constructor(private var contacts: ArrayList<ContactMod
 
     inner class MainHolder(val binding: ListItemChatContactBinding): RecyclerView.ViewHolder(binding.root)
     {
+        @SuppressLint("SetTextI18n")
         fun bind(user: ContactModel, listener: ChatOverviewClickListener)
         {
             binding.root.tag = user

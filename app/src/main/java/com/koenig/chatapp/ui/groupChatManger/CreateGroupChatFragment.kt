@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.ImageView
@@ -29,7 +28,6 @@ import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
-import com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewViewModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
@@ -50,7 +48,7 @@ class CreateGroupChatFragment : Fragment() {
     private val args by navArgs<CreateGroupChatFragmentArgs>()
 
     private var groupContacts = ArrayList<ContactModel>()
-    var newGroup = GroupModel()
+    private var newGroup = GroupModel()
 
     private val keyGroupName: String = "KEY_GROUP_NAME_EDIT_TEXT"
     private val keyHasGroupName: String = "IS_GROUP_NAME_EDIT"
@@ -67,7 +65,7 @@ class CreateGroupChatFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _fragBinding = FragmentCreateGroupChatBinding.inflate(inflater, container, false)
         val root = fragBinding.root

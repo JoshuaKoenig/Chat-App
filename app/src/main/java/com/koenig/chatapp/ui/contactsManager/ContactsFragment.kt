@@ -1,14 +1,13 @@
 package com.koenig.chatapp.ui.contactsManager
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
@@ -23,7 +22,6 @@ import com.koenig.chatapp.databinding.FragmentContactsBinding
 import com.koenig.chatapp.enums.ChatModes
 import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.models.ContactModel
-import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.utils.SwipeToViewCallback
 
@@ -54,12 +52,12 @@ class ContactsFragment : Fragment(), ContactsClickListener {
 
         fragBinding.recyclerViewMyContacts.layoutManager = LinearLayoutManager(activity)
 
-        contactsViewModel.observableContacts.observe(viewLifecycleOwner, Observer { contacts ->
+        contactsViewModel.observableContacts.observe(viewLifecycleOwner) { contacts ->
             contacts?.let {
                 render(contacts as ArrayList<ContactModel>)
                 fragBinding.progressBar.visibility = View.GONE
             }
-        })
+        }
 
         fragBinding.buttonSearchContacts.setOnClickListener {
             val currentContactIds = ArrayList<String>()
@@ -150,6 +148,7 @@ class ContactsFragment : Fragment(), ContactsClickListener {
         return  root
     }
 
+    @SuppressLint("SetTextI18n")
     private fun render(contacts: ArrayList<ContactModel>)
     {
         fragBinding.recyclerViewMyContacts.adapter = ContactsAdapter(contacts, this, args.contactClickModes)

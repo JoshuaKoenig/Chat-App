@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Patterns
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.databinding.ActivityCreateAccountBinding
@@ -19,7 +18,7 @@ class CreateAccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
+        loginRegisterViewModel = ViewModelProvider(this)[LoginRegisterViewModel::class.java]
 
         createAccountBinding = ActivityCreateAccountBinding.inflate(layoutInflater)
         setContentView(createAccountBinding.root)
@@ -32,10 +31,10 @@ class CreateAccountActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        loginRegisterViewModel.liveFirebaseUser.observe(this, Observer {
-                firebaseUser -> if (firebaseUser != null)
-            startActivity(Intent(this, MainActivity::class.java))
-        })
+        loginRegisterViewModel.liveFirebaseUser.observe(this) { firebaseUser ->
+            if (firebaseUser != null)
+                startActivity(Intent(this, MainActivity::class.java))
+        }
     }
 
     private fun createAccount(email: String, password: String, userName: String)

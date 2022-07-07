@@ -1,11 +1,11 @@
 package com.koenig.chatapp.ui.settingsManager
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -14,7 +14,6 @@ import com.koenig.chatapp.databinding.FragmentSettingsBinding
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.mapManager.MapsViewModel
 
-
 class SettingsFragment : Fragment() {
 
     private var _fragBinding: FragmentSettingsBinding? = null
@@ -22,7 +21,6 @@ class SettingsFragment : Fragment() {
     private  val settingsViewModel: SettingsViewModel by activityViewModels()
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
     private val mapsViewModel: MapsViewModel by activityViewModels()
-
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,12 +75,14 @@ class SettingsFragment : Fragment() {
 
 
     // FUNCTIONS
+    @SuppressLint("SetTextI18n")
     private fun setUserId(userId: String)
     {
         fragBinding.textUserId.text = "UserId: $userId"
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setLocationPermission(hasLocationPermission: Boolean)
     {
         if(hasLocationPermission)
@@ -116,7 +116,7 @@ class SettingsFragment : Fragment() {
 
     private fun listenForMapSwitchChanges()
     {
-        fragBinding.switchMap.setOnCheckedChangeListener { p0, p1 ->
+        fragBinding.switchMap.setOnCheckedChangeListener { _, p1 ->
             // When location permission is disabled => cannot set the map active for other users
             if (mapsViewModel.hasLocationPermission.value!!) {
                 if (p1) {
