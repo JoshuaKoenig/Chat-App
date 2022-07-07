@@ -1,8 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.mapManager.MapsFragment" />
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/informationContainer"
+        tools:context=".ui.mapManager.MapsFragment" />
+
+    <RelativeLayout
+        android:id="@+id/informationContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:padding="0px"
+        android:visibility="gone"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/distanceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Distance between"
+            app:startIconDrawable="@drawable/ic_distance">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textDistanceBetween"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:ems="10"
+                android:backgroundTint="@color/white"
+                android:inputType="textPersonName"
+                android:text="5000 km"
+                android:textSize="12sp"
+                android:editable="false"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

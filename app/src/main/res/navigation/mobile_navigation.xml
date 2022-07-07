@@ -86,6 +86,9 @@
         <argument
             android:name="contactIds"
             app:argType="string[]" />
+        <action
+            android:id="@+id/action_searchContactsFragment_to_contactProfileFragment"
+            app:destination="@id/contactProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/friendRequestFragment"
@@ -103,6 +106,10 @@
         <action
             android:id="@+id/action_contactProfileFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <argument
+            android:name="canLike"
+            app:argType="boolean"
+            android:defaultValue="true" />
     </fragment>
     <fragment
         android:id="@+id/chatOverviewFragment"
@@ -168,6 +175,9 @@
             android:name="isEdited"
             app:argType="boolean"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_groupProfileFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
@@ -180,9 +190,14 @@
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
-            android:name="isOwnMap"
-            app:argType="boolean"
-            android:defaultValue="true" />
+            android:name="mapMode"
+            app:argType="com.koenig.chatapp.enums.MapModes"
+            android:defaultValue="OWNMAP" />
+        <argument
+            android:name="group"
+            app:argType="com.koenig.chatapp.models.GroupModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

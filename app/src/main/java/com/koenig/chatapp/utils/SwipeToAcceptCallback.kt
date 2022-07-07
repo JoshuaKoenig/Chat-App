@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.koenig.chatapp.R
 
+
 abstract class SwipeToAcceptCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT)
 {
     private val viewIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_user)
@@ -58,6 +59,8 @@ abstract class SwipeToAcceptCallback(context: Context) : ItemTouchHelper.SimpleC
 
         viewIcon?.setBounds(viewIconLeft, viewIconTop, viewIconRight, viewIconBottom)
         viewIcon?.draw(c)
+
+
 
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }

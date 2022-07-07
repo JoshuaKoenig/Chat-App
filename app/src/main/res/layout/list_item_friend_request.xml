@@ -39,14 +39,14 @@
             android:paddingStart="10dp">
 
             <ImageView
-                android:id="@+id/imageReject"
+                android:id="@+id/imageAccept"
                 android:layout_gravity="center"
                 android:layout_width="15dp"
                 android:layout_height="40dp"
                 android:background="@drawable/round_corners_compl"
-                android:src="@drawable/ic_arrow_left"
+                android:src="@drawable/ic_arrow_right"
                 android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/red"
+                android:backgroundTint="@color/green"
                 />
 
             <ImageView
@@ -55,30 +55,51 @@
                 android:layout_height="50dp"
                 android:src="@drawable/ic_profile"/>
 
-            <TextView
-                android:id="@+id/textUserName"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:text="@{currentContact.userName}"
-                android:layout_marginEnd="10dp"
                 android:layout_weight="2.5"
-                android:textColor="#990E0E0E"
-                android:gravity="center_vertical|center_horizontal"
-                android:textSize="20sp"
-                tools:text="User Name"
-                />
+
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                >
+
+                <TextView
+                    android:id="@+id/textUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|start"
+                    android:text="@{currentContact.userName}"
+                    android:textColor="#990E0E0E"
+                    android:textSize="18sp"
+                    tools:text="User Name"
+                    android:layout_marginBottom="2dp"
+                    />
+
+                <TextView
+                    android:id="@+id/textUserMail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{currentContact.email}"
+                    android:textColor="@color/colorSecondary"
+                    android:gravity="center_vertical|start"
+                    android:textSize="14sp"
+                    tools:text="newuser@mail.com"
+                    android:textStyle="italic"
+                    />
+
+            </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageAccept"
+                android:id="@+id/imageReject"
                 android:layout_gravity="center"
                 android:layout_width="15dp"
                 android:layout_height="40dp"
                 android:background="@drawable/round_corners_compl"
-                android:src="@drawable/ic_arrow_right"
+                android:src="@drawable/ic_arrow_left"
                 android:layout_marginStart="10dp"
-                android:backgroundTint="@color/green"
+                android:backgroundTint="@color/red"
                 />
 
         </LinearLayout>

@@ -3,6 +3,9 @@ package com.koenig.chatapp.ui.profileManager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -13,17 +16,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.google.firebase.auth.FirebaseUser
 import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentProfileBinding
 import com.koenig.chatapp.enums.ContactClickModes
+import com.koenig.chatapp.enums.MapModes
 import com.koenig.chatapp.firebase.FirebaseImageManager
+import com.koenig.chatapp.models.UserModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.mapManager.MapsViewModel
+import com.makeramen.roundedimageview.RoundedTransformationBuilder
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
+import com.squareup.picasso.Transformation
 import java.io.IOException
 
 
@@ -50,19 +62,12 @@ class ProfileFragment : Fragment() {
 
         // OBSERVERS
         profileViewModel.observableProfile.observe(viewLifecycleOwner, Observer {
-            render()
+            render(it)
         })
 
         // Enable own Map when location permission was given
         mapViewModel.observableLocationPermission.observe(viewLifecycleOwner){
             renderMapButton(it)
-        }
-
-        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
-            if (firebaseUser != null) {
-                updateProfile(firebaseUser)
-                fragBinding.progressBar.visibility = View.GONE
-            }
         }
 
         profileViewModel.observableLikes.observe(viewLifecycleOwner){
@@ -130,22 +135,40 @@ class ProfileFragment : Fragment() {
         }
 
         fragBinding.buttonMap.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment()
-            findNavController().navigate(action)
+            val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment(null, MapModes.OWNMAP)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                }
+            })
         }
 
         fragBinding.buttonContacts.setOnClickListener {
             val action = ProfileFragmentDirections.actionProfileFragmentToContactsFragment(
                 ContactClickModes.DEFAULTMODE, null)
 
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                }
+            })
         }
         return  root
     }
 
-    private fun render()
+    private fun render(user: UserModel)
     {
         fragBinding.profilevm = profileViewModel
+
+        Picasso.get().load(user.photoUri)
+            .resize(200, 200)
+            .transform(customTransformation())
+            .centerCrop()
+            .memoryPolicy(MemoryPolicy.NO_CACHE)
+            .into(fragBinding.imageUser)
+
+        fragBinding.imageUser.visibility = View.VISIBLE
+        fragBinding.progressBar.visibility = View.GONE
     }
 
     @SuppressLint("IntentReset")
@@ -178,44 +201,6 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun updateProfile(currentUser: FirebaseUser)
-    {
-        // TODO: CHANGE
-      FirebaseImageManager.imageUri.observe(viewLifecycleOwner) { result ->
-            if (result == Uri.EMPTY)
-            {
-               if (currentUser.photoUrl != null)
-               {
-                   FirebaseImageManager.updateUserImage(
-                       currentUser.uid,
-                       currentUser.photoUrl,
-                       fragBinding.imageUser,
-                       false
-                   )
-               }
-               else
-               {
-                   FirebaseImageManager.updateDefaultImage(
-                       currentUser.uid,
-                       R.drawable.empty_profile,
-                       fragBinding.imageUser
-                   )
-               }
-            }
-            else
-            {
-                // Sets the Picture for current user
-                FirebaseImageManager.updateUserImage(
-                    currentUser.uid,
-                    FirebaseImageManager.imageUri.value,
-                    fragBinding.imageUser,
-                    false
-                )
-            }
-          fragBinding.imageUser.visibility = View.VISIBLE
-        }
-    }
-
     private fun renderMapButton(isMapEnabled: Boolean)
     {
         fragBinding.buttonMap.isEnabled = isMapEnabled
@@ -228,9 +213,14 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        profileViewModel.getProfile(loggedInViewModel.liveFirebaseUser.value?.uid!!)
-        mapViewModel.getHasLocationPermission(loggedInViewModel.liveFirebaseUser.value?.uid!!)
-        profileViewModel.getLikeAmount(loggedInViewModel.liveFirebaseUser.value?.uid!!)
+        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
+            if (firebaseUser != null) {
+
+                profileViewModel.getProfile(firebaseUser.uid)
+                mapViewModel.getHasLocationPermission(firebaseUser.uid)
+                profileViewModel.getLikeAmount(firebaseUser.uid)
+            }
+        }
     }
 
     // TODO: Outsource in Helpers.kt
@@ -245,4 +235,12 @@ class ProfileFragment : Fragment() {
         }
         return uri
     }
+
+    private fun customTransformation() : Transformation =
+        RoundedTransformationBuilder()
+            .borderColor(Color.WHITE)
+            .borderWidth(2f)
+            .cornerRadius(35f)
+            .oval(false)
+            .build()
 }

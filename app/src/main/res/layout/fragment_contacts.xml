@@ -10,24 +10,102 @@
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:indicatorColor="@color/colorSecondary"
         android:indeterminate="true"
+        app:indicatorColor="@color/colorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/containerAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center|start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/containerHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            >
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/textAmountContacts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12 Contacts"
+                style="?attr/materialButtonOutlinedStyle"
+                android:textSize="12sp"
+                android:focusable="false"
+                android:clickable="false"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                android:focusable="false"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonContactsSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_drop_down"
+                app:iconGravity="end"
+                style="?attr/materialButtonOutlinedStyle"
+                android:text="Search"
+                android:textSize="10sp"
+                android:focusable="true"
+                android:clickable="true"
+                />
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchContactLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="User Name"
+            android:visibility="gone"
+            app:endIconMode="clear_text"
+            app:startIconTint="@color/colorSecondary"
+            app:startIconDrawable="@drawable/ic_search">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editSearchContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:backgroundTint="@color/white"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMyContacts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonSearchContacts"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/containerAmount" />
 
     <TextView
         android:id="@+id/textNoContacts"
@@ -40,8 +118,7 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noContactsImage"
-       />
+        app:layout_constraintTop_toBottomOf="@+id/noContactsImage" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/buttonSearchContacts"

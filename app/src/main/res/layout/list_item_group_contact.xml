@@ -39,20 +39,40 @@
                 android:layout_height="50dp"
                 android:src="@drawable/ic_profile"/>
 
-            <TextView
-                android:id="@+id/textUserName"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
                 android:layout_weight="2.5"
-                android:text="@{contact.userName}"
-                android:textColor="#990E0E0E"
-                android:gravity="center_vertical|start"
-                android:textSize="20sp"
-                tools:text="User Name"
-                />
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                >
+
+                <TextView
+                    android:id="@+id/textUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|start"
+                    android:text="@{contact.userName}"
+                    android:textColor="#990E0E0E"
+                    android:textSize="18sp"
+                    tools:text="User Name"
+                    android:layout_marginBottom="2dp"
+                    />
+
+                <TextView
+                    android:id="@+id/textUserMail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{contact.status}"
+                    android:textColor="@color/colorSecondary"
+                    android:gravity="center_vertical|start"
+                    android:textSize="14sp"
+                    tools:text="Status ..."
+                    android:textStyle="italic"
+                    />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textisAdmin"
@@ -61,18 +81,21 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="2.5"
+                android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="Admin"
                 android:textColor="@color/green"
                 android:textSize="16sp"
                 android:textStyle="italic" />
 
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            <ImageView
                 android:id="@+id/buttonRemoveUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_remove_user"
+                android:layout_gravity="center"
+                android:layout_width="15dp"
+                android:layout_height="40dp"
+                android:background="@drawable/round_corners_compl"
+                android:src="@drawable/ic_arrow_left"
+                android:layout_marginStart="10dp"
                 android:backgroundTint="@color/red"
                 />
 

@@ -3,6 +3,7 @@ package com.koenig.chatapp.ui.searchContactManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +12,21 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.koenig.chatapp.adapters.FoundUserAdapter
 import com.koenig.chatapp.adapters.FoundUserClickListener
 import com.koenig.chatapp.databinding.FragmentSearchContactsBinding
 import com.koenig.chatapp.models.ContactModel
+import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.models.UserModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.friendRequestManager.FriendRequestViewModel
 import com.koenig.chatapp.ui.profileManager.ProfileViewModel
+import com.koenig.chatapp.utils.SwipeToViewCallback
 
 class SearchContactsFragment : Fragment(), FoundUserClickListener {
 
@@ -34,6 +39,8 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
 
     private val args by navArgs<SearchContactsFragmentArgs>()
+
+    private val currentUsersContactIds = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +60,13 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
         // OBSERVERS
         if(searchContactsViewModel.currentTab.value == null)
         {
-            startObservingSearchContacts()
+            profileViewModel.observableProfile.observe(viewLifecycleOwner)
+            {
+                it.contacts.values.forEach { um ->
+                    currentUsersContactIds.add(um.userId)
+                }
+                startObservingSearchContacts(0)
+            }
         }
 
         searchContactsViewModel.currentTabObserver.observe(viewLifecycleOwner){
@@ -61,13 +74,13 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
             {
                 if(it == 0)
                 {
-                    startObservingSearchContacts()
+                    startObservingSearchContacts(it)
                     selectSearchTab()
 
                 }
                 else if(it == 1)
                 {
-                    startObservingRecommendations()
+                    startObservingRecommendations(it)
                     selectRecommendationTab()
                 }
             }
@@ -113,13 +126,22 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
+        // ITEM TOUCH HANDLER
+        val swipeViewHandler = object : SwipeToViewCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewContactProfile(viewHolder.itemView.tag as UserModel)
+            }
+        }
+        val itemTouchViewHelper = ItemTouchHelper(swipeViewHandler)
+        itemTouchViewHelper.attachToRecyclerView(fragBinding.recyclerViewFoundContacts)
+
         return root
     }
 
 
-    private fun render(userList: ArrayList<UserModel>)
+    private fun render(userList: ArrayList<UserModel>, currentUsersContactIds: ArrayList<String>, currentTab: Int)
     {
-        fragBinding.recyclerViewFoundContacts.adapter = FoundUserAdapter(userList, this)
+        fragBinding.recyclerViewFoundContacts.adapter = FoundUserAdapter(userList, this, currentUsersContactIds, currentTab)
 
         if(userList.isEmpty())
         {
@@ -135,27 +157,27 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
         }
     }
 
-    private fun startObservingSearchContacts()
+    private fun startObservingSearchContacts(currentTab: Int)
     {
-        render(arrayListOf())
+        render(arrayListOf(), arrayListOf(), currentTab)
         fragBinding.progressBar.visibility = View.VISIBLE
 
         searchContactsViewModel.observableUserList.observe(viewLifecycleOwner, Observer { users ->
             users?.let {
-                render(users as ArrayList<UserModel>)
+                render(users as ArrayList<UserModel>, currentUsersContactIds, currentTab)
                 fragBinding.progressBar.visibility = View.GONE
             }
         })
     }
 
-    private fun startObservingRecommendations()
+    private fun startObservingRecommendations(currentTab: Int)
     {
-        render(arrayListOf())
+        render(arrayListOf(), arrayListOf(), currentTab)
         fragBinding.progressBar.visibility = View.VISIBLE
 
         searchContactsViewModel.observableRecUserList.observe(viewLifecycleOwner){
             it?.let {
-                render(it as ArrayList<UserModel>)
+                render(it as ArrayList<UserModel>, currentUsersContactIds, currentTab)
                 fragBinding.progressBar.visibility = View.GONE
             }
         }
@@ -169,6 +191,19 @@ class SearchContactsFragment : Fragment(), FoundUserClickListener {
     private fun selectRecommendationTab()
     {
         fragBinding.tablayout.getTabAt(1)!!.select()
+    }
+
+    private fun viewContactProfile(user: UserModel)
+    {
+        val contact = ContactModel()
+        contact.userId = user.userId
+        contact.userName = user.userName
+        contact.photoUri = user.photoUri
+        contact.email = user.email
+        contact.status = user.status
+
+        val action = SearchContactsFragmentDirections.actionSearchContactsFragmentToContactProfileFragment(contact, false)
+        findNavController().navigate(action)
     }
 
 

@@ -47,6 +47,7 @@ class ChatAdapter constructor(private var messages: ArrayList<MessageModel>, pri
                 val drawable = ContextCompat.getDrawable(context, R.drawable.message_shape)
                 drawable!!.setTint(Color.parseColor("#3C414C"))
                 binding.cardLayout.background = drawable
+                binding.textMessage.setTextColor(Color.parseColor("#FFFFFF"))
             }
             // Own Messages
             else if(currentUserId == message.fromUserId)

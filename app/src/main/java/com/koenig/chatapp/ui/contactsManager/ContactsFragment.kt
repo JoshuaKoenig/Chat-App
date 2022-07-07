@@ -1,12 +1,17 @@
 package com.koenig.chatapp.ui.contactsManager
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +36,8 @@ class ContactsFragment : Fragment(), ContactsClickListener {
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
 
     private val args by navArgs<ContactsFragmentArgs>()
+
+    private var isSearchActive = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,8 +69,43 @@ class ContactsFragment : Fragment(), ContactsClickListener {
             }
 
             val action = ContactsFragmentDirections.actionContactsFragmentToSearchContactsFragment(currentContactIds.toTypedArray())
-            findNavController().navigate(action)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                }
+            })
         }
+
+        fragBinding.buttonContactsSearch.setOnClickListener {
+
+           isSearchActive = !isSearchActive
+
+            if(isSearchActive)
+            {
+                fragBinding.searchContactLayout.visibility = View.VISIBLE
+                fragBinding.buttonContactsSearch.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_drop_up)
+            }
+            else
+            {
+                fragBinding.searchContactLayout.visibility = View.GONE
+                fragBinding.buttonContactsSearch.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_drop_down)
+            }
+        }
+
+        // TEXT CHANGE LISTENER
+        fragBinding.editSearchContact.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                contactsViewModel.loadAllContacts(
+                    loggedInViewModel.liveFirebaseUser.value!!.uid,
+                    false,
+                    null,
+                    p0.toString())
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
 
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
             if (firebaseUser != null) {
@@ -76,11 +118,11 @@ class ContactsFragment : Fragment(), ContactsClickListener {
                         groupContactIds.add(it.value.userId)
                     }
 
-                    contactsViewModel.loadAllContacts(firebaseUser.uid, true, groupContactIds)
+                    contactsViewModel.loadAllContacts(firebaseUser.uid, true, groupContactIds, "")
                 }
                 else
                 {
-                    contactsViewModel.loadAllContacts(firebaseUser.uid, false, null)
+                    contactsViewModel.loadAllContacts(firebaseUser.uid, false, null, "")
                 }
             }
         }
@@ -111,6 +153,7 @@ class ContactsFragment : Fragment(), ContactsClickListener {
     private fun render(contacts: ArrayList<ContactModel>)
     {
         fragBinding.recyclerViewMyContacts.adapter = ContactsAdapter(contacts, this, args.contactClickModes)
+        fragBinding.textAmountContacts.text = "${contacts.size} Contacts"
 
         if(contacts.isEmpty())
         {
@@ -130,6 +173,9 @@ class ContactsFragment : Fragment(), ContactsClickListener {
     {
         (requireActivity() as MainActivity).toolbar.title = "Select Contact"
         fragBinding.buttonSearchContacts.visibility = View.GONE
+        fragBinding.containerHeader.visibility = View.GONE
+        fragBinding.searchContactLayout.visibility = View.GONE
+
     }
 
     // OVERRIDES

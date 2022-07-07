@@ -17,19 +17,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
 import com.koenig.chatapp.adapters.GroupContactsAdapter
 import com.koenig.chatapp.adapters.GroupContactsClickListener
 import com.koenig.chatapp.databinding.FragmentGroupProfileBinding
 import com.koenig.chatapp.enums.ContactClickModes
+import com.koenig.chatapp.enums.MapModes
 import com.koenig.chatapp.models.ContactModel
+import com.koenig.chatapp.models.GroupModel
 import com.koenig.chatapp.models.MessageModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.chatManager.ChatViewModel
 import com.koenig.chatapp.ui.chatOverviewManager.ChatOverviewViewModel
 import com.koenig.chatapp.ui.contactsManager.ContactsViewModel
+import com.koenig.chatapp.utils.SwipeToRemoveCallback
+import com.koenig.chatapp.utils.SwipeToViewCallback
 import com.makeramen.roundedimageview.RoundedTransformationBuilder
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
@@ -89,6 +95,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
             fragBinding.buttonSaveGroupName.isEnabled = false
             fragBinding.buttonSaveDescription.visibility = View.GONE
             fragBinding.buttonSaveDescription.isEnabled = false
+            fragBinding.progressBar.visibility = View.GONE
         }
         // Just come back from contacts fragment without user to add
         else if(args.isEdited)
@@ -100,6 +107,7 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
             fragBinding.buttonSaveGroupName.isEnabled = false
             fragBinding.buttonSaveDescription.visibility = View.GONE
             fragBinding.buttonSaveDescription.isEnabled = false
+            fragBinding.progressBar.visibility = View.GONE
         }
         else
         {
@@ -129,6 +137,11 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
 
         fragBinding.imageGroup.setOnClickListener {
             openGalleryForImage()
+        }
+
+        fragBinding.buttonMap.setOnClickListener {
+            val action = GroupProfileFragmentDirections.actionGroupProfileFragmentToMapsFragment(null, MapModes.GROUPMAP, args.groupModel)
+            findNavController().navigate(action)
         }
 
 
@@ -172,6 +185,19 @@ class GroupProfileFragment : Fragment(), GroupContactsClickListener {
             }
             override fun afterTextChanged(p0: Editable?) {}
         })
+
+        // ITEM TOUCH HANDLER
+        val swipeRemoveUserHandler = object : SwipeToRemoveCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                onClickRemoveUser(viewHolder.itemView.tag as ContactModel)
+            }
+        }
+
+        if(loggedInViewModel.liveFirebaseUser.value!!.uid == args.groupModel!!.adminUid)
+        {
+            val itemTouchRemoveHelper = ItemTouchHelper(swipeRemoveUserHandler)
+            itemTouchRemoveHelper.attachToRecyclerView(fragBinding.recyclerViewGroupContacts)
+        }
 
         return root
     }

@@ -74,6 +74,17 @@
                     android:textStyle="italic"
                     />
 
+                <TextView
+                    android:id="@+id/textCommonUsers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSecondary"
+                    android:gravity="center_vertical|start"
+                    android:textSize="14sp"
+                    android:textStyle="italic"
+                    android:text="Common Users: 4"
+                    />
+
             </LinearLayout>
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

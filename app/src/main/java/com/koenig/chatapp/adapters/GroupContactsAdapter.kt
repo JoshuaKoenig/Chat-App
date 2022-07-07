@@ -45,7 +45,10 @@ class GroupContactsAdapter constructor(private var contacts: ArrayList<ContactMo
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(binding.imageUser)
 
-            binding.root.setOnClickListener { listener.onClickShowUserProfile(user) }
+            if (user.userId != currentUserId)
+            {
+                binding.root.setOnClickListener { listener.onClickShowUserProfile(user) }
+            }
 
             // Show Admin
             if (user.userId == adminUid)
@@ -65,10 +68,6 @@ class GroupContactsAdapter constructor(private var contacts: ArrayList<ContactMo
             else
             {
                 binding.buttonRemoveUser.visibility = View.GONE
-            }
-
-            binding.buttonRemoveUser.setOnClickListener {
-                listener.onClickRemoveUser(user)
             }
 
             binding.executePendingBindings()

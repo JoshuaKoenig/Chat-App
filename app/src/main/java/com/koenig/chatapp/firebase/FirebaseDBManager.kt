@@ -15,6 +15,7 @@ import com.koenig.chatapp.models.UserStore
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 object FirebaseDBManager: UserStore {
 
@@ -49,7 +50,8 @@ object FirebaseDBManager: UserStore {
         user.hasLocationPermission = false
         user.hasNotificationEnabled = true
         user.amountLikes = 0
-
+        user.latitude = 0.0
+        user.longitude = 0.0
 
         val userValues = user.toMap()
         val childAdd = HashMap<String, Any>()
@@ -93,6 +95,16 @@ object FirebaseDBManager: UserStore {
                         currentUser.email = it.child("email").value.toString()
                         if(it.child("isMapEnabled").value != null) currentUser.isMapEnabled = it.child("isMapEnabled").value as Boolean
                         if(it.child("hasLocationPermission").value != null) currentUser.hasLocationPermission = it.child("hasLocationPermission").value as Boolean
+
+                        val contactsForUser = it.child("contacts").children
+                        contactsForUser.forEach { ds ->
+                            val contactUserModel = ds.getValue(UserModel::class.java)
+                            if (contactUserModel != null)
+                            {
+                                currentUser.contacts[ds.key.toString()] = contactUserModel
+                            }
+                        }
+
                         localUserList.add(currentUser)
                     }
                 }
@@ -116,29 +128,47 @@ object FirebaseDBManager: UserStore {
         })
     }
 
-    override fun getAllContactsForUser(userId: String, contactList: MutableLiveData<List<ContactModel>>, isSelectMode: Boolean, groupContactIds: ArrayList<String>?) {
+    override fun getAllContactsForUser(userId: String, contactList: MutableLiveData<List<ContactModel>>, isSelectMode: Boolean, groupContactIds: ArrayList<String>?, filterName: String) {
         database.child("users").child(userId).child("contacts").addValueEventListener(object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onDataChange(snapshot: DataSnapshot) {
                 val localContactList = ArrayList<ContactModel>()
                 val contacts = snapshot.children
 
-                contacts.forEach {
-                    //val contactUserModel = it.getValue(ContactModel::class.java)
-                    val currentContact = ContactModel()
-                    currentContact.userId = it.child("userId").value.toString()
-                    currentContact.userName = it.child("userName").value.toString()
-                    currentContact.status = it.child("status").value.toString()
-                    currentContact.photoUri = it.child("photoUri").value.toString()
-                    currentContact.email = it.child("email").value.toString()
-                    localContactList.add(currentContact)
-                }
-
                 if(isSelectMode && groupContactIds != null)
                 {
+                    // Cannot filter contacts
+                    contacts.forEach {
+                        //val contactUserModel = it.getValue(ContactModel::class.java)
+                        val currentContact = ContactModel()
+                        currentContact.userId = it.child("userId").value.toString()
+                        currentContact.userName = it.child("userName").value.toString()
+                        currentContact.status = it.child("status").value.toString()
+                        currentContact.photoUri = it.child("photoUri").value.toString()
+                        currentContact.email = it.child("email").value.toString()
+                        localContactList.add(currentContact)
+                    }
+
                     // Remove all users included in the contact list
                     groupContactIds.forEach {
                         localContactList.removeIf { currentUser -> currentUser.userId == it }
+                    }
+                }
+                else
+                {
+                    // Can filter contacts
+                    contacts.forEach {
+                        //val contactUserModel = it.getValue(ContactModel::class.java)
+                        val currentContact = ContactModel()
+                        if(it.child("userName").value.toString().lowercase(Locale.getDefault()).contains(filterName.lowercase(Locale.getDefault())))
+                        {
+                            currentContact.userId = it.child("userId").value.toString()
+                            currentContact.userName = it.child("userName").value.toString()
+                            currentContact.status = it.child("status").value.toString()
+                            currentContact.photoUri = it.child("photoUri").value.toString()
+                            currentContact.email = it.child("email").value.toString()
+                            localContactList.add(currentContact)
+                        }
                     }
                 }
 
@@ -465,14 +495,12 @@ object FirebaseDBManager: UserStore {
                 {
                     amountLikes.value = 0
                 }
-
             }
 
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
         })
-
     }
 
     override fun increaseLikeForUser(userId: String, currentLikeAmount: Int) {
@@ -517,6 +545,36 @@ object FirebaseDBManager: UserStore {
           .child(contactId)
           .child("hasAlreadyLiked")
           .setValue(hasLiked)
-
   }
+
+    override fun getUsersWithLocation(userIds: ArrayList<String>, usersWithLocation: MutableLiveData<List<UserModel>>)
+    {
+        database.child("users").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val localUsers = ArrayList<UserModel>()
+                val children = snapshot.children
+
+                children.forEach {
+                    val currentUser = it.getValue(UserModel::class.java)
+
+                    if(currentUser!!.userId in userIds)
+                    {
+                        val isMapEnabled: Boolean = snapshot.child(currentUser.userId).child("isMapEnabled").value as Boolean
+
+                        if(isMapEnabled)
+                        {
+                            localUsers.add(currentUser)
+                        }
+                    }
+                }
+
+                usersWithLocation.value = localUsers
+                database.child("users").removeEventListener(this)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
 }

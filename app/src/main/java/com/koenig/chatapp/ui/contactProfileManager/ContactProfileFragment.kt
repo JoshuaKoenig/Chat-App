@@ -11,9 +11,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import com.koenig.chatapp.MainActivity
 import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentContactProfileBinding
+import com.koenig.chatapp.enums.MapModes
 import com.koenig.chatapp.models.ContactModel
 import com.koenig.chatapp.ui.auth.LoggedInViewModel
 import com.koenig.chatapp.ui.contactsManager.ContactsViewModel
@@ -71,8 +73,12 @@ class ContactProfileFragment : Fragment() {
         }
 
         fragBinding.buttonMap.setOnClickListener {
-            val action = ContactProfileFragmentDirections.actionContactProfileFragmentToMapsFragment(args.contactModel, false)
-            findNavController().navigate(action)
+            val action = ContactProfileFragmentDirections.actionContactProfileFragmentToMapsFragment(args.contactModel, MapModes.CONTACTMAP)
+            findNavController().navigate(action, navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                }
+            })
         }
 
         fragBinding.buttonLike.setOnClickListener {
@@ -104,14 +110,22 @@ class ContactProfileFragment : Fragment() {
 
         contactProfileViewModel.hasAlreadyLikedObserver.observe(viewLifecycleOwner){ hasLiked ->
 
-            if(hasLiked)
+            if(args.canLike)
             {
-                fragBinding.buttonLike.visibility = View.GONE
-                fragBinding.buttonAlreadyLiked.visibility = View.VISIBLE
+                if(hasLiked)
+                {
+                    fragBinding.buttonLike.visibility = View.GONE
+                    fragBinding.buttonAlreadyLiked.visibility = View.VISIBLE
+                }
+                else
+                {
+                    fragBinding.buttonLike.visibility = View.VISIBLE
+                    fragBinding.buttonAlreadyLiked.visibility = View.GONE
+                }
             }
             else
             {
-                fragBinding.buttonLike.visibility = View.VISIBLE
+                fragBinding.buttonLike.visibility = View.GONE
                 fragBinding.buttonAlreadyLiked.visibility = View.GONE
             }
 
@@ -136,7 +150,7 @@ class ContactProfileFragment : Fragment() {
         super.onResume()
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) {
             profileViewModel.getProfile(it.uid)
-            contactsViewModel.loadAllContacts(it.uid, false, null)
+            contactsViewModel.loadAllContacts(it.uid, false, null, "")
             contactProfileViewModel.getHasAlreadyLiked(it.uid, args.contactModel.userId)
         }
         mapViewModel.getIsMapEnabled(args.contactModel.userId)

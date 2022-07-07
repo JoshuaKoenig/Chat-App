@@ -71,7 +71,6 @@
                 android:backgroundTint="@color/white"
                 android:inputType="textPersonName" />
 
-
         </com.google.android.material.textfield.TextInputLayout>
 
 

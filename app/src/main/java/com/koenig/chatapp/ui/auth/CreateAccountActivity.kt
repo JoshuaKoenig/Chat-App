@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Patterns
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.koenig.chatapp.MainActivity
@@ -42,6 +43,7 @@ class CreateAccountActivity : AppCompatActivity() {
         if(!validateEmail() || !validatePassword() || !validateUserName()){ return }
 
         loginRegisterViewModel.register(email, password, userName)
+        createAccountBinding.layoutBlurry.visibility = View.VISIBLE
 
     }
 

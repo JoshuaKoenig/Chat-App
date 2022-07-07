@@ -1,7 +1,9 @@
 package com.koenig.chatapp.adapters
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.koenig.chatapp.databinding.ListItemAddUserBinding
@@ -16,7 +18,7 @@ interface FoundUserClickListener{
     fun onUserAddClick(addUser: ContactModel)
 }
 
-class FoundUserAdapter constructor(private var users: ArrayList<UserModel>, private val listener: FoundUserClickListener) : RecyclerView.Adapter<FoundUserAdapter.MainHolder>()
+class FoundUserAdapter constructor(private var users: ArrayList<UserModel>, private val listener: FoundUserClickListener, private val currentUsersContactIds: ArrayList<String>, private val currentTab: Int) : RecyclerView.Adapter<FoundUserAdapter.MainHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         val binding = ListItemAddUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -36,6 +38,31 @@ class FoundUserAdapter constructor(private var users: ArrayList<UserModel>, priv
         {
             binding.root.tag = user
             binding.user = user
+
+            if(currentTab == 0)
+            {
+                // Get the amount of common contacts
+                val contactsContactIds = ArrayList<String>()
+                user.contacts.values.forEach {
+                    contactsContactIds.add(it.userId)
+                }
+                val commonContacts = currentUsersContactIds.intersect(contactsContactIds.toSet()).size
+
+                // Set the amount to text
+                binding.textCommonUsers.text = "Common Contacts: $commonContacts"
+
+                // Remove email
+                binding.textUserMail.visibility = View.GONE
+                // show common user amount
+                binding.textCommonUsers.visibility = View.VISIBLE
+            }
+            else
+            {
+                // Remove common user amount
+                binding.textCommonUsers.visibility = View.GONE
+                // Show email
+                binding.textUserMail.visibility = View.VISIBLE
+            }
 
             if(user.photoUri.isNotEmpty())
             {

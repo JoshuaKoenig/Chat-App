@@ -48,7 +48,6 @@
                     android:layout_marginEnd="10dp"
                     android:layout_weight="2.5"
                     android:text="@{message.message}"
-                    android:textColor="@color/primary_text"
                     android:textSize="20sp"
                     tools:text="Message" />
 

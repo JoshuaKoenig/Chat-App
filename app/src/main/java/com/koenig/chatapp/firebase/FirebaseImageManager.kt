@@ -15,6 +15,8 @@ import com.squareup.picasso.Target
 import java.io.ByteArrayOutputStream
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Transformation
+import com.google.firebase.storage.ktx.component1
+import com.google.firebase.storage.ktx.component2
 
 object FirebaseImageManager {
 
@@ -35,6 +37,48 @@ object FirebaseImageManager {
         }
     }
 
+    fun getUserImage(userid: String,  userImageUri: MutableLiveData<Uri>)
+    {
+        val imageRef = storage.child("photos").child("${userid}.jpg")
+
+        imageRef.metadata.addOnSuccessListener {
+            imageRef.downloadUrl.addOnSuccessListener {
+                userImageUri.value = it
+            }
+        }
+    }
+
+    fun getUserGroupImages(userIds: ArrayList<String>, userGroupImages: MutableLiveData<List<Uri>>)
+    {
+        Log.d("Debug", "getUserGroupImages")
+        val imageRef = storage.child("photos")
+
+        imageRef.listAll()
+            .addOnSuccessListener {
+
+                val localList = ArrayList<Uri>()
+                it.items.forEach{ sr ->
+
+                    // All none group images
+                    if(sr.toString().length > 64)
+                    {
+                        val subString = sr.toString().substring(38, 66)
+                        if(subString in userIds)
+                        {
+                            sr.metadata.addOnSuccessListener {
+                                sr.downloadUrl.addOnSuccessListener { uri ->
+                                    Log.d("DebugItem", uri.toString())
+                                    localList.add(uri)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                userGroupImages.value = localList
+        }
+    }
+
 
     fun uploadImageToFirebase(userid: String, bitmap: Bitmap, updating : Boolean) {
 
@@ -52,7 +96,6 @@ object FirebaseImageManager {
                 uploadTask.addOnSuccessListener { ut ->
                     ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
                         imageUri.value = task.result!!
-                        Log.d("Task", task.result.toString())
                         // Can update the userImageUri => task.result
                     }
                 }
@@ -70,7 +113,6 @@ object FirebaseImageManager {
 
     fun uploadGroupImage(groupId: String, bitmap: Bitmap, updating : Boolean)
     {
-        Log.d("Debug_Upload_Id", groupId)
         val imageRef = storage.child("photos").child("${groupId}.jpg")
         val baos = ByteArrayOutputStream()
         lateinit var uploadTask: UploadTask
@@ -84,7 +126,6 @@ object FirebaseImageManager {
         uploadTask.addOnSuccessListener { ut ->
             ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
                 groupImageUri.value = task.result!!
-                Log.d("Debug_Task", task.result.toString())
                 FirebaseGroupChatManager.updateGroupImage(groupId, task.result.toString())
                 }
             }
@@ -93,7 +134,6 @@ object FirebaseImageManager {
             uploadTask.addOnSuccessListener { ut ->
                 ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
                     groupImageUri.value = task.result!!
-                    Log.d("Debug_Task_F", task.result.toString())
                     FirebaseGroupChatManager.updateGroupImage(groupId, task.result.toString())
                 }
             }
@@ -125,7 +165,6 @@ object FirebaseImageManager {
     }
 
     fun updateUserImage(userid: String, imageUri : Uri?, imageView: ImageView, updating : Boolean) {
-        Log.d("Image", imageUri.toString())
         Picasso.get().load(imageUri)
             .resize(200, 200)
             .transform(customTransformation())

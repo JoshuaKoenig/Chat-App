@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -73,6 +74,7 @@ class LoginActivity : AppCompatActivity() {
         if(!validateEmail() || !validatePassword()){ return }
 
         loginRegisterViewModel.login(email, password)
+        loginBinding.layoutBlurry.visibility = View.VISIBLE
     }
 
     private fun googleSignIn()
@@ -81,6 +83,7 @@ class LoginActivity : AppCompatActivity() {
             .googleSignInClient.value!!.signInIntent
 
         startForResult.launch(signInIntent)
+        loginBinding.layoutBlurry.visibility = View.VISIBLE
     }
 
     private fun setupGoogleSignInCallback()
@@ -94,7 +97,6 @@ class LoginActivity : AppCompatActivity() {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                     try{
                         val account = task.getResult(ApiException::class.java)
-                        Log.d("Debug_Acc", account.idToken.toString())
                         loginRegisterViewModel.authWithGoogle(account!!)
                     }
                     catch (e: ApiException)

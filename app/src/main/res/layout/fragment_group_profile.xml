@@ -43,6 +43,18 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/buttonMap"
+        android:theme="@style/Button_Theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        app:icon="@drawable/ic_map"
+        app:layout_constraintBottom_toTopOf="@+id/FrameGroupName"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
