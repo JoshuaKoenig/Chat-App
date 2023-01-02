@@ -329,8 +329,10 @@ object FirebaseDBManager: UserStore {
                         currentContact.email = ds.child("email").value.toString()
                         currentContact.hasConversation = ds.child("hasConversation").value as Boolean
                         currentContact.hasNewMessage = ds.child("hasNewMessage").value as Boolean
-                        currentContact.recentMessage = ds.child("recentMessage").getValue(MessageModel:: class.java)!!
-
+                        if (ds.child("recentMessage").value != null)
+                        {
+                            currentContact.recentMessage = ds.child("recentMessage").getValue(MessageModel:: class.java)!!
+                        }
                         if (currentContact.hasConversation)
                         {
                             localChatContacts.add(currentContact)

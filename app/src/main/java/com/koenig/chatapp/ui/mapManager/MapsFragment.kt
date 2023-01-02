@@ -117,10 +117,10 @@ class MapsFragment : Fragment() {
     {
         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_YES -> {
-                mapsViewModel.map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style_dark))
+                mapsViewModel.map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.own_map_dark))
             }
             Configuration.UI_MODE_NIGHT_NO -> {
-                mapsViewModel.map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style_contact))
+                mapsViewModel.map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.own_map_style))
             }
         }
         mapsViewModel.map.isMyLocationEnabled = true

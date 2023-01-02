@@ -8,15 +8,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
+import com.koenig.chatapp.R
 import com.koenig.chatapp.databinding.FragmentProfileBinding
 import com.koenig.chatapp.enums.ContactClickModes
 import com.koenig.chatapp.enums.MapModes
@@ -64,6 +67,10 @@ class ProfileFragment : Fragment() {
 
         profileViewModel.observableLikes.observe(viewLifecycleOwner){
             renderCurrentLikes(it)
+        }
+
+        FirebaseImageManager.imageUri.observe(viewLifecycleOwner){ it ->
+            renderImage(it)
         }
 
         // TEXT CHANGE LISTENER
@@ -152,15 +159,17 @@ class ProfileFragment : Fragment() {
     {
         fragBinding.profilevm = profileViewModel
 
-        Picasso.get().load(user.photoUri)
+        fragBinding.imageUser.visibility = View.VISIBLE
+        fragBinding.progressBar.visibility = View.GONE
+    }
+
+    private fun renderImage(uri: Uri){
+        Picasso.get().load(uri)
             .resize(200, 200)
             .transform(customTransformation())
             .centerCrop()
             .memoryPolicy(MemoryPolicy.NO_CACHE)
             .into(fragBinding.imageUser)
-
-        fragBinding.imageUser.visibility = View.VISIBLE
-        fragBinding.progressBar.visibility = View.GONE
     }
 
     @SuppressLint("IntentReset")

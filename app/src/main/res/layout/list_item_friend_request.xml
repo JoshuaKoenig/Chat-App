@@ -29,78 +29,73 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="wrap_content"
+            android:background="#F8F8F8"
             android:baselineAligned="false"
             android:orientation="horizontal"
+            android:paddingStart="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"
             android:paddingEnd="10dp"
-            android:background="#F8F8F8"
-            android:paddingStart="10dp">
+            android:paddingBottom="10dp">
 
             <ImageView
                 android:id="@+id/imageAccept"
-                android:layout_gravity="center"
                 android:layout_width="15dp"
                 android:layout_height="40dp"
-                android:background="@drawable/round_corners_compl"
-                android:src="@drawable/ic_arrow_right"
+                android:layout_gravity="center"
                 android:layout_marginEnd="10dp"
+                android:background="@drawable/round_corners_compl"
                 android:backgroundTint="@color/green"
-                />
+                android:src="@drawable/ic_arrow_right" />
 
             <ImageView
                 android:id="@+id/imageUser"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_profile"/>
+                android:src="@drawable/ic_profile" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2.5"
-
-                android:orientation="vertical"
                 android:layout_marginStart="20dp"
+
                 android:layout_marginEnd="20dp"
-                >
+                android:layout_weight="2.5"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
                     android:gravity="center_vertical|start"
                     android:text="@{currentContact.userName}"
                     android:textColor="#990E0E0E"
                     android:textSize="18sp"
-                    tools:text="User Name"
-                    android:layout_marginBottom="2dp"
-                    />
+                    tools:text="User Name" />
 
                 <TextView
                     android:id="@+id/textUserMail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical|start"
                     android:text="@{currentContact.email}"
                     android:textColor="@color/colorSecondary"
-                    android:gravity="center_vertical|start"
                     android:textSize="14sp"
-                    tools:text="newuser@mail.com"
                     android:textStyle="italic"
-                    />
+                    tools:text="newuser@mail.com" />
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageReject"
-                android:layout_gravity="center"
                 android:layout_width="15dp"
                 android:layout_height="40dp"
-                android:background="@drawable/round_corners_compl"
-                android:src="@drawable/ic_arrow_left"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
+                android:background="@drawable/round_corners_compl"
                 android:backgroundTint="@color/red"
-                />
+                android:src="@drawable/ic_arrow_left" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
